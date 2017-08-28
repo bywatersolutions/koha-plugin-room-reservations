@@ -1,0 +1,751 @@
+[% INCLUDE 'doc-head-open.inc' %]
+    <title>Koha: Room Reservations Plugin: Configuration</title>
+[% INCLUDE 'doc-head-close.inc' %]
+    <style type="text/css">
+        .fieldset-auto-width {
+            display: inline-block;
+        }
+
+        .table-header-bold {
+            font-weight: bold;
+        }
+        .table-row-centered {
+            text-align: center;
+        }
+        button {
+            background:none!important;
+            color:#0000EE;
+            border:none; 
+            padding:0!important;
+            font: inherit;
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        function validateSavedRooms() {
+            var x = document.forms["saved_rooms"]["saved_rooms_action"].value;
+            if (x == "null") {
+                alert("Please choose an action");
+                return false;
+            } else if (x == "delete") {
+                if (confirm("Are you sure you want to remove the selected room?")) {
+                    // Yes
+                    return true;
+                } else {
+                    // No
+                    return false;
+                }
+            }
+
+            var room = document.getElementsByName('selectedRoom');
+            var roomValue = false;
+
+            for (var i = 0; i < room.length; i++) {
+                if (room[i].checked == true) {
+                    roomValue = true;
+                }
+            }
+            if (!roomValue) {
+                alert("Please select a room");
+                return false;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function validateConfigActions() {
+            var x = document.forms["config_actions"]["config_actions_selection"].value;
+            if (x == "null") {
+                alert("Please choose an action");
+                return false;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function loadSelectedAction() {
+            document.getElementById('actionSelectedBtn').click();
+        }
+    </script>
+</head>
+
+<body>
+[% INCLUDE 'header.inc' %]
+[% INCLUDE 'cat-search.inc' %]
+
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Configuration</div>
+
+<div id="doc3">
+
+    <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
+    <h3>Koha: Room Reservations Plugin: Configuration</h3>
+
+    [% IF op == '' %]
+    <form name="config_actions" method="post" action="#" onsubmit="return validateConfigActions()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="action-selected" />
+
+        <fieldset class="fieldset-auto-width">
+            <legend>Actions</legend>
+                <div>
+                        Select an action: 
+                        <select name="config_actions_selection">
+                            <option value="null"></option>
+                            <option value="action-select-display">Display rooms</option>
+                            <option value="action-select-add">Add room</option>
+                            <option value="action-select-edit">Edit room</option>
+                            <option value="action-select-delete">Delete room</option>
+                            <option value="action-select-add-equipment">Add Room Equipment</option>
+                            <option value="action-select-delete-equipment">Delete Room Equipment</option>
+                        </select><br />
+                        <span style="float:right;"><input type="submit" name="config-actions-submit" value="Continue" /></span>
+                </div>
+        </fieldset>
+    </form>
+    [% END # op == '' %]
+
+    [% IF op == 'action-selected' %]
+    <script type="text/javascript">
+        // binds onload to anonymous function
+        // this causes the fieldless form below
+        // to automatically "load" the selected
+        // action
+        window.onload = function() {
+            loadSelectedAction();
+        };
+    </script>
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="[% action %]" />
+
+        <p>Processing...</p>
+        <div style="display:none;">
+            <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
+        </div>
+    </form>
+    [% END # op == 'action-selected' %]
+
+    [% IF op == 'display-rooms' %]
+    <script type="text/javascript">
+            function validateDisplayRooms() {
+                // populate an equipment array to iterate for validation
+                var rooms = document.getElementsByName("selected-displayed-room");
+
+
+                var roomChecked = false;
+                for ( var i = 0; i < rooms.length; i++ ) {
+                    if ( rooms[i].checked ) {
+                        roomChecked = true;
+                    }
+                }
+
+                if ( !roomChecked ) {
+                    alert("Select a room to display its details or select another action.");
+                    return false;
+                }
+            }
+    </script>
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>Select another action</button>
+    </form>
+    <br />
+    <br />
+    <form name="displayRooms" method="post" action="#" onsubmit="return validateDisplayRooms()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="display-rooms-detail" />
+        <table>
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Room</th>
+            </tr>
+        </thead>
+        <tbody>
+        [% FOREACH room IN roomnumbers %]
+            <tr>
+                <td>
+                    <input type="radio" name="selected-displayed-room" value="[% room.roomid %]" />
+                </td>
+                <td>
+                    [% room.roomnumber %]
+                </td>
+            </tr>
+        [% END # FOREACH room IN roomnumbers %]
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <!-- Empty to force submit button to "Room" column -->
+                </td>
+                <td>
+                    <input type="submit" name="submitSelectedDisplayedRoom" value="Show details" />
+                </td>
+            </tr>
+        </tfoot>
+        </table>
+    </form>
+    [% END # op == 'display-rooms' %]
+
+    [% IF op == 'display-rooms-detail' %]
+    <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="display-rooms" />
+
+        <button>Select another room to display</button>
+    </form>
+    <br />
+    <br />
+    <table>
+        <tbody>
+            [% FOREACH room IN selected_room_details %]
+            <tr>
+                <td><strong>Name:</strong> [% room.roomnumber %]</td>
+            </tr>
+            <tr>
+                <td><strong>Room capacity:</strong> [% room.maxcapacity %]</td>
+            </tr>
+            <tr>
+                <td>
+                <strong>Equipment:</strong><br />
+                [% FOREACH item IN selected_room_equipment %]
+                <!-- <pre>&#9; &bull; [% item %]</pre> -->
+                [% item.equipmentname %]<br />
+                [% END # FOREACH item IN selected_room_equipment %]
+                </td>
+            </tr>
+            [% END # FOREACH room IN selected_room_details %]
+        </tbody>
+    </table>
+    [% END # op == 'display-rooms-detail' %]
+
+    [% IF op == 'add-rooms' %]
+        <script type="text/javascript">
+            function validateAddRooms() {
+                var roomname = document.forms["addRoomForm"]["add-room-roomnumber"].value;
+                var maxcapacity = document.forms["addRoomForm"]["add-room-maxcapacity"].value;
+                // populate an equipment array to iterate for validation
+                var equipments = document.getElementsByName("selected-equipment");
+
+
+                if ( roomname == "" ) {
+                    alert("Please enter a roomname");
+                    return false;
+                }
+
+                if ( maxcapacity == "" ) {
+                    alert("Please enter a max capacity for the room");
+                    return false;
+                }
+
+                var equipmentChecked = false;
+                for ( var i = 0; i < equipments.length; i++ ) {
+                    if ( equipments[i].checked ) {
+                        equipmentChecked = true;
+                    }
+                }
+
+                if ( !equipmentChecked ) {
+                    alert("Select room equipment. If no equipment then check 'none'");
+                    return false;
+                }
+            }
+        </script>
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+
+        <table>
+            <thead>
+                <tr class="table-header-bold table-row-centered">
+                    <td>Current Rooms</td>
+                </tr>
+            </thead>
+            <tbody>
+                [% FOREACH room IN all_room_numbers %]
+                <tr class="table-row-centered">
+                    <td>[% room.roomnumber %]</td>
+                </tr>
+                [% END # FOREACH room IN all_room_numbers %]
+            </tbody>
+        </table>
+
+        <!-- TODO: Display table of rooms already added -->
+        <form name="addRoomForm" method="post" action="#" onsubmit="return validateAddRooms()">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="add-rooms" />
+            <input type="hidden" name="added-room" value="1" />
+            <table>
+                <thead class="table-header-bold table-row-centered">
+                    <tr class="table-row-centered">
+                        <td>Add Room</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Room Number: <input type="text" name="add-room-roomnumber" /></td>
+                    </tr>
+                    <tr>
+                        <td>Max Capacity <input type="text" name="add-room-maxcapacity" size="4" maxlength="4" /></td>
+                    </tr>
+                    <tr>
+                        <td>Equipment:</td>
+                    </tr>
+                    <tr>
+                        <td>
+                        [% count = 1 %]
+                        [% FOREACH equipment IN available_equipment %]
+
+                            [% IF count mod 4 == 0 %]
+                                <input type="checkbox" name="selected-equipment" value="[% equipment.equipmentid %]" />&nbsp;[% equipment.equipmentname %]&nbsp;<br />
+                            [% ELSE %]
+                                <input type="checkbox" name="selected-equipment" value="[% equipment.equipmentid %]" />&nbsp;[% equipment.equipmentname %]&nbsp;
+                            [% END %]
+                            [% count = count + 1 %]
+                        [% END # FOREACH equipment IN available_equipment %]
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-row-centered">
+                        <td><input type="submit" value="Add Room" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    [% END # op == 'add-rooms' %]
+
+    [% IF op == 'edit-rooms' %]
+        <script type="text/javascript">
+            function validateEditRooms() {
+                var editChoice = document.forms["editRoomsForm"]["edit-rooms-choice"].value;
+
+                if (editChoice == "") {
+                    alert('Please select an edit action.');
+                    return false;
+                }
+
+            }
+        </script>
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+        <form name="editRoomsForm" method="post" action="#" onsubmit="return validateEditRooms()">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="edit-rooms-selection" />
+            <input type="hidden" name="editing" value="1" />
+            <table>
+                <thead>
+                    <tr class="table-header-bold table-row-centered">
+                        <td>&nbsp;</td>
+                        <td>Current Rooms</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    [% FOREACH room IN current_rooms %]
+                    <tr class="table-row-centered">
+                        <td><input type="radio" name="current-rooms-edit" required="required" value="[% room.roomid %]" /></td>
+                        <td>[% room.roomnumber %]</td>
+                    </tr>
+                    [% END # FOREACH room IN   %]
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <select name="edit-rooms-choice">
+                                <option value="">Actions</option>
+                                <option value="room">Edit Room</option>
+                                <option value="equipment">Edit Equipment</option>
+                            </select>
+                            <input type="submit" value="Edit" /></td>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table> 
+        </form>
+    [% END # op == 'edit-rooms' %]
+
+    [% IF op == 'edit-rooms-selection' %]
+    <script type="text/javascript">
+        // binds onload to anonymous function
+        // this causes the fieldless form below
+        // to automatically "load" the selected
+        // action
+        window.onload = function() {
+            loadSelectedAction();
+        };
+    </script>
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="[% edit_action %]" />
+        <input type="hidden" name="selected-room-id" value="[% selected_room_id %]" />
+
+        <p>Please wait...</p>
+        <div style="display:none;">
+            <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
+        </div>
+    </form>
+    [% END # IF op == 'edit-rooms-selection' %]
+
+    [% IF op == 'edit-rooms-room' %]
+        <script type="text/javascript">
+            function validateEditRoomsRoom() {
+                var roomname = document.forms["editRoomDetails"]["edit-rooms-room-roomnumber"].value;
+                var maxcapacity = document.forms["editRoomDetails"]["edit-rooms-room-maxcapacity"].value;
+
+                if ( roomname == "" ) {
+                    alert("Room Number cannot be blank.");
+                    return false;
+                }
+
+                if ( maxcapacity == "" ) {
+                    alert("Max Capacity cannot be blank.");
+                    return false;
+                }
+            }
+        </script>
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="edit-rooms" />
+
+            <button>Select another room to edit</button>
+        </form>
+        <br />
+        <br />
+        <form name="editRoomDetails" method="post" action="#" onsubmit="return validateEditRoomsRoom()">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="edit-rooms" />
+            <input type="hidden" name="room-details-updated" value="1" />
+            <table>
+                <thead>
+                    <tr class="table-header-bold table-row-centered">
+                        <td>Edit Room Details</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    [% FOREACH room IN room_details %]
+                    <input type="hidden" name="room-details-updated-roomid" value="[% room.roomid %]" />
+                    <tr>
+                        <td><strong>Room Number: </strong><input type="text" name="edit-rooms-room-roomnumber" value="[% room.roomnumber %]" /></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max Capacity: </strong><input type="text" name="edit-rooms-room-maxcapacity" size="4" maxlength="4" value="[% room.maxcapacity %]" /></td>
+                    </tr>
+                    [% END # FOREACH room IN room_details %]
+                </tbody>
+                <tfoot>
+                    <tr class="table-row-centered">
+                        <td><input type="submit" value="Update" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    [% END # IF op == 'edit-rooms-room' %]
+
+    [% IF op == 'edit-rooms-equipment' %]
+        <script type="text/javascript">
+            function validateEditRoomsEquipment() {
+                var equipments = document.getElementsByName("edit-rooms-current-equipment");
+
+                var equipmentChecked = false;
+                for ( var i = 0; i < equipments.length; i++ ) {
+                    if ( equipments[i].checked ) {
+                        equipmentChecked = true;
+                    }
+                }
+
+                if ( !equipmentChecked ) {
+                    alert("Room equipment cannot be empty. If no equipment then check 'none'");
+                    return false;
+                }
+            }
+        </script>
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="edit-rooms" />
+
+            <button>Select another room to edit</button>
+        </form>
+        <br />
+        <br />
+        <form name="editRoomEquipment" method="post" action="#" onsubmit="return validateEditRoomsEquipment()">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="edit-rooms" />
+            <input type="hidden" name="room-equipment-updated" value="1" />
+            <table>
+                <thead>
+                    <tr class="table-header-bold table-row-centered">
+                        <td>Edit Room Equipment</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    [% FOREACH room IN room_details %]
+                    <input type="hidden" name="room-equipment-updated-roomid" value="[% room.roomid %]" />
+                    <tr>
+                        <td><strong>Room Number: </strong>[% room.roomnumber %]</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Equipment:</strong><br />
+                            [% FOREACH available IN all_available_equipment %]
+
+                                <input type="checkbox" name="edit-rooms-current-equipment" value="[% available.equipmentid %]" />[% available.equipmentname %]<br />
+
+                            [% END # FOREACH available IN all_available_equipment %]
+                        </td>
+                    </tr>
+                    [% END # FOREACH room IN room_details %]
+                </tbody>
+                <tfoot>
+                    <tr class="table-row-centered">
+                        <td><input type="submit" value="Update" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    [% END # IF op == 'edit-rooms-equipment' %]
+
+    [% IF op == 'delete-rooms' %]
+    <script type="text/javascript">
+            function deleteRoomConfirmation() {
+                var rooms = document.getElementsByName("delete-room-radio-button");
+
+                var roomChecked = false;
+                for ( var i = 0; i < rooms.length; i++ ) {
+                    if ( rooms[i].checked ) {
+                        roomChecked = true;
+                    }
+                }
+
+                if ( !roomChecked ) {
+                    alert("Select a room to delete.");
+                    return false;
+                }
+
+                if ( roomChecked ) {
+                    if (confirm("Are you sure you want to delete the selected room?") == true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        </script>
+    <h3>Only rooms not linked to a booking are listed below</h3>
+    <br />
+    <br />
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>Select another action</button>
+    </form>
+    <br />
+    <br />
+    <form method="post" action="#" onsubmit="return deleteRoomConfirmation()">
+        [% IF rooms_available_to_delete == 1 %]
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="delete-rooms" />
+        <input type="hidden" name="delete" value="1" />
+        <table>
+            <thead>
+                <tr class="table-header-bold table-row-centered">
+                    <td>&nbsp;</td>
+                    <td>Current Rooms</td>
+                </tr>
+            </thead>
+            <tbody>
+                [% FOREACH room IN available_rooms %]
+                <tr class="table-row-centered">
+                    <td><input type="radio" name="delete-room-radio-button" value="[% room.roomid %]" /></td>
+                    <td>[% room.roomnumber %]</td>
+                </tr>
+                [% END # FOREACH room IN available_rooms %]
+            </tbody>
+            <tfoot>
+                <tr class="table-row-centered">
+                    <td colspan="2">
+                        <input type="submit" name="room-delete-submit" id="room-delete-submit" value="Delete" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    [% ELSE %]
+    <h2>No rooms available to delete!</h2>
+    [% END %]
+    </form>
+    [% END # op == 'delete-rooms' %]
+
+    [% IF op == 'add-equipment' %]
+    <script type="text/javascript">
+            function validateAddEquipment() {
+                var equipmentname = document.forms["addEquipment"]["add-equipment-text-field"].value;
+
+                if ( equipmentname == "" ) {
+                    alert("Equipment name cannot be blank.");
+                    return false;
+                }
+            }
+        </script>
+    <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+    <table>
+        <thead>
+            <tr class="table-header-bold table-row-centered">
+                <td>Current Equipment</td>
+            </tr>
+        </thead>
+        <tbody>
+            [% FOREACH equipment IN available_equipment %]
+            <tr class="table-row-centered">
+                <td>[% equipment.equipmentname %]</td>
+            </tr>
+            [% END # FOREACH equipment IN available_equipment %]
+        </tbody>
+    </table>
+    <br />
+    <br />
+
+    <form name="addEquipment" method="post" action="#" onsubmit="return validateAddEquipment()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="add-equipment" />
+        <input type="hidden" name="insert" value="1" />
+        <table>
+            <thead class="table-header-bold table-row-centered">
+                <tr>
+                    <td>Add Equipment</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name: <input type="text" name="add-equipment-text-field" /></td>
+                </tr>
+                <tr class="table-row-centered">
+                    <td><input type="submit" value="Add" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    [% END # op == 'add-equipment' %]
+
+    [% IF op == 'delete-equipment' %]
+    <script type="text/javascript">
+            function deleteEquipmentConfirmation() {
+                var equipment = document.getElementsByName("delete-equipment-radio-button");
+
+                var equipmentChecked = false;
+                for ( var i = 0; i < equipment.length; i++ ) {
+                    if ( equipment[i].checked ) {
+                        equipmentChecked = true;
+                    }
+                }
+
+                if ( !equipmentChecked ) {
+                    alert("Select equipment to delete.");
+                    return false;
+                }
+
+                if ( equipmentChecked ) {
+                    if (confirm("Are you sure you want to delete the selected equipment?") == true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        </script>
+    <h3>Only equipment not currently associated with a room is listed below</h3>
+    <br />
+    <br />
+    <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>Select another action</button>
+        </form>
+        <br />
+        <br />
+    <form method="post" action="#" onsubmit="return deleteEquipmentConfirmation()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="delete-equipment" />
+        <input type="hidden" name="delete" value="1" />
+        <table>
+            <thead>
+                <tr class="table-header-bold table-row-centered">
+                    <td>&nbsp;</td>
+                    <td>Current Equipment</td>
+                </tr>
+            </thead>
+            <tbody>
+                [% FOREACH equipment IN available_equipment %]
+                <tr class="table-row-centered">
+                    <td><input type="radio" name="delete-equipment-radio-button" value="[% equipment.equipmentid %]" /></td>
+                    <td>[% equipment.equipmentname %]</td>
+                </tr>
+                [% END # FOREACH equipment IN available_equipment %]
+            </tbody>
+            <tfoot>
+                <tr class="table-row-centered">
+                    <td colspan="2">
+                        <input type="submit" name="equipment-delete-submit" id="equipment-delete-submit" value="Delete" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    [% END # op == 'delete-equipment' %]
