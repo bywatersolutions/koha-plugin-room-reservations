@@ -20,6 +20,14 @@ To set up the Koha plugin system you must first make some changes to your instal
 
 Once set up is complete you will need to alter your UseKohaPlugins system preference. On the Tools page you will see the Tools Plugins and on the Reports page you will see the Reports Plugins.
 
+# Package from source
+
+From the root of the room reservation git folder, make sure `zip` is installed and package the plugin with the command
+
+    zip -r package-file-name.kpz Koha/
+
+The `-r` flag compresses everything contained within the Koha folder into a file with the specified name. The important part about the file name is for it to end with `.kpz`.
+
 # Apache Configuration
 
 * These instructions assume the plugin is being installed in [kohadevbox](https://github.com/digibib/kohadevbox). If installing for production change the file paths accordingly.
