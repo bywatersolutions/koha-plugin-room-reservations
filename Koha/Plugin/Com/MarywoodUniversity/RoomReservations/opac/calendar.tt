@@ -513,18 +513,6 @@
                     alert("Room capacity is required.");
                     return false;
                 }
-
-                // boolean to test if at least one box is checked
-                // var equipmentChecked = false;
-                // for ( var i = 0; i < equipments.length; i++ ) {
-                //  if ( equipments[i].checked ) {
-                //      equipmentChecked = true;
-                //  }
-                // }
-
-                // if ( !equipmentChecked ) {
-                //  alert('');
-                // }
             }
         </script>
         <ul class="breadcrumb">
@@ -812,8 +800,10 @@
                     <input type="hidden" name="confirmed-start" value="[% selected_start_time %]" />
                     <input type="hidden" name="confirmed-end" value="[% selected_end_time %]" />
                     <input type="hidden" name="op" value="reservation-confirmed" />
+                    [% IF Koha.Preference('KohaAdminEmailAddress') %]
                     <!-- Checked by default -->
                     <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
+                    [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
                     <p><input type="submit" name="confirmationSubmit" value="Confirm" /><input type="submit" name="confirmationSubmit" value="Start over" /></p>
                 </fieldset>
             </form>
