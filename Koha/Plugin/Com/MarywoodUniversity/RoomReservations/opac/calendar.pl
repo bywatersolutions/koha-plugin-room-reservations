@@ -425,9 +425,7 @@ sub getAvailableRooms {
             (SELECT roomid
             FROM $bookings_table
             WHERE
-            start BETWEEN " . "'" . $start . "'" . " AND " . "'" . $end . "'" . 
-            " AND end BETWEEN " . "'" . $start . "'" . " AND " . "'" . $end . "'" . 
-        ")";
+            start BETWEEN " . "'" . $start . "'" . " AND " . "'" . $end . "')";
 
         # if dereferences array ref has zero elements (length evaluated in scalar context)
         if ( @$equipment > 0 ) {
