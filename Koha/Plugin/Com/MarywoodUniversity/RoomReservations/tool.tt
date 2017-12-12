@@ -1,0 +1,135 @@
+[% INCLUDE 'doc-head-open.inc' %]
+    <title>Koha: Room Reservations Plugin: Tool</title>
+[% INCLUDE 'doc-head-close.inc' %]
+    <style type="text/css">
+        .fieldset-auto-width {
+            display: inline-block;
+        }
+
+        .table-header-bold {
+            font-weight: bold;
+        }
+        .table-row-centered {
+            text-align: center;
+        }
+        button {
+            background:none!important;
+            color:#0000EE;
+            border:none; 
+            padding:0!important;
+            font: inherit;
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        function loadSelectedAction() {
+            document.getElementById('actionSelectedBtn').click();
+        }
+    </script>
+</head>
+
+<body>
+[% INCLUDE 'header.inc' %]
+[% INCLUDE 'cat-search.inc' %]
+
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Tool</div>
+
+<div id="doc3">
+
+	<!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
+    <h3>Koha: Room Reservations Plugin: Tool</h3>
+
+    [% IF op == '' %]
+    <form name="tool_actions" method="post" action="#">
+    	<input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="action-selected" />
+
+        <fieldset class="fieldset-auto-width">
+        	<legend>Actions</legend>
+        		<div>
+        			Select an action:
+        			<select name="tool_actions_selection">
+        				<option value="null"></option>
+        				<option value="action-manage-reservations">Manage reservations</option>
+        			</select><br />
+        			<span style="float:right;"><input type="submit" name="tool-actions-submit" value="Continue" /></span>
+        		</div>
+        </fieldset>
+    </form>
+    [% END # op == '' %]
+
+    [% IF op == 'action-selected' %]
+    <script type="text/javascript">
+        // binds onload to anonymous function
+        // this causes the fieldless form below
+        // to automatically "load" the selected
+        // action
+        window.onload = function() {
+            loadSelectedAction();
+        };
+    </script>
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="[% action %]" />
+
+        <p>Processing...</p>
+        <div style="display:none;">
+            <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
+        </div>
+    </form>
+    [% END # op == 'action-selected' %]
+
+    [% IF op == 'manage-reservations' %]
+    [% IF message %]
+    	<p>[% message %]</p>
+    [% ELSE %]
+    	<p>No delete!</p>
+    [% END # IF message %]
+    <!-- TODO: add JS validation to check only one action item is selected - if (count > 1) -->
+    <form method="post" action="#">
+    	<input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+	    <input type="hidden" name="op" value="manage-reservations" />
+        <br />
+        <h4>Manage reservations</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Room #</th>
+                    <th>Patron</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            	[% FOREACH booking IN bookings %]
+            	<tr>
+            		<td><input type="radio" name="manage-bookings-id" value="[% booking.bookingid %]"></td>
+            		<td>[% booking.roomnumber %]</td>
+            		<td>[% booking.firstname %] [% booking.surname %]</td>
+            		<td>[% booking.start %]</td>
+            		<td>[% booking.end %]</td>
+            	</tr>
+            	[% END # FOREACH booking IN bookings %]
+            	<tr>
+            		<td colspan="5">
+            			<select name="manage-bookings-action">
+                        	<option value="null">Actions</option>
+                        	<option value="edit">Edit</option>
+                        	<option value="delete">Delete</option>
+                        </select>
+            		</td>
+            	</tr>
+            </tbody>
+            <tfoot>
+            	<tr>
+            		<td><input type="submit" value="Submit" /></td>
+            	</tr>
+            </tfoot>
+        </table>
+    </form>
+    [% END # op == 'manage-reservations' %]

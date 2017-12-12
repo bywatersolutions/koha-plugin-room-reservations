@@ -698,7 +698,7 @@
 
                 // populate an equipment array to iterate for validation
                 var rooms = document.getElementsByName("selected-room-id");
-
+                var numMatchingRooms = document.getElementsByClassName("no-rooms-match");
 
                 var roomChecked = false;
                 for ( var i = 0; i < rooms.length; i++ ) {
@@ -708,9 +708,14 @@
                     }
                 }
 
-                if ( !roomChecked ) {
-                    alert('Select a room to continue.');
-                    return false;
+                if (numMatchingRooms.length > 0) {
+                    // do nothing
+                }
+                else {
+                    if ( !roomChecked ) {
+                        alert('Select a room to continue.');
+                        return false;
+                    }
                 }
             }
         </script>
@@ -758,7 +763,7 @@
                         </tfoot>
                     </table>
                 [% ELSE %]
-                <h2>No rooms match your criteria!</h2>
+                <h2 class="no-rooms-match">No rooms match your criteria!</h2>
                 <form method="post" action="#">
                     <input type="hidden" name="op" value="availability-search" />
 
@@ -812,15 +817,31 @@
         </div> <!-- / .row-fluid -->
     </div> <!-- / .container-fluid -->
     [% ELSIF op == 'reservation-confirmed' %]
-        <h1>Congratulations! Your reservation is confirmed!</h1>
-        <br />
-        [% IF SENT == '1' %]
-        <h3>An email confirmation has been sent to [% patron_email %]!</h3>
-        [% END %]
-        <form method="post" action="#">
-            
-            <button>Back to calendar</button>
-        </form>
+
+        [% IF invalid_booking == 1 %]
+            <h1>Sorry!</h1>
+            <br />
+            <h2>It appears there was a problem completing your reservation
+                <br />
+                This is most likely due to someone else placing a reservation for a conflicting time slot.
+            </h2>
+
+            <form method="post" action="#">
+
+                <button>Click here to search again</button>
+            </form>
+        [% ELSE %]
+            <h1>Congratulations! Your reservation is confirmed!</h1>
+            <br />
+            [% IF SENT == '1' %]
+            <h3>An email confirmation has been sent to [% patron_email %]!</h3>
+            [% END %]
+            <form method="post" action="#">
+
+                <button>Back to calendar</button>
+            </form>
+        [% END # IF invalid_booking == 1 %]
+
     [% END %]
 </div> <!-- / .main -->
 [% INCLUDE 'opac-bottom.inc' %]

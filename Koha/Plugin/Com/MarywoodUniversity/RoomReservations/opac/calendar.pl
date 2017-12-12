@@ -47,6 +47,8 @@ my $bookings_table = 'bookings';
 my $equipment_table = 'booking_equipment';
 my $roomequipment_table = 'booking_room_equipment';
 
+my $valid; # used to check if booking still valid prior to insertion of new booking
+
 my $cgi = new CGI;
 
 # initial value -- calendar is displayed while $op is undef
@@ -201,11 +203,20 @@ elsif( $op eq 'reservation-confirmed' ) {
         $op = 'availability-search';
     }
     else {
-        
-        addBooking($borrowernumber, $roomid, $start, $end);
+
+        $valid = preBookingAvailabilityCheck($roomid, $start, $end);
+
+        if ($valid) {
+            addBooking($borrowernumber, $roomid, $start, $end);
+        }
+        else {
+            $template->param(
+                invalid_booking => 1,
+            );
+        }
     }
 
-    if ( $sendCopy eq '1' ) {
+    if ( $sendCopy eq '1' && $valid ) {
 
         my $email = Koha::Email->new();
         my $user_email = C4::Context->preference('KohaAdminEmailAddress');
@@ -354,7 +365,7 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
         'WHERE r.roomid = b.roomid
         AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" . 
-        'ORDER BY monthdate ASC';
+        'ORDER BY b.roomid ASC, start ASC';
 
     $sth = $dbh->prepare($query);
     $sth->execute();
@@ -366,6 +377,35 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
     }
 
     return \@calendarBookings;
+}
+
+sub preBookingAvailabilityCheck {
+    my ( $roomid, $start, $end ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT COUNT(*)
+        FROM $bookings_table
+        WHERE roomid = $roomid
+        AND \'$end\' > start
+        AND \'$start\' < end;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my ($count) = $sth->fetchrow_array();
+
+    if ($count > 0) { # a conflicting booking was found
+        return 0;
+    }
+    else { # no conflict found
+        return 1;
+    }
 }
 
 sub addBooking {
@@ -425,9 +465,9 @@ sub getAvailableRooms {
             (SELECT roomid
             FROM $bookings_table
             WHERE
-            start BETWEEN " . "'" . $start . "'" . " AND " . "'" . $end . "')";
+            \'$end\' > start AND \'$start\' < end)";
 
-        # if dereferences array ref has zero elements (length evaluated in scalar context)
+        # if dereferenced array ref has zero elements (length evaluated in scalar context)
         if ( @$equipment > 0 ) {
 
             # counts number of elements

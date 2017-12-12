@@ -142,19 +142,13 @@ sub uninstall() {
 #     }
 # }
 
-## TODO: Add a tool option
 # sub tool {
 #     my ( $self, $args ) = @_;
 
 #     my $cgi = $self->{'cgi'};
 
-#     unless ( $cgi->param('submitted') ) {
-#         $self->tool_step1();
-#     }
-#     else {
-#         $self->tool_step2();
-#     }
-
+#     my $template = $self->get_template({ file => 'tool.tt' });
+#     my $op = $cgi->param('op') || q{};
 # }
 
 sub configure {
@@ -165,7 +159,6 @@ sub configure {
     my $op = $cgi->param('op') || q{};
 
     if ( $op eq '' ) { # Displays currently configured rooms
-
 
 
         $template->param(

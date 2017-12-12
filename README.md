@@ -44,6 +44,9 @@ Next, also under the OPAC section of the koha.conf Apache configuration file, we
 
 Last, we need to add a directive to `/etc/apache2/apache2.conf` to prevent 403 errors on the OPAC
     
+**Important**
+The following directory stanza is only required in **Apache 2.4+**. `Require all granted` will result in breaks on **Apache 2.2 and below**.
+    
     <Directory /var/lib/koha/kohadev/plugins/>
         Options Indexes FollowSymLinks
         AllowOverride None
