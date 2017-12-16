@@ -40,7 +40,17 @@
     <h3>Koha: Room Reservations Plugin: Tool</h3>
 
     [% IF op == '' %]
-    <form name="tool_actions" method="post" action="#">
+    <script type="text/javascript">
+        function validateAction() {
+            var action = document.forms["tool_actions"]["tool_actions_selection"].value;
+
+            if ( action == "" ) {
+                    alert("Please select an action to continue.");
+                    return false;
+                }
+        }
+    </script>
+    <form name="tool_actions" method="post" action="#" onsubmit="return validateAction()">
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="action-selected" />
@@ -50,7 +60,7 @@
         		<div>
         			Select an action:
         			<select name="tool_actions_selection">
-        				<option value="null"></option>
+        				<option value=""></option>
         				<option value="action-manage-reservations">Manage reservations</option>
         			</select><br />
         			<span style="float:right;"><input type="submit" name="tool-actions-submit" value="Continue" /></span>
@@ -82,33 +92,63 @@
     [% END # op == 'action-selected' %]
 
     [% IF op == 'manage-reservations' %]
-    [% IF message %]
-    	<p>[% message %]</p>
-    [% ELSE %]
-    	<p>No delete!</p>
-    [% END # IF message %]
+    <script type="text/javascript">
+        function validateBookingAction() {
+            var action = document.forms["manageBookingsForm"]["manage-bookings-action"].value;
+            var ids = document.getElementsByName("manage-bookings-id");
+
+            var checked = 0;
+
+            for (var i = 0; i < ids.length; i++) {
+                if (ids[i].checked) {
+                    checked++;
+                }
+            }
+
+            if (checked != 1) {
+                alert("Please make a selection to continue.");
+                return false;
+            }
+
+            if (action == "") {
+                alert("Please select an action to continue.");
+                return false;
+            }
+        }
+    </script>
     <!-- TODO: add JS validation to check only one action item is selected - if (count > 1) -->
-    <form method="post" action="#">
+    <form name="manageBookingsForm" method="post" action="#" onsubmit="return validateBookingAction()">
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 	    <input type="hidden" name="op" value="manage-reservations" />
         <br />
+        [% IF deleted == 1 %]
+        <div class="dialog alert audio-alert-warning">
+            <p class="problem">There was a problem deleting the selected booking. Please try again</p>
+        </div>
+        [% ELSIF deleted == 0 %]
+        <div class="dialog alert audio-alert-warning">
+            <p class="problem">Selected booking deleted successfully</p>
+        </div>
+        <br />
+        [% END # IF deleted %]
+        [% IF bookings %]
         <h4>Manage reservations</h4>
 
         <table>
             <thead>
                 <tr>
+                    <th>&nbsp;</th>
                     <th>Room #</th>
                     <th>Patron</th>
                     <th>Start</th>
                     <th>End</th>
-                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
             	[% FOREACH booking IN bookings %]
-            	<tr>
-            		<td><input type="radio" name="manage-bookings-id" value="[% booking.bookingid %]"></td>
+            	<tr style="text-align: center;">
+            		<td style="margin: 0;"><input type="radio" name="manage-bookings-id" value="[% booking.bookingid %]"></td>
             		<td>[% booking.roomnumber %]</td>
             		<td>[% booking.firstname %] [% booking.surname %]</td>
             		<td>[% booking.start %]</td>
@@ -118,18 +158,18 @@
             	<tr>
             		<td colspan="5">
             			<select name="manage-bookings-action">
-                        	<option value="null">Actions</option>
-                        	<option value="edit">Edit</option>
+                        	<option value="">Actions</option>
                         	<option value="delete">Delete</option>
                         </select>
+                        &nbsp;<input type="submit" value="Submit" />
             		</td>
             	</tr>
             </tbody>
-            <tfoot>
-            	<tr>
-            		<td><input type="submit" value="Submit" /></td>
-            	</tr>
-            </tfoot>
         </table>
+        [% ELSE %]
+        <h5>No bookings found!</h5>
+        [% END # IF bookings %]
     </form>
     [% END # op == 'manage-reservations' %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

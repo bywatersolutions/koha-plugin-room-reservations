@@ -4,14 +4,14 @@ use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
 
-our $VERSION = 1.00;
+our $VERSION = 1.1;
 
 our $metadata = {
     name            => 'Room Reservations Plugin',
     author          => 'Lee Jamison',
     description     => 'This plugin provides a room reservation solution on both intranet and OPAC interfaces.',
     date_authored   => '2017-05-08',
-    date_updated    => '2017-08-27',
+    date_updated    => '2017-12-16',
     minimum_version => '3.22',
     maximum_version => undef,
     version         => $VERSION,
@@ -67,11 +67,12 @@ sub install() {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
         qq{CREATE INDEX $rooms_index ON $rooms_table(roomid);},
         qq{CREATE TABLE $bookings_table (
+              `bookingid` INT NOT NULL AUTO_INCREMENT,
               `borrowernumber` INT NOT NULL, -- foreign key; borrowers table
               `roomid` INT NOT NULL, -- foreign key; $rooms_table table
               `start` DATETIME NOT NULL, -- start date/time of booking
               `end` DATETIME NOT NULL, -- end date/time of booking
-              PRIMARY KEY (borrowernumber, roomid, start),
+              PRIMARY KEY (bookingid),
               CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
               CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
@@ -142,14 +143,56 @@ sub uninstall() {
 #     }
 # }
 
-# sub tool {
-#     my ( $self, $args ) = @_;
+sub tool {
+    my ( $self, $args ) = @_;
 
-#     my $cgi = $self->{'cgi'};
+    my $cgi = $self->{'cgi'};
+    my $template = $self->get_template({ file => 'tool.tt' });
+    my $op = $cgi->param('op') || q{};
+    my $tool_action = $cgi->param('tool_actions_selection');
 
-#     my $template = $self->get_template({ file => 'tool.tt' });
-#     my $op = $cgi->param('op') || q{};
-# }
+    if ( $op eq 'action-selected' &&  $tool_action eq 'action-manage-reservations') {
+
+        my $bookings = getAllBookings();
+
+        $template->param(
+            op => 'manage-reservations',
+            bookings => $bookings,
+        );
+    }
+    elsif ( $op eq 'manage-reservations' ) {
+        my $selected = $cgi->param('manage-bookings-action');
+
+        my $selectedId = $cgi->param('manage-bookings-id');
+
+        if ( $selected eq 'delete' ) {
+
+            my $deleted = deleteBookingById($selectedId);
+
+            my $bookings = getAllBookings();
+
+            if ($deleted == 0) {
+                $template->param(
+                    deleted  => 1,
+                    bookings => $bookings,
+                );
+            }
+            else {
+                $template->param(
+                    deleted  => 0,
+                    bookings => $bookings,
+                );
+            }
+        }
+
+        $template->param(
+            op       => $op,
+        );
+    }
+
+    print $cgi->header();
+    print $template->output();
+}
 
 sub configure {
     my ( $self, $args ) = @_;
@@ -432,6 +475,56 @@ sub configure {
 
     print $cgi->header();
     print $template->output();
+}
+
+sub getAllBookings {
+
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        SELECT bk.bookingid, r.roomnumber, b.firstname, b.surname, DATE_FORMAT(bk.start, \"%m/%d/%Y %h:%i %p\") AS start, DATE_FORMAT(bk.end, \"%m/%d/%Y %h:%i %p\") AS end
+        FROM borrowers b, $bookings_table bk, $rooms_table r
+        WHERE b.borrowernumber = bk.borrowernumber
+        AND bk.roomid = r.roomid
+        ORDER BY bk.roomid ASC, bk.start DESC;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allBookings;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allBookings, $row );
+    }
+
+    return \@allBookings;
+}
+
+sub deleteBookingById {
+
+    my ( $bookingId ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        DELETE FROM bookings WHERE bookingid = $bookingId;
+    ";
+
+    $sth = $dbh->prepare($query);
+
+    my $count = $sth->execute();
+
+    if ($count == 0) { # no row(s) affected
+        return 0;
+    }
+    else { # sucessfully deleted row(s)
+        return 1;
+    }
 }
 
 sub areAnyRoomsAvailableToDelete {
@@ -881,3 +974,5 @@ sub displayAllRooms {
     # returns hashref for performance boost
     return \%roomsAndFeatures;
 }
+
+1;
