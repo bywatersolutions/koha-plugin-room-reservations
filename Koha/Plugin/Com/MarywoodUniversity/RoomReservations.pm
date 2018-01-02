@@ -4,14 +4,14 @@ use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
 
-our $VERSION = 1.1;
+our $VERSION = "{VERSION}";
 
 our $metadata = {
     name            => 'Room Reservations Plugin',
     author          => 'Lee Jamison',
     description     => 'This plugin provides a room reservation solution on both intranet and OPAC interfaces.',
     date_authored   => '2017-05-08',
-    date_updated    => '2017-12-16',
+    date_updated    => '1900-01-01',
     minimum_version => '3.22',
     maximum_version => undef,
     version         => $VERSION,
