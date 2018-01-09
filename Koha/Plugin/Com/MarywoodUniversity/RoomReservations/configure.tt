@@ -371,7 +371,7 @@
                         <td><input type="radio" name="current-rooms-edit" required="required" value="[% room.roomid %]" /></td>
                         <td>[% room.roomnumber %]</td>
                     </tr>
-                    [% END # FOREACH room IN   %]
+                    [% END # FOREACH room IN current_rooms %]
                 </tbody>
                 <tfoot>
                     <tr>

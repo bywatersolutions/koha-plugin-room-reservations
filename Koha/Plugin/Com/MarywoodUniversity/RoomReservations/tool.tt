@@ -61,6 +61,7 @@
         			Select an action:
         			<select name="tool_actions_selection">
         				<option value=""></option>
+                        <option value="action-manage-blackouts">Manage blackouts</option>
         				<option value="action-manage-reservations">Manage reservations</option>
         			</select><br />
         			<span style="float:right;"><input type="submit" name="tool-actions-submit" value="Continue" /></span>
@@ -172,4 +173,527 @@
     </form>
     [% END # op == 'manage-reservations' %]
 
+    [% IF op == 'manage-blackouts' %]
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var blackoutType = $('#blackoutType');
+            var blackoutSelectionDiv = $('#b-selection');
+            var fullBlackoutDiv = $('#full-blackout');
+            var partialBlackoutDiv = $('#partial-blackout');
+            
+            partialBlackoutDiv.hide();
+            fullBlackoutDiv.hide();
+            
+            blackoutType.change(function(){
+                if (blackoutType.val() == "full") {
+                    blackoutSelectionDiv.hide();
+                    partialBlackoutDiv.hide();
+                    fullBlackoutDiv.show();
+                } else if (blackoutType.val() == "partial") {
+                    blackoutSelectionDiv.hide();
+                    partialBlackoutDiv.show();
+                    fullBlackoutDiv.hide();
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function validateManageBlackouts() {
+            var actionChoice = document.forms["manageBlackoutsForm"]["manage-blackouts-action"].value;
+
+            if (actionChoice == "") {
+                alert('Please select an action.');
+                return false;
+            }
+        }
+    </script>
+    <form name="manageBlackoutsForm" action="#" method="post" onsubmit="return validateManageBlackouts()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="manage-blackouts" />
+
+        [% IF blackouts %]
+        <h4>Manage Blackouts</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Room #</th>
+                    <th>Blackout start</th>
+                    <th>Blackout end</th>
+                </tr>
+            </thead>
+            <tbody>
+                [% FOREACH blackout IN blackouts %]
+                <tr style="text-align: center;">
+                    <td style="margin: 0;"><input type="radio" name="manage-blackouts-id" required="required" value="[% blackout.bookingid %]"></td>
+                    <td>[% blackout.roomnumber %]</td>
+                    <td>[% blackout.start %]</td>
+                    <td>[% blackout.end %]</td>
+                </tr>
+                [% END # FOREACH booking IN bookings %]
+                <tr>
+                    <td colspan="5">
+                        <select name="manage-blackouts-action">
+                            <option value="">Actions</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                        &nbsp;<input type="submit" name="manage-blackouts-submit" value="Submit" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+        [% ELSE %]
+        <br />
+        <h5>No upcoming blackouts scheduled!</h5>
+        [% END # IF blackouts %]
+
+    <br />
+    <br />
+
+    <div id="b-selection">
+        <fieldset class="fieldset-auto-width">
+            <legend>Add a blackout</legend>
+            <table>
+                <tr style="text-align: center;">
+                    <td>How long is the blackout?</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select id="blackoutType" style="display: block; margin: 0 auto;">
+                            <option value="null"></option>
+                            <option value="full">Full day(s)</option>
+                            <option value="partial">A few hours</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div> <!-- b-selection -->
+
+    <script type="text/javascript">
+        // disable all room checkboxes
+        // if 'All rooms' is selected
+        $(document).ready(function() {
+            $(".full-blackout").change(function() {
+                if (this.value == "0") {
+                    if (this.checked) {
+                        var rooms = document.getElementsByName("current-room-blackout");
+
+                        for (var i = 1; i < rooms.length; i++) {
+                            // disable all other checkboxes
+                            // when 'All rooms' selected
+                            rooms[i].checked = false;
+                            rooms[i].disabled = true;
+                        }
+                    } else {
+                        var rooms = document.getElementsByName("current-room-blackout");
+
+                        for (var i = 1; i < rooms.length; i++) {
+                            // disable all other checkboxes
+                            // when 'All rooms' selected
+                            rooms[i].checked = false;
+                            rooms[i].disabled = false;
+                        }
+                    }
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $(".partial-blackout").change(function() {
+                if (this.value == "0") {
+                    if (this.checked) {
+                        var rooms = document.getElementsByClassName("partial-blackout");
+
+                        for (var i = 1; i < rooms.length; i++) {
+                            // disable all other checkboxes
+                            // when 'All rooms' selected
+                            rooms[i].checked = false;
+                            rooms[i].disabled = true;
+                        }
+                    } else {
+                        var rooms = document.getElementsByClassName("partial-blackout");
+
+                        for (var i = 1; i < rooms.length; i++) {
+                            // disable all other checkboxes
+                            // when 'All rooms' selected
+                            rooms[i].checked = false;
+                            rooms[i].disabled = false;
+                        }
+                    }
+                }
+            });
+        });
+
+        function validateDate(dateStr) {
+           const regExp = /^(\d\d?)\/(\d\d?)\/(\d{4})$/;
+           let matches = dateStr.match(regExp);
+           let isValid = matches;
+           let maxDate = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+           
+           if (matches) {
+             const month = parseInt(matches[1]);
+             const date = parseInt(matches[2]);
+             const year = parseInt(matches[3]);
+             
+             isValid = month <= 12 && month > 0;
+             isValid &= date <= maxDate[month] && date > 0;
+             
+             const leapYear = (year % 400 == 0)
+                || (year % 4 == 0 && year % 100 != 0);
+             isValid &= month != 2 || leapYear || date <= 28; 
+           }
+           
+           return isValid
+        }
+
+        function validateFullBlackout() {
+            var startDate = document.forms["fullBlackoutForm"]["blackout-start-date"].value;
+            var endDate   = document.forms["fullBlackoutForm"]["blackout-end-date"].value;
+            var rooms     = document.getElementsByName("current-room-blackout");
+            var roomChecked = false;
+
+            if (!validateDate(startDate)) {
+                alert("Start date is required.");
+                return false;
+            }
+
+            if (!validateDate(endDate)) {
+                alert("End date is required.");
+                return false;
+            }
+
+            for (var i = 0; i < rooms.length; i++) {
+                if (rooms[i].checked) {
+                    roomChecked = true;
+                    break;
+                }
+            }
+
+            if (!roomChecked) {
+                alert("Please select one or more rooms.");
+                return false;
+            }
+        }
+    </script>
+    <div id="full-blackout">
+    <form action="#" name="fullBlackoutForm" method="post" onsubmit="return validateFullBlackout();">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="manage-blackouts" />
+        <fieldset class="fieldset-auto-width">
+            <legend>Add a blackout</legend>
+            <table>
+                <tr>
+                    <td>
+                        <input class="datefield" name="blackout-start-date" id="blackout-start-date" size="10" placeholder="Start" required="required" />
+                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="datefield" name="blackout-end-date" id="blackout-end-date" size="10" placeholder="End" required="required" />
+                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>All day<input type="checkbox" checked="true" disabled="true"/></td>
+                </tr>
+                [% IF current_rooms %]
+                <tr>
+                    <td>
+                        <br />
+                        <b>Select room(s) to blackout</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" name="current-room-blackout" class="full-blackout" value="0" /> All rooms
+                    </td>
+                </tr>
+                [% FOREACH room IN current_rooms %]
+                <tr>
+                    <td>
+                        <input type="checkbox" name="current-room-blackout" class="full-blackout" value="[% room.roomid %]" /> [% room.roomnumber %]
+                    </td>
+                </tr>
+                [% END # FOREACH room IN current_rooms %]
+                [% END # IF current_rooms %]
+                [% IF current_rooms %]
+                <tr>
+                    <td>
+                        <input type="submit" name="submit-full-blackout" value="Add" />
+                    </td>
+                </tr>
+                [% ELSE %]
+                <tr>
+                    <td>
+                        <input type="submit" name="submit-full-blackout" value="Add" disabled="true" />
+                    </td>
+                </tr>
+                [% END # IF current_rooms %]
+            </table>
+        </fieldset>
+    </form>
+    </div> <!-- full-blackout -->
+
+
+    <script type="text/javascript">
+        function validatePartialBlackout() {
+            var blackoutDate = document.forms["partialBlackoutForm"]["blackout-date"].value;
+            var blackoutStartTime = document.forms["partialBlackoutForm"]["blackout-start-time"].value;
+            var blackoutEndTime = document.forms["partialBlackoutForm"]["blackout-end-time"].value;
+            var rooms = document.getElementsByName("current-room-blackout");
+            var roomChecked = false;
+
+            if (!validateDate(blackoutDate)) {
+                alert("Date is required.");
+                return false;
+            }
+
+            // convert date format from mm/dd/yyyy to yyyy-mm-dd
+            blackoutDate = blackoutDate.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
+
+            // timestamp of MySQL type DATETIME
+            var startTimestamp = blackoutDate + " " + blackoutStartTime;
+            var endTimestamp   = blackoutDate + " " + blackoutEndTime;
+
+            // determines if invalid start/end values were entered
+            if (startTimestamp >= endTimestamp) {      
+                alert("Please select a valid start and end time!");     
+                return false;       
+            }
+
+            for (var i = 0; i < rooms.length; i++) {
+                if (rooms[i].checked) {
+                    roomChecked = true;
+                    break;
+                }
+            }
+
+            if (!roomChecked) {
+                alert("Please select one or more rooms.");
+                return false;
+            }
+        }
+    </script>
+    <div id="partial-blackout">
+    <form action="#" name="partialBlackoutForm" method="post" onsubmit="return validatePartialBlackout();">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="manage-blackouts" />
+        <fieldset class="fieldset-auto-width">
+            <legend>Add a blackout</legend>
+            <table>
+                <tr>
+                    <td>
+                        <input class ="datefield" name="blackout-date" id="blackout-date" size="10" placeholder="Date" />
+                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="blackout-start-time">
+                            <option value="">From</option>
+                            <option value="00:00:00">12:00 AM</option>
+                            <option value="00:30:00">12:30 AM</option>
+                            <option value="01:00:00">1:00 AM</option>
+                            <option value="01:30:00">1:30 AM</option>
+                            <option value="02:00:00">2:00 AM</option>
+                            <option value="02:30:00">2:30 AM</option>
+                            <option value="03:00:00">3:00 AM</option>
+                            <option value="03:30:00">3:30 AM</option>
+                            <option value="04:00:00">4:00 AM</option>
+                            <option value="04:30:00">4:30 AM</option>
+                            <option value="05:00:00">5:00 AM</option>
+                            <option value="05:30:00">5:30 AM</option>
+                            <option value="06:00:00">6:00 AM</option>
+                            <option value="06:30:00">6:30 AM</option>
+                            <option value="07:00:00">7:00 AM</option>
+                            <option value="07:30:00">7:30 AM</option>
+                            <option value="08:00:00">8:00 AM</option>
+                            <option value="08:30:00">8:30 AM</option>
+                            <option value="09:00:00">9:00 AM</option>
+                            <option value="09:30:00">9:30 AM</option>
+                            <option value="10:00:00">10:00 AM</option>
+                            <option value="10:30:00">10:30 AM</option>
+                            <option value="11:00:00">11:00 AM</option>
+                            <option value="11:30:00">11:30 AM</option>
+                            <option value="12:00:00">12:00 PM</option>
+                            <option value="12:30:00">12:30 PM</option>
+                            <option value="13:00:00">1:00 PM</option>
+                            <option value="13:30:00">1:30 PM</option>
+                            <option value="14:00:00">2:00 PM</option>
+                            <option value="14:30:00">2:30 PM</option>
+                            <option value="15:00:00">3:00 PM</option>
+                            <option value="15:30:00">3:30 PM</option>
+                            <option value="16:00:00">4:00 PM</option>
+                            <option value="16:30:00">4:30 PM</option>
+                            <option value="17:00:00">5:00 PM</option>
+                            <option value="17:30:00">5:30 PM</option>
+                            <option value="18:00:00">6:00 PM</option>
+                            <option value="18:30:00">6:30 PM</option>
+                            <option value="19:00:00">7:00 PM</option>
+                            <option value="19:30:00">7:30 PM</option>
+                            <option value="20:00:00">8:00 PM</option>
+                            <option value="20:30:00">8:30 PM</option>
+                            <option value="21:00:00">9:00 PM</option>
+                            <option value="21:30:00">9:30 PM</option>
+                            <option value="22:00:00">10:00 PM</option>
+                            <option value="22:30:00">10:30 PM</option>
+                            <option value="23:00:00">11:00 PM</option>
+                            <option value="23:30:00">11:30 PM</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="blackout-end-time">
+                            <option value="">To</option>
+                            <option value="00:00:00">12:00 AM</option>
+                            <option value="00:30:00">12:30 AM</option>
+                            <option value="01:00:00">1:00 AM</option>
+                            <option value="01:30:00">1:30 AM</option>
+                            <option value="02:00:00">2:00 AM</option>
+                            <option value="02:30:00">2:30 AM</option>
+                            <option value="03:00:00">3:00 AM</option>
+                            <option value="03:30:00">3:30 AM</option>
+                            <option value="04:00:00">4:00 AM</option>
+                            <option value="04:30:00">4:30 AM</option>
+                            <option value="05:00:00">5:00 AM</option>
+                            <option value="05:30:00">5:30 AM</option>
+                            <option value="06:00:00">6:00 AM</option>
+                            <option value="06:30:00">6:30 AM</option>
+                            <option value="07:00:00">7:00 AM</option>
+                            <option value="07:30:00">7:30 AM</option>
+                            <option value="08:00:00">8:00 AM</option>
+                            <option value="08:30:00">8:30 AM</option>
+                            <option value="09:00:00">9:00 AM</option>
+                            <option value="09:30:00">9:30 AM</option>
+                            <option value="10:00:00">10:00 AM</option>
+                            <option value="10:30:00">10:30 AM</option>
+                            <option value="11:00:00">11:00 AM</option>
+                            <option value="11:30:00">11:30 AM</option>
+                            <option value="12:00:00">12:00 PM</option>
+                            <option value="12:30:00">12:30 PM</option>
+                            <option value="13:00:00">1:00 PM</option>
+                            <option value="13:30:00">1:30 PM</option>
+                            <option value="14:00:00">2:00 PM</option>
+                            <option value="14:30:00">2:30 PM</option>
+                            <option value="15:00:00">3:00 PM</option>
+                            <option value="15:30:00">3:30 PM</option>
+                            <option value="16:00:00">4:00 PM</option>
+                            <option value="16:30:00">4:30 PM</option>
+                            <option value="17:00:00">5:00 PM</option>
+                            <option value="17:30:00">5:30 PM</option>
+                            <option value="18:00:00">6:00 PM</option>
+                            <option value="18:30:00">6:30 PM</option>
+                            <option value="19:00:00">7:00 PM</option>
+                            <option value="19:30:00">7:30 PM</option>
+                            <option value="20:00:00">8:00 PM</option>
+                            <option value="20:30:00">8:30 PM</option>
+                            <option value="21:00:00">9:00 PM</option>
+                            <option value="21:30:00">9:30 PM</option>
+                            <option value="22:00:00">10:00 PM</option>
+                            <option value="22:30:00">10:30 PM</option>
+                            <option value="23:00:00">11:00 PM</option>
+                            <option value="23:30:00">11:30 PM</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>All day<input type="checkbox" disabled="true"/></td>
+                </tr>
+                [% IF current_rooms %]
+                <tr>
+                    <td>
+                        <br />
+                        <b>Select room(s) to blackout</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" name="current-room-blackout" class="partial-blackout" value="0" /> All rooms
+                    </td>
+                </tr>
+                [% FOREACH room IN current_rooms %]
+                <tr>
+                    <td><input type="checkbox" name="current-room-blackout" class="partial-blackout" value="[% room.roomid %]" /> [% room.roomnumber %]</td>
+                </tr>
+                [% END # FOREACH room IN current_rooms %]
+                [% END # IF current_rooms %]
+                [% IF current_rooms %]
+                <tr>
+                    <td>
+                        <input type="submit" name="submit-partial-blackout" value="Add" />
+                    </td>
+                </tr>
+                [% ELSE %]
+                <tr>
+                    <td>
+                        <input type="submit" name="submit-partial-blackout" value="Add" disabled="true" />
+                    </td>
+                </tr>
+                [% END # IF current_rooms %]
+            </table>
+        </fieldset>
+    </form>
+    </div> <!-- partial-blackout -->
+    [% END # op == 'manage-blackouts' %]
+
+[% INCLUDE calendar.inc %]
+<!-- Full blackout -->
+<script type="text/javascript">
+// <![CDATA[
+
+    $(document).ready(function() {
+        $(".datefield").prop("readOnly", true);
+    });
+
+    // http://jqueryui.com/demos/datepicker/#date-range
+    var requestdates = $( "#blackout-start-date, #blackout-end-date" ).datepicker({
+        minDate: 0,
+        changeMonth: true,
+        numberOfMonths: 1,
+        onSelect: function( selectedDate ) {
+            var option = this.id == "blackout-start-date" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" );
+                date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings );
+            requestdates.not( this ).datepicker("option", option, date);
+        }
+    });
+// ]]>
+</script>
+
+<!-- Partial blackout -->
+<script type="text/javascript">
+// <![CDATA[
+
+    $(document).ready(function() {
+        $(".datefield").prop("readOnly", true);
+    });
+
+    // http://jqueryui.com/demos/datepicker/#date-range
+    var requestdates = $( "#blackout-date" ).datepicker({
+        minDate: 0,
+        changeMonth: true,
+        numberOfMonths: 1,
+        onSelect: function( selectedDate ) {
+            var option = this.id == "blackout-date" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" );
+                date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings );
+            requestdates.not( this ).datepicker("option", option, date);
+        }
+    });
+// ]]>
+</script>
 [% INCLUDE 'intranet-bottom.inc' %]

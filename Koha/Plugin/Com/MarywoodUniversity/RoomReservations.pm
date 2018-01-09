@@ -72,6 +72,7 @@ sub install() {
               `roomid` INT NOT NULL, -- foreign key; $rooms_table table
               `start` DATETIME NOT NULL, -- start date/time of booking
               `end` DATETIME NOT NULL, -- end date/time of booking
+              `blackedout` TINYINT(1) NOT NULL DEFAULT 0,
               PRIMARY KEY (bookingid),
               CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
               CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
@@ -151,6 +152,11 @@ sub tool {
     my $op = $cgi->param('op') || q{};
     my $tool_action = $cgi->param('tool_actions_selection');
 
+    # used for manage blackouts
+    my $manage_blackouts_submit = $cgi->param('manage-blackouts-submit') || q{}; # delete existing blackout
+    my $submit_full_blackout = $cgi->param('submit-full-blackout') || q{}; # add full day blackout(s)
+    my $submit_partial_blackout = $cgi->param('submit-partial-blackout') || q{}; # add partial-day blackout
+
     if ( $op eq 'action-selected' &&  $tool_action eq 'action-manage-reservations') {
 
         my $bookings = getAllBookings();
@@ -159,6 +165,18 @@ sub tool {
             op => 'manage-reservations',
             bookings => $bookings,
         );
+    }
+    elsif ( $op eq 'action-selected' && $tool_action eq 'action-manage-blackouts' ) {
+
+    	my $blackouts = getAllBlackedoutBookings();
+
+    	my $rooms = getCurrentRoomNumbers();
+
+    	$template->param(
+    		op => 'manage-blackouts',
+    		blackouts => $blackouts,
+    		current_rooms => $rooms,
+    	);
     }
     elsif ( $op eq 'manage-reservations' ) {
         my $selected = $cgi->param('manage-bookings-action');
@@ -186,7 +204,108 @@ sub tool {
         }
 
         $template->param(
-            op       => $op,
+            op => $op,
+        );
+    }
+    elsif ( $op eq 'manage-blackouts' &&  $manage_blackouts_submit ne '' ) {
+
+    	# TODO - delete the selected blackout
+
+    	my $bookingid = $cgi->param('manage-blackouts-id');
+
+    	deleteBookingById($bookingid);
+
+    	my $blackouts = getAllBlackedoutBookings();
+    	my $rooms = getCurrentRoomNumbers();
+
+    	$template->param(
+            op => $op,
+            blackouts => $blackouts,
+    		current_rooms => $rooms,
+        );
+    }
+    elsif ( $op eq 'manage-blackouts' && $submit_full_blackout ne '' ) {
+
+    	my $blackout_start_date = $cgi->param('blackout-start-date');
+    	my $blackout_end_date = $cgi->param('blackout-end-date');
+    	my @rooms = $cgi->multi_param('current-room-blackout');
+
+    	my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_start_date;
+    	my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_end_date;
+
+    	$start_date = $start_date . ' 00:00:00';
+    	$end_date = $end_date . ' 23:59:59';
+
+    	my $current_user = C4::Context->userenv->{'number'};
+
+    	if ( $rooms[0] eq '0' ) {
+
+    		my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
+
+    		my @room_IDs = @$room_ids;
+
+    		for my $item ( @room_IDs ) {
+    			for my $key ( keys %$item ) {
+    				addBlackoutBooking($current_user, $item->{ $key }, $start_date, $end_date);
+    			}
+    		}
+    	}
+    	else {
+
+    		for (my $i = 0; $i < scalar(@rooms); $i++) {
+    			addBlackoutBooking($current_user, $rooms[$i], $start_date, $end_date);
+    		} 
+    	}
+
+    	my $blackouts = getAllBlackedoutBookings();
+    	my $current_rooms = getCurrentRoomNumbers();
+
+    	$template->param(
+            op => $op,
+            blackouts => $blackouts,
+    		current_rooms => $current_rooms,
+        );
+    }
+    elsif ( $op eq 'manage-blackouts' && $submit_partial_blackout ne '' ) {
+
+    	my $blackout_date = $cgi->param('blackout-date');
+    	my $start_time = $cgi->param('blackout-start-time');
+    	my $end_time = $cgi->param('blackout-end-time');
+    	my @rooms = $cgi->multi_param('current-room-blackout');
+
+    	$blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
+
+    	my $start = $blackout_date . " $start_time";
+    	my $end = $blackout_date . " $end_time";
+
+    	my $current_user = C4::Context->userenv->{'number'};
+
+    	if ( $rooms[0] eq '0' ) {
+
+    		my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
+
+    		my @room_IDs = @$room_ids;
+
+    		for my $item ( @room_IDs ) {
+    			for my $key ( keys %$item ) {
+    				addBlackoutBooking($current_user, $item->{ $key }, $start, $end);
+    			}
+    		}
+    	}
+    	else {
+
+    		for (my $i = 0; $i < scalar(@rooms); $i++) {
+    			addBlackoutBooking($current_user, $rooms[$i], $start, $end);
+    		} 
+    	}
+
+    	my $blackouts = getAllBlackedoutBookings();
+    	my $current_rooms = getCurrentRoomNumbers();
+
+    	$template->param(
+            op => $op,
+            blackouts => $blackouts,
+    		current_rooms => $current_rooms,
         );
     }
 
@@ -503,6 +622,44 @@ sub getAllBookings {
     return \@allBookings;
 }
 
+sub getAllBlackedoutBookings {
+
+	my $dbh = C4::Context->dbh;
+
+	my $sth = '';
+
+	my $query = "
+		SELECT bk.bookingid, r.roomnumber, DATE_FORMAT(bk.start, \"%m/%d/%Y %h:%i %p\") AS start, DATE_FORMAT(bk.end, \"%m/%d/%Y %h:%i %p\") AS end
+		FROM $bookings_table bk, $rooms_table r
+        WHERE bk.roomid = r.roomid
+        AND bk.blackedout = 1
+        AND bk.start BETWEEN CAST(CONCAT(CURDATE(), \" 00:00:00\") AS DATETIME) AND CAST(CONCAT(DATE_ADD(CURDATE(), INTERVAL 30 DAY), \" 23:59:59\") AS DATETIME)
+        ORDER BY bk.start ASC;
+	";
+
+	$sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allBlackedoutBookings;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allBlackedoutBookings, $row );
+    }
+
+    return \@allBlackedoutBookings;
+}
+
+sub addBlackoutBooking {
+
+    my ( $borrowernumber, $roomid, $start, $end ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    $dbh->do("
+        INSERT INTO $bookings_table (borrowernumber, roomid, start, end, blackedout) 
+        VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ', 1);');
+}
+
 sub deleteBookingById {
 
     my ( $bookingId ) = @_;
@@ -702,6 +859,55 @@ sub deleteEquipment {
     $dbh->do("DELETE FROM $equipment_table WHERE equipmentid = $equipmentId");
 }
 
+sub countRooms {
+
+	## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT COUNT(roomid) AS count
+        FROM $rooms_table;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my $row = $sth->fetchrow_hashref();
+
+    my $count = $row->{'count'};
+
+    return $count;
+}
+
+sub getAllRoomIds {
+
+	## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT roomid
+        FROM $rooms_table
+        ORDER BY roomid;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allRoomIds;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allRoomIds, $row );
+    }
+
+    return \@allRoomIds;
+}
+
 sub getCurrentRoomNumbers {
 
     ## load access to database
@@ -711,7 +917,7 @@ sub getCurrentRoomNumbers {
     my $sth = '';
 
     my $query = "
-        SELECT roomnumber
+        SELECT roomid, roomnumber
         FROM $rooms_table
         ORDER BY roomnumber;
     ";
