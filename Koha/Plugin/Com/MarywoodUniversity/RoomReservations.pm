@@ -3,6 +3,18 @@ package Koha::Plugin::Com::MarywoodUniversity::RoomReservations;
 use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
+use Koha::Patrons;
+use Koha::DateUtils;
+use Carp;
+use C4::Output;
+use C4::Auth;
+use Koha::Email;
+use Mail::Sendmail;
+use MIME::QuotedPrint;
+use MIME::Base64;
+use Cwd qw( abs_path );
+use File::Basename qw( dirname );
+use POSIX 'strftime';
 
 our $VERSION = "{VERSION}";
 
@@ -28,6 +40,8 @@ my $equipment_table = 'booking_equipment';
 my $equipment_index = 'bookingequipment_idx';
 my $roomequipment_table = 'booking_room_equipment';
 my $roomequipment_index = 'bookingroomequipment_idx';
+
+my $valid; # used to check if booking still valid prior to insertion of new booking
 
 sub new {
     my ( $class, $args ) = @_;
@@ -100,6 +114,34 @@ sub install() {
         $sth->execute or die C4::Context->dbh->errstr;
     }
 
+    # Add required IntranetUserJS entry to place
+    # reservations for a patron from circulation.pl
+    my $IntranetUserJS = C4::Context->preference('IntranetUserJS');
+
+    $IntranetUserJS =~ s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
+
+    $IntranetUserJS .= q(
+/* JS for Koha RoomReservation Plugin 
+This JS was added automatically by installing the RoomReservation plugin
+Please do not modify */
+
+$(document).ready(function() {
+var data = $("div.patroninfo h5").html();
+
+    if (data) {
+        var regExp = /\(([^)]+)\)/;
+        var matches = regExp.exec(data);
+        var cardnumber = matches[1];
+
+        $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;Reserve room as patron</a>').insertAfter($('#addnewmessageLabel'));
+    }
+}\);
+
+    /* End of JS for Koha RoomReservation Plugin */
+    );
+
+    C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
+
     return 1;
 }
 
@@ -129,20 +171,244 @@ sub uninstall() {
     return 1;
 }
 
-## The existance of a 'report' subroutine means the plugin is capable
-## of running a report.
-## TODO: Add a report option
-# sub report {
-#     my ( $self, $args ) = @_;
-#     my $cgi = $self->{'cgi'};
+sub bookas {
 
-#     unless ( $cgi->param('output') ) {
-#         $self->report_step1();
-#     }
-#     else {
-#         $self->report_step2();
-#     }
-# }
+    my ( $self, $args ) = @_;
+
+    my $cgi = $self->{'cgi'};
+    my $template = $self->get_template({ file => 'bookas.tt' });
+    my $op = $cgi->param('op') || q{};
+
+    my $borrowernumber = $cgi->param('borrowernumber');
+
+    my $member = Koha::Patrons->find( $borrowernumber );
+
+    my $member_firstname = $member->firstname;
+    my $member_surname = $member->surname;
+    my $member_email = $member->email;
+
+    my $submitButton = $cgi->param('confirmationSubmit') || q{};
+
+    if ( $submitButton eq 'Start over' ) {
+
+        $op = '';
+    }
+
+    $template->param(
+        op             => $op,
+        borrowernumber => $borrowernumber,
+        firstname      => $member_firstname,
+        surname        => $member_surname,
+        email          => $member_email,
+    );
+
+    if ( $op eq '' ) {
+        my $equipment = loadAllEquipment();
+
+        my $capacities = loadAllMaxCapacities();
+
+        $template->param(
+            available_room_equipment => $equipment,
+            all_room_capacities => $capacities,
+        );
+    }
+    elsif ( $op eq 'availability-search-results' ) {
+        my $start_date = $cgi->param('availability-search-start-date');
+        my $start_time = $cgi->param('availability-search-start-time');
+
+        my $end_date = $cgi->param('availability-search-end-date');
+        my $end_time = $cgi->param('availability-search-end-time');
+
+        my $room_capacity = $cgi->param('availability-search-room-capacity');
+
+        my @equipment = $cgi->param('availability-search-selected-equipment') || ();
+
+        my $event_start = sprintf("%s %s", $start_date, $start_time);
+        my $event_end   = sprintf("%s %s", $end_date, $end_time);
+
+        # converts '/' to '-'
+        (my $availability_format_start_date = $start_date) =~ s/\//\-/g;
+        (my $availability_format_end_date = $end_date) =~ s/\//\-/g;
+
+        # re-arranges from MM-DD-YYYY to YYYY-MM-DD
+        ($availability_format_start_date = $availability_format_start_date) =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$1-$2/;
+        ($availability_format_end_date = $availability_format_end_date) =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$1-$2/;
+
+        # used exclusively for getAvailableRooms -- BUG excluding T from the DATETIME start/end field returns wrong results?
+        my $availability_format_start = sprintf("%sT%s", $availability_format_start_date, $start_time);
+        my $availability_format_end   = sprintf("%sT%s", $availability_format_end_date, $end_time);
+
+        # generates a DateTime object from a string
+        $event_start = dt_from_string($event_start);
+        $event_end = dt_from_string($event_end);
+
+        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'us', timeformat => '12hr' });
+        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'us', timeformat => '12hr' });
+
+        my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
+
+        # boolean -- returns 1 (one) if true or 0 (zero) if false
+        my $roomsAreAvailable = areAnyRoomsAvailable($availableRooms);
+
+        $template->param(
+            available_rooms => $availableRooms,
+            are_rooms_available => $roomsAreAvailable,
+            displayed_start => $displayed_event_start,
+            displayed_end => $displayed_event_end,
+            event_start_time => $event_start,
+            event_end_time => $event_end,
+        );
+    }
+    elsif ( $op eq 'room-selection-confirmation' ) {
+        my $selected_id = $cgi->param('selected-room-id');
+        my $displayed_start = $cgi->param('displayed-start');
+        my $displayed_end = $cgi->param('displayed-end');
+        my $event_start = $cgi->param('event-start-time');
+        my $event_end = $cgi->param('event-end-time');
+
+        my $displayed_event_time = "$displayed_start - $displayed_end";
+
+        my $user = "$member_firstname $member_surname";
+
+        my $selectedRoomNumber = getRoomNumberById($selected_id);
+
+        $template->param(
+            op                  => $op,
+            current_user        => $user,
+            current_user_email  => $member_email,
+            selected_room_id    => $selected_id,
+            selected_room_no    => $selectedRoomNumber,
+            displayed_time      => $displayed_event_time,
+            selected_start_time => $event_start,
+            selected_end_time   => $event_end,
+            displayed_start     => $displayed_start,
+            displayed_end       => $displayed_end,
+        );
+    }
+    elsif ( $op eq 'reservation-confirmed' ) {
+        my $roomid = $cgi->param('confirmed-room-id');
+        my $start   = $cgi->param('confirmed-start');
+        my $end     = $cgi->param('confirmed-end');
+        my $sendCopy = $cgi->param('send-confirmation-copy');
+        #my $submitButton = $cgi->param('confirmationSubmit');
+        my $user = $cgi->param('confirmed-user');
+        my $roomnumber = $cgi->param('confirmed-roomnumber');
+        my $displayed_start = $cgi->param('confirmed-displayed-start');
+        my $displayed_end = $cgi->param('confirmed-displayed-end');
+        my $patronEmail = $cgi->param('confirmed-email');
+
+        #if ( $submitButton eq 'Start over' ) {
+
+        #    $op = '';
+        #}
+        #else {
+
+            $valid = preBookingAvailabilityCheck($roomid, $start, $end);
+
+            if ($valid) {
+                addBooking($borrowernumber, $roomid, $start, $end);
+            }
+            else {
+                $template->param(
+                    invalid_booking => 1,
+                );
+            }
+        #}
+
+    if ( $sendCopy eq '1' && $valid ) {
+
+        my $email = Koha::Email->new();
+        my $user_email = C4::Context->preference('KohaAdminEmailAddress');
+
+        # KohaAdmin address is the default - no need to set
+        my %mail = $email->create_message_headers({
+            to => $patronEmail,
+        });
+        $mail{'X-Abuse-Report'} = C4::Context->preference('KohaAdminEmailAddress');
+
+        # Since we are already logged in, no need to check credentials again
+        # when loading a second template.
+        my $template2 = $self->get_template({ file => 'calendar-sendconfirmation.tt' });
+
+        my $timestamp = getCurrentTimestamp();
+
+        $template2->param(
+            user => $user,
+            room => $roomnumber,
+            from => $displayed_start,
+            to   => $displayed_end,
+            confirmed_timestamp => $timestamp,
+        );
+
+        # Getting template result
+        my $template_res = $template2->output();
+        my $body;
+
+        # Analysing information and getting mail properties
+
+        if ($template_res =~ /<SUBJECT>(.*)<END_SUBJECT>/s) {
+            $mail{subject} = $1;
+            $mail{subject} =~ s|\n?(.*)\n?|$1|;
+            $mail{subject} = Encode::encode("UTF-8", $mail{subject});
+        }
+        else { $mail{'subject'} = "no subject"; }
+
+        my $email_header = "";
+
+        if ( $template_res =~ /<HEADER>(.*)<END_HEADER>/s ) {
+            $email_header = $1;
+            $email_header =~ s|\n?(.*)\n?|$1|;
+            $email_header = encode_qp(Encode::encode("UTF-8", $email_header));
+        }
+
+        my $email_file = "bookingconfirmation.txt";
+        if ( $template_res =~ /<FILENAME>(.*)<END_FILENAME>/s ) {
+            $email_file = $1;
+            $email_file =~ s|\n?(.*)\n?|$1|;
+        }
+
+        if ( $template_res =~ /<MESSAGE>(.*)<END_MESSAGE>/s ) {
+            $body = $1;
+            $body =~ s|\n?(.*)\n?|$1|;
+            $body = encode_qp(Encode::encode("UTF-8", $body));
+        }
+
+        $mail{body} = $body;
+
+        my $boundary = "====" . time() . "====";
+
+        $mail{'content-type'} = "multipart/mixed; boundary=\"$boundary\"";
+        $boundary = '--' . $boundary;
+        $mail{body} = <<END_OF_BODY;
+$boundary
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+$email_header
+$body
+$boundary--
+END_OF_BODY
+
+        # Sending mail (if not empty basket)
+        if (sendmail %mail) {
+            # do something if it works....
+            $template->param(
+                SENT      => "1",
+                patron_email => $patronEmail,
+            );
+        }
+        else {
+            # do something if it doesnt work....
+            carp "Error sending mail: an error has occurred";
+            carp "Error sending mail: $Mail::Sendmail::error" if $Mail::Sendmail::error;
+            $template->param( error => 1 );
+        }
+    }
+    }
+
+    print $cgi->header();
+    print $template->output();
+}
 
 sub tool {
     my ( $self, $args ) = @_;
@@ -168,15 +434,15 @@ sub tool {
     }
     elsif ( $op eq 'action-selected' && $tool_action eq 'action-manage-blackouts' ) {
 
-    	my $blackouts = getAllBlackedoutBookings();
+        my $blackouts = getAllBlackedoutBookings();
 
-    	my $rooms = getCurrentRoomNumbers();
+        my $rooms = getCurrentRoomNumbers();
 
-    	$template->param(
-    		op => 'manage-blackouts',
-    		blackouts => $blackouts,
-    		current_rooms => $rooms,
-    	);
+        $template->param(
+            op => 'manage-blackouts',
+            blackouts => $blackouts,
+            current_rooms => $rooms,
+        );
     }
     elsif ( $op eq 'manage-reservations' ) {
         my $selected = $cgi->param('manage-bookings-action');
@@ -209,103 +475,103 @@ sub tool {
     }
     elsif ( $op eq 'manage-blackouts' &&  $manage_blackouts_submit ne '' ) {
 
-    	# TODO - delete the selected blackout
+        # TODO - delete the selected blackout
 
-    	my $bookingid = $cgi->param('manage-blackouts-id');
+        my $bookingid = $cgi->param('manage-blackouts-id');
 
-    	deleteBookingById($bookingid);
+        deleteBookingById($bookingid);
 
-    	my $blackouts = getAllBlackedoutBookings();
-    	my $rooms = getCurrentRoomNumbers();
+        my $blackouts = getAllBlackedoutBookings();
+        my $rooms = getCurrentRoomNumbers();
 
-    	$template->param(
+        $template->param(
             op => $op,
             blackouts => $blackouts,
-    		current_rooms => $rooms,
+            current_rooms => $rooms,
         );
     }
     elsif ( $op eq 'manage-blackouts' && $submit_full_blackout ne '' ) {
 
-    	my $blackout_start_date = $cgi->param('blackout-start-date');
-    	my $blackout_end_date = $cgi->param('blackout-end-date');
-    	my @rooms = $cgi->multi_param('current-room-blackout');
+        my $blackout_start_date = $cgi->param('blackout-start-date');
+        my $blackout_end_date = $cgi->param('blackout-end-date');
+        my @rooms = $cgi->multi_param('current-room-blackout');
 
-    	my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_start_date;
-    	my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_end_date;
+        my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_start_date;
+        my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_end_date;
 
-    	$start_date = $start_date . ' 00:00:00';
-    	$end_date = $end_date . ' 23:59:59';
+        $start_date = $start_date . ' 00:00:00';
+        $end_date = $end_date . ' 23:59:59';
 
-    	my $current_user = C4::Context->userenv->{'number'};
+        my $current_user = C4::Context->userenv->{'number'};
 
-    	if ( $rooms[0] eq '0' ) {
+        if ( $rooms[0] eq '0' ) {
 
-    		my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
+            my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
 
-    		my @room_IDs = @$room_ids;
+            my @room_IDs = @$room_ids;
 
-    		for my $item ( @room_IDs ) {
-    			for my $key ( keys %$item ) {
-    				addBlackoutBooking($current_user, $item->{ $key }, $start_date, $end_date);
-    			}
-    		}
-    	}
-    	else {
+            for my $item ( @room_IDs ) {
+                for my $key ( keys %$item ) {
+                    addBlackoutBooking($current_user, $item->{ $key }, $start_date, $end_date);
+                }
+            }
+        }
+        else {
 
-    		for (my $i = 0; $i < scalar(@rooms); $i++) {
-    			addBlackoutBooking($current_user, $rooms[$i], $start_date, $end_date);
-    		} 
-    	}
+            for (my $i = 0; $i < scalar(@rooms); $i++) {
+                addBlackoutBooking($current_user, $rooms[$i], $start_date, $end_date);
+            } 
+        }
 
-    	my $blackouts = getAllBlackedoutBookings();
-    	my $current_rooms = getCurrentRoomNumbers();
+        my $blackouts = getAllBlackedoutBookings();
+        my $current_rooms = getCurrentRoomNumbers();
 
-    	$template->param(
+        $template->param(
             op => $op,
             blackouts => $blackouts,
-    		current_rooms => $current_rooms,
+            current_rooms => $current_rooms,
         );
     }
     elsif ( $op eq 'manage-blackouts' && $submit_partial_blackout ne '' ) {
 
-    	my $blackout_date = $cgi->param('blackout-date');
-    	my $start_time = $cgi->param('blackout-start-time');
-    	my $end_time = $cgi->param('blackout-end-time');
-    	my @rooms = $cgi->multi_param('current-room-blackout');
+        my $blackout_date = $cgi->param('blackout-date');
+        my $start_time = $cgi->param('blackout-start-time');
+        my $end_time = $cgi->param('blackout-end-time');
+        my @rooms = $cgi->multi_param('current-room-blackout');
 
-    	$blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
+        $blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
 
-    	my $start = $blackout_date . " $start_time";
-    	my $end = $blackout_date . " $end_time";
+        my $start = $blackout_date . " $start_time";
+        my $end = $blackout_date . " $end_time";
 
-    	my $current_user = C4::Context->userenv->{'number'};
+        my $current_user = C4::Context->userenv->{'number'};
 
-    	if ( $rooms[0] eq '0' ) {
+        if ( $rooms[0] eq '0' ) {
 
-    		my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
+            my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
 
-    		my @room_IDs = @$room_ids;
+            my @room_IDs = @$room_ids;
 
-    		for my $item ( @room_IDs ) {
-    			for my $key ( keys %$item ) {
-    				addBlackoutBooking($current_user, $item->{ $key }, $start, $end);
-    			}
-    		}
-    	}
-    	else {
+            for my $item ( @room_IDs ) {
+                for my $key ( keys %$item ) {
+                    addBlackoutBooking($current_user, $item->{ $key }, $start, $end);
+                }
+            }
+        }
+        else {
 
-    		for (my $i = 0; $i < scalar(@rooms); $i++) {
-    			addBlackoutBooking($current_user, $rooms[$i], $start, $end);
-    		} 
-    	}
+            for (my $i = 0; $i < scalar(@rooms); $i++) {
+                addBlackoutBooking($current_user, $rooms[$i], $start, $end);
+            } 
+        }
 
-    	my $blackouts = getAllBlackedoutBookings();
-    	my $current_rooms = getCurrentRoomNumbers();
+        my $blackouts = getAllBlackedoutBookings();
+        my $current_rooms = getCurrentRoomNumbers();
 
-    	$template->param(
+        $template->param(
             op => $op,
             blackouts => $blackouts,
-    		current_rooms => $current_rooms,
+            current_rooms => $current_rooms,
         );
     }
 
@@ -596,6 +862,13 @@ sub configure {
     print $template->output();
 }
 
+sub getCurrentTimestamp {
+
+    my $timestamp = strftime('%m/%d/%Y %I:%M:%S %p', localtime);
+
+    return $timestamp;
+}
+
 sub getAllBookings {
 
     my $dbh = C4::Context->dbh;
@@ -624,20 +897,20 @@ sub getAllBookings {
 
 sub getAllBlackedoutBookings {
 
-	my $dbh = C4::Context->dbh;
+    my $dbh = C4::Context->dbh;
 
-	my $sth = '';
+    my $sth = '';
 
-	my $query = "
-		SELECT bk.bookingid, r.roomnumber, DATE_FORMAT(bk.start, \"%m/%d/%Y %h:%i %p\") AS start, DATE_FORMAT(bk.end, \"%m/%d/%Y %h:%i %p\") AS end
-		FROM $bookings_table bk, $rooms_table r
+    my $query = "
+        SELECT bk.bookingid, r.roomnumber, DATE_FORMAT(bk.start, \"%m/%d/%Y %h:%i %p\") AS start, DATE_FORMAT(bk.end, \"%m/%d/%Y %h:%i %p\") AS end
+        FROM $bookings_table bk, $rooms_table r
         WHERE bk.roomid = r.roomid
         AND bk.blackedout = 1
         AND bk.start BETWEEN CAST(CONCAT(CURDATE(), \" 00:00:00\") AS DATETIME) AND CAST(CONCAT(DATE_ADD(CURDATE(), INTERVAL 30 DAY), \" 23:59:59\") AS DATETIME)
         ORDER BY bk.start ASC;
-	";
+    ";
 
-	$sth = $dbh->prepare($query);
+    $sth = $dbh->prepare($query);
     $sth->execute();
 
     my @allBlackedoutBookings;
@@ -861,7 +1134,7 @@ sub deleteEquipment {
 
 sub countRooms {
 
-	## load access to database
+    ## load access to database
     my $dbh = C4::Context->dbh;
 
     ## database statement handler
@@ -884,7 +1157,7 @@ sub countRooms {
 
 sub getAllRoomIds {
 
-	## load access to database
+    ## load access to database
     my $dbh = C4::Context->dbh;
 
     ## database statement handler
@@ -1179,6 +1452,171 @@ sub displayAllRooms {
 
     # returns hashref for performance boost
     return \%roomsAndFeatures;
+}
+
+sub loadAllMaxCapacities {
+
+    ## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT DISTINCT maxcapacity
+        FROM $rooms_table;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allMaxCapacities;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allMaxCapacities, $row );
+    }
+
+    return \@allMaxCapacities;
+}
+
+sub getAvailableRooms {
+
+    my ( $start, $end, $capacity, $equipment ) = @_;
+
+    ## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT *
+        FROM $rooms_table
+        WHERE maxcapacity = $capacity
+        AND roomid NOT IN
+            (SELECT roomid
+            FROM $bookings_table
+            WHERE
+            \'$end\' > start AND \'$start\' < end)";
+
+        # if dereferenced array ref has zero elements (length evaluated in scalar context)
+        if ( @$equipment > 0 ) {
+
+            # counts number of elements
+            my $totalElements = scalar @{ $equipment };
+
+            $query .= " AND roomid IN (SELECT roomid
+                                        FROM $roomequipment_table
+                                        WHERE";
+
+            foreach my $piece (@$equipment) {
+
+                if ( --$totalElements == 0 ) {
+
+                    $query .= " equipmentid = $piece)";
+                }
+                else {
+                    $query .= " equipmentid = $piece AND";
+                }
+
+                $totalElements--;
+            }
+        }
+
+        $query .= ' GROUP BY roomnumber;';
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allAvailableRooms;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allAvailableRooms, $row );
+    }
+
+    return \@allAvailableRooms;
+}
+
+sub areAnyRoomsAvailable {
+
+    my ( $rooms ) = @_;
+
+    if ( @$rooms > 0 ) {
+        # return true
+        return 1;
+    }
+    else {
+        # return false
+        return 0;
+    }
+}
+
+sub getRoomNumberById {
+
+    my ( $roomid ) = @_;
+
+    # load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT roomnumber
+        FROM $rooms_table
+        WHERE roomid = $roomid;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @roomNumberFromId;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @roomNumberFromId, $row );
+    }
+
+    return \@roomNumberFromId;
+}
+
+sub preBookingAvailabilityCheck {
+    my ( $roomid, $start, $end ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT COUNT(*)
+        FROM $bookings_table
+        WHERE roomid = $roomid
+        AND \'$end\' > start
+        AND \'$start\' < end;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my ($count) = $sth->fetchrow_array();
+
+    if ($count > 0) { # a conflicting booking was found
+        return 0;
+    }
+    else { # no conflict found
+        return 1;
+    }
+}
+
+sub addBooking {
+
+    my ( $borrowernumber, $roomid, $start, $end ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    $dbh->do("
+        INSERT INTO $bookings_table (borrowernumber, roomid, start, end) 
+        VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ');');
 }
 
 1;

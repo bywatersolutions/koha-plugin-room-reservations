@@ -1,0 +1,393 @@
+[% USE Koha %]
+[% USE Branches %]
+[% INCLUDE 'doc-head-open.inc' %]
+    <title>Koha: Room Reservations Plugin: Reserve as patron</title>
+[% INCLUDE 'doc-head-close.inc' %]
+    <style>
+        .avail-room {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+[% INCLUDE 'header.inc' %]
+[% INCLUDE 'cat-search.inc' %]
+
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Tool</div>
+
+<div id="doc3">
+
+    <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
+    <h3>Reserve as [% firstname %]&nbsp;[% surname %]</h3>
+
+    [% IF op == '' %]
+    <script type="text/javascript">
+        function validateAvailabilitySearch() {
+
+            var startDate = document.forms["availabilitySearchForm"]["availability-search-start-date"].value;
+            var startTime = document.forms["availabilitySearchForm"]["availability-search-start-time"].value;
+            var endDate = document.forms["availabilitySearchForm"]["availability-search-end-date"].value;
+            var endTime = document.forms["availabilitySearchForm"]["availability-search-end-time"].value;
+            var maxCapacity = document.forms["availabilitySearchForm"]["availability-search-room-capacity"].value;
+            // populate an equipment array to iterate for validation
+            var equipments = document.getElementsByName("availability-search-selected-equipment");
+
+            if ( startDate == "" ) {
+                alert("Start date is required.");
+                return false;
+            }
+
+            if ( startTime == "" ) {
+                alert("Start time is required.");
+                return false;
+            }
+
+            if ( endDate == "" ) {
+                alert("End date is required.");
+                return false;
+            }
+
+            if ( endTime == "" ) {
+                alert("End time is required.");
+                return false;
+            }
+
+            if ( maxCapacity == "" ) {
+                alert("Room capacity is required.");
+                return false;
+            }
+        }
+    </script>
+    <form name="availabilitySearchForm" method="post" action="#" onsubmit="return validateAvailabilitySearch()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:center;">Availability Search</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="Start date" />
+                
+                <select name="availability-search-start-time">
+                    <option value="">Time</option>
+                    <option value="00:00:00">12:00 AM</option>
+                    <option value="00:30:00">12:30 AM</option>
+                    <option value="01:00:00">1:00 AM</option>
+                    <option value="01:30:00">1:30 AM</option>
+                    <option value="02:00:00">2:00 AM</option>
+                    <option value="02:30:00">2:30 AM</option>
+                    <option value="03:00:00">3:00 AM</option>
+                    <option value="03:30:00">3:30 AM</option>
+                    <option value="04:00:00">4:00 AM</option>
+                    <option value="04:30:00">4:30 AM</option>
+                    <option value="05:00:00">5:00 AM</option>
+                    <option value="05:30:00">5:30 AM</option>
+                    <option value="06:00:00">6:00 AM</option>
+                    <option value="06:30:00">6:30 AM</option>
+                    <option value="07:00:00">7:00 AM</option>
+                    <option value="07:30:00">7:30 AM</option>
+                    <option value="08:00:00">8:00 AM</option>
+                    <option value="08:30:00">8:30 AM</option>
+                    <option value="09:00:00">9:00 AM</option>
+                    <option value="09:30:00">9:30 AM</option>
+                    <option value="10:00:00">10:00 AM</option>
+                    <option value="10:30:00">10:30 AM</option>
+                    <option value="11:00:00">11:00 AM</option>
+                    <option value="11:30:00">11:30 AM</option>
+                    <option value="12:00:00">12:00 PM</option>
+                    <option value="12:30:00">12:30 PM</option>
+                    <option value="13:00:00">1:00 PM</option>
+                    <option value="13:30:00">1:30 PM</option>
+                    <option value="14:00:00">2:00 PM</option>
+                    <option value="14:30:00">2:30 PM</option>
+                    <option value="15:00:00">3:00 PM</option>
+                    <option value="15:30:00">3:30 PM</option>
+                    <option value="16:00:00">4:00 PM</option>
+                    <option value="16:30:00">4:30 PM</option>
+                    <option value="17:00:00">5:00 PM</option>
+                    <option value="17:30:00">5:30 PM</option>
+                    <option value="18:00:00">6:00 PM</option>
+                    <option value="18:30:00">6:30 PM</option>
+                    <option value="19:00:00">7:00 PM</option>
+                    <option value="19:30:00">7:30 PM</option>
+                    <option value="20:00:00">8:00 PM</option>
+                    <option value="20:30:00">8:30 PM</option>
+                    <option value="21:00:00">9:00 PM</option>
+                    <option value="21:30:00">9:30 PM</option>
+                    <option value="22:00:00">10:00 PM</option>
+                    <option value="22:30:00">10:30 PM</option>
+                    <option value="23:00:00">11:00 PM</option>
+                    <option value="23:30:00">11:30 PM</option>
+                </select><br />
+
+                <input class ="datefield" name="availability-search-end-date" id="availability-search-end-date" size="10" placeholder="End date" />
+
+                <select name="availability-search-end-time">
+                    <option value="">Time</option>
+                    <option value="00:00:00">12:00 AM</option>
+                    <option value="00:30:00">12:30 AM</option>
+                    <option value="01:00:00">1:00 AM</option>
+                    <option value="01:30:00">1:30 AM</option>
+                    <option value="02:00:00">2:00 AM</option>
+                    <option value="02:30:00">2:30 AM</option>
+                    <option value="03:00:00">3:00 AM</option>
+                    <option value="03:30:00">3:30 AM</option>
+                    <option value="04:00:00">4:00 AM</option>
+                    <option value="04:30:00">4:30 AM</option>
+                    <option value="05:00:00">5:00 AM</option>
+                    <option value="05:30:00">5:30 AM</option>
+                    <option value="06:00:00">6:00 AM</option>
+                    <option value="06:30:00">6:30 AM</option>
+                    <option value="07:00:00">7:00 AM</option>
+                    <option value="07:30:00">7:30 AM</option>
+                    <option value="08:00:00">8:00 AM</option>
+                    <option value="08:30:00">8:30 AM</option>
+                    <option value="09:00:00">9:00 AM</option>
+                    <option value="09:30:00">9:30 AM</option>
+                    <option value="10:00:00">10:00 AM</option>
+                    <option value="10:30:00">10:30 AM</option>
+                    <option value="11:00:00">11:00 AM</option>
+                    <option value="11:30:00">11:30 AM</option>
+                    <option value="12:00:00">12:00 PM</option>
+                    <option value="12:30:00">12:30 PM</option>
+                    <option value="13:00:00">1:00 PM</option>
+                    <option value="13:30:00">1:30 PM</option>
+                    <option value="14:00:00">2:00 PM</option>
+                    <option value="14:30:00">2:30 PM</option>
+                    <option value="15:00:00">3:00 PM</option>
+                    <option value="15:30:00">3:30 PM</option>
+                    <option value="16:00:00">4:00 PM</option>
+                    <option value="16:30:00">4:30 PM</option>
+                    <option value="17:00:00">5:00 PM</option>
+                    <option value="17:30:00">5:30 PM</option>
+                    <option value="18:00:00">6:00 PM</option>
+                    <option value="18:30:00">6:30 PM</option>
+                    <option value="19:00:00">7:00 PM</option>
+                    <option value="19:30:00">7:30 PM</option>
+                    <option value="20:00:00">8:00 PM</option>
+                    <option value="20:30:00">8:30 PM</option>
+                    <option value="21:00:00">9:00 PM</option>
+                    <option value="21:30:00">9:30 PM</option>
+                    <option value="22:00:00">10:00 PM</option>
+                    <option value="22:30:00">10:30 PM</option>
+                    <option value="23:00:00">11:00 PM</option>
+                    <option value="23:30:00">11:30 PM</option>
+                </select><br />
+                </td>
+              </tr>
+              <tr>
+                  <td>
+                      <div class="headcount-selection" style="text-align: center;">
+                            <h3>Maximum Room Capacity</h3>
+                            <select name="availability-search-room-capacity">
+                                <option value=""></option>
+                                [% FOREACH capacity IN all_room_capacities %]
+                                <option value="[% capacity.maxcapacity %]">[% capacity.maxcapacity %] people </option>
+                                [% END # FOREACH capacity IN all_room_capacities %]
+                            </select>
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="room-features-selection" style="text-align: center;">
+                    <h3>Room Equipment</h3>
+                    [% count = 1 %]
+                    [% FOREACH equipment IN available_room_equipment %]
+
+                    <!-- the modulo wraps the list around to the next row with 4 pieces of equipment to a row -->
+                    [% IF count mod 4 == 0 %]
+                    <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipment.equipmentname %]<br />
+                    [% ELSE %]
+                    <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipment.equipmentname %]
+                    [% END # IF count %]
+                    [% count = count + 1 %] <!-- equal to count++ to advance the loop -->
+                    <input type="hidden" name="availability-search-selected-equipment-name" value="[% equipment.equipmentname %]" />
+
+                    [% END # FOREACH equipment IN available_room_equipment %]
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                  <td style="text-align: center;">
+                    <br />
+                    <input type="hidden" name="op" value="availability-search-results" />
+                    <input type="submit" value="Check Room Availability">
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+    </form>
+    [% ELSIF op == 'availability-search-results' %]
+        <script type="text/javascript">
+            function validateAvailabilitySearchResults() {
+
+                // populate an equipment array to iterate for validation
+                var rooms = document.getElementsByName("selected-room-id");
+                var numMatchingRooms = document.getElementsByClassName("no-rooms-match");
+
+                var roomChecked = false;
+                for ( var i = 0; i < rooms.length; i++ ) {
+                    if ( rooms[i].checked ) {
+                        roomChecked = true;
+                        last; // exit out of loop
+                    }
+                }
+
+                if (numMatchingRooms.length > 0) {
+                    // do nothing
+                }
+                else {
+                    if ( !roomChecked ) {
+                        alert('Select a room to continue.');
+                        return false;
+                    }
+                }
+            }
+        </script>
+        <form method="post" action="#" onsubmit="return validateAvailabilitySearchResults()">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
+        [% IF are_rooms_available == 1 %]
+        <table border="2">
+            <thead>
+                <tr>
+                    <th colspan="4">Available Rooms</th>
+                </tr>
+                <tr>
+                    <th>Select</th>
+                    <th>Room #</th>
+                    <th>Max Capacity</th>
+                </tr>
+            </thead>
+            <tbody>
+                [% FOREACH room IN available_rooms %]
+                    <tr class="avail-room">
+                        <td><input type="radio" name="selected-room-id" value="[% room.roomid %]" /></td>
+                        <td>[% room.roomnumber %]</td>
+                        <input type="hidden" name="selected-room-no" value="[% room.roomnumber %]" />
+                        <td>[% room.maxcapacity %]</td>
+                    </tr>
+                [% END %]
+            </tbody>
+            <tfoot>
+                <tr>
+                    <input type="hidden" name="displayed-start" value="[% displayed_start %]" />
+                    <input type="hidden" name="displayed-end" value="[% displayed_end %]" />
+                    <input type="hidden" name="event-start-time" value="[% event_start_time %]" />
+                    <input type="hidden" name="event-end-time" value="[% event_end_time %]" />
+                    <input type="hidden" name="op" value="room-selection-confirmation" />
+                    <td></td>
+                    <td colspan="2"><input type="submit" value="Select Room" /></td>
+                <tr>
+            </tfoot>
+        </table>
+        [% ELSE %]
+        <h2 class="no-rooms-match">No rooms match your criteria!</h2>
+        <form method="post" action="#">
+            <input type="hidden" name="op" value="" />
+
+            <button>Click here to try another search</button>
+        [% END # IF are_rooms_available == 1 %]
+        </form>
+    [% ELSIF op == 'room-selection-confirmation' %]
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
+            <fieldset style="float:left;">
+                <legend>Confirmation</legend>
+                <p>Name: <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
+                <input type="hidden" name="confirmed-user" value="[% current_user %]" />
+                <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
+                <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />
+                <p>Email: <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
+                <input type="hidden" name="confirmed-email" value="[% current_user_email %]" />
+                [% FOREACH roomnumber IN selected_room_no %]
+                <p>Room: <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
+                <input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
+                [% END %]
+                <p style="float:right;">Time: <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
+                <input type="hidden" name="confirmed-displayed-start" value="[% displayed_start %]" />
+                <input type="hidden" name="confirmed-displayed-end" value="[% displayed_end %]" />
+                <input type="hidden" name="confirmed-room-id" value="[% selected_room_id %]" />
+                <input type="hidden" name="confirmed-start" value="[% selected_start_time %]" />
+                <input type="hidden" name="confirmed-end" value="[% selected_end_time %]" />
+                <input type="hidden" name="op" value="reservation-confirmed" />
+                [% IF Koha.Preference('KohaAdminEmailAddress') %]
+                <!-- Checked by default -->
+                <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
+                [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
+                <p><input type="submit" name="confirmationSubmit" value="Confirm" /><input type="submit" name="confirmationSubmit" value="Start over" /></p>
+            </fieldset>
+        </form>
+    [% ELSIF op == 'reservation-confirmed' %]
+        <script type="text/javascript">
+            function close_window() {
+                close();
+            }
+        </script>
+        [% IF invalid_booking == 1 %]
+            <h1>Sorry!</h1>
+            <br />
+            <h2>It appears there was a problem completing your reservation
+                <br />
+                This is most likely due to someone else placing a reservation for a conflicting time slot.
+            </h2>
+
+            <form method="post" action="#">
+                <input type="hidden" name="class" value="[% CLASS %]" />
+                <input type="hidden" name="method" value="[% METHOD %]" />
+                <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
+                <button>Click here to search again</button>
+            </form>
+        [% ELSE %]
+            <h1>Congratulations! Your reservation is confirmed!</h1>
+            <br />
+            [% IF SENT == '1' %]
+            <h3>An email confirmation has been sent to [% patron_email %]!</h3>
+            [% END %]
+            <form method="post" action="#">
+                <input type="hidden" name="class" value="[% CLASS %]" />
+                <input type="hidden" name="method" value="[% METHOD %]" />
+                <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
+                <button onclick="close_window(); return false;">Back to patron record</button>
+            </form>
+        [% END # IF invalid_booking == 1 %]
+
+    [% END %]
+
+
+[% INCLUDE 'intranet-bottom.inc' %]
+[% INCLUDE calendar.inc %]
+<script type="text/javascript">
+// <![CDATA[
+
+    $(document).ready(function() {
+        $(".datefield").prop("readOnly", true);
+    });
+
+    // http://jqueryui.com/demos/datepicker/#date-range
+    var requestdates = $( "#availability-search-start-date, #availability-search-end-date" ).datepicker({
+        minDate: 0,
+        changeMonth: true,
+        numberOfMonths: 1,
+        onSelect: function( selectedDate ) {
+            var option = this.id == "availability-search-start-date" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" );
+                date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                    $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings );
+            requestdates.not( this ).datepicker("option", option, date);
+        }
+    });
+// ]]>
+</script>
