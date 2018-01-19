@@ -1,7 +1,7 @@
 {
   "name": "koha-plugin-room-reservations",
-  "version": "1.1.1",
-  "previous_version": "1.1.0",
+  "version": "1.1.2",
+  "previous_version": "1.1.1",
   "description": "Koha Room Reservations Plugin",
   "devDependencies": {
     "gulp": "^3.9.1",
