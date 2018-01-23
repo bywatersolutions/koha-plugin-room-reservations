@@ -90,12 +90,13 @@
                         Select an action: 
                         <select name="config_actions_selection">
                             <option value="null"></option>
-                            <option value="action-select-display">Display rooms</option>
                             <option value="action-select-add">Add room</option>
-                            <option value="action-select-edit">Edit room</option>
+                            <option value="action-select-add-equipment">Add room equipment</option>
                             <option value="action-select-delete">Delete room</option>
-                            <option value="action-select-add-equipment">Add Room Equipment</option>
-                            <option value="action-select-delete-equipment">Delete Room Equipment</option>
+                            <option value="action-select-delete-equipment">Delete room equipment</option>
+                            <option value="action-select-display">Display rooms</option>
+                            <option value="action-select-edit">Edit room</option>
+                            <option value="action-max-future-date">OPAC max future date</option>
                         </select><br />
                         <span style="float:right;"><input type="submit" name="config-actions-submit" value="Continue" /></span>
                 </div>
@@ -230,6 +231,61 @@
         </tbody>
     </table>
     [% END # op == 'display-rooms-detail' %]
+
+    [% IF op == 'max-future-date' %]
+        <script type="text/javascript">
+            function validateMaxFutureDate() {
+                //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;
+
+                var num = document.getElementById("max-days-field").value;
+
+                if (isNaN(num)) {
+                    alert("Please enter a valid number!");
+                    return false;
+                }
+
+                if (num === "") {
+                    alert("Please enter a valid number!");
+                    return false;
+                }
+            }
+        </script>
+        <form name="maxFutureDateForm" method="post" action="#" onsubmit="return validateMaxFutureDate();">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="max-future-date" />
+            <input type="hidden" name="max-submitted" value="1" />
+            <table>
+                <thead class="table-header-bold table-row-centered">
+                    <tr>
+                        <td colspan="2">Set max number days</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    [% IF max_num_days == '' %]
+                    <tr>
+                        <td style="text-align: right;">Current max number days:</td>
+                        <td>n/a</td>
+                    </tr>
+                    [% ELSE %]
+                    <tr>
+                        <td style="text-align: right;">Current max number days:</td>
+                        <td>[% max_num_days %]</td>
+                    </tr>
+                    [% END # max_num_days == '' %]
+                    <tr>
+                        <td style="text-align: right;">Set max number of days: </td>
+                        <td><input type="text" name="max-days-field" id="max-days-field" size="4" maxlength="4" /></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-row-centered">
+                        <td colspan="2"><input type="submit" value="Add Room" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    [% END # op == 'max-future-date' %]
 
     [% IF op == 'add-rooms' %]
         <script type="text/javascript">

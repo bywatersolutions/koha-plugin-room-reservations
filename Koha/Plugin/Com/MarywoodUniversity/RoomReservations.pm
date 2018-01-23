@@ -654,6 +654,38 @@ sub configure {
                 op => $op,
             );
         }
+        elsif ( $selected eq 'action-max-future-date' ) {
+
+            $action = 'max-future-date';
+
+            $template->param(
+                action => $action,
+                op => $op,
+            );
+        }
+    }
+    elsif ( $op eq 'max-future-date' ) {
+
+        my $submitted = $cgi->param('max-submitted') || q{};
+
+        if ( $submitted eq '1' ) {
+
+            my $max_days = $cgi->param('max-days-field');
+
+            $self->store_data({ max_future_days => $max_days });
+        }
+
+        my $max_num_days = $self->retrieve_data('max_future_days');
+
+        if ( $max_num_days eq '0' ) {
+            $max_num_days = '';
+        }
+
+        $template->param(
+            op => $op,
+            max_num_days => $max_num_days,
+
+        );
     }
     elsif ( $op eq 'display-rooms' ) {
 

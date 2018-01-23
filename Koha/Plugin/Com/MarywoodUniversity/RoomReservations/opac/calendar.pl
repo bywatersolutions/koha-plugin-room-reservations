@@ -96,10 +96,17 @@ elsif ( $op eq 'availability-search' ) {
 
     my $capacities = loadAllMaxCapacities();
 
+    my $max_num_days = getFutureDays();
+
+    if ( $max_num_days eq '0' ) {
+        $max_num_days = '';
+    }
+
     $template->param(
         op => $op,
         available_room_equipment => $equipment,
         all_room_capacities => $capacities,
+        max_days => $max_num_days,
     );
 }
 elsif ( $op eq 'availability-search-results' ) {
@@ -326,6 +333,17 @@ END_OF_BODY
     $template->param(
         op => $op,
     );
+}
+
+sub getFutureDays {
+
+    my $dbh = C4::Context->dbh;
+    my $sql = "SELECT plugin_value FROM plugin_data WHERE plugin_class = ? AND plugin_key = ?";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute( 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations', 'max_future_days' );
+    my $row = $sth->fetchrow_hashref();
+
+    return $row->{'plugin_value'};
 }
 
 sub areAnyRoomsAvailable {
