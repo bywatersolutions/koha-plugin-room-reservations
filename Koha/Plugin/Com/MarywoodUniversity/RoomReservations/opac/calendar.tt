@@ -489,6 +489,59 @@
                 // populate an equipment array to iterate for validation
                 var equipments = document.getElementsByName("availability-search-selected-equipment");
 
+                var max_time = $('#max_time').val();
+
+                var maxTimeToMilliSeconds;
+
+                // convert milliseconds to hours, minutes, seconds
+                var x;
+                var seconds;
+                var minutes;
+                var hours;
+
+                if (max_time !== "0") {
+
+                    maxTimeToMilliSeconds = max_time * 60000; // convert seconds to milliseconds
+
+                          // convert milliseconds to seconds, minutes, hours
+                          x = maxTimeToMilliSeconds / 1000;
+                    seconds = x % 60;
+                         x /= 60;
+                    minutes = x % 60;
+                         x /= 60;
+                      hours = x % 24;
+                } else {
+                    maxTimeToMilliSeconds = 0;
+                                        x = 0;
+                                  seconds = 0;
+                                  minutes = 0;
+                                    hours = 0;
+                }
+
+                var startTimestamp = startDate + " " + startTime;
+                var endTimestamp = endDate + " " + endTime;
+
+                var startToMilliseconds = Date.parse(startTimestamp);
+                var endToMilliseconds = Date.parse(endTimestamp);
+
+                var timeDifferenceInMilliseconds = endToMilliseconds - startToMilliseconds;
+
+                if (timeDifferenceInMilliseconds > maxTimeToMilliSeconds && maxTimeToMilliSeconds > 0) {
+
+                    var timeString = "";
+
+                    if (hours > 0) {
+                        timeString += "" + hours + " hours";
+                    }
+
+                    alert("Selected time range exceeds maximum time allowed of " + timeString + "!");
+                    return false;
+                }
+                else if (startTimestamp >= endTimestamp) {
+                    alert("Please select a valid time range!");
+                    return false;
+                }
+
                 if ( startDate == "" ) {
                     alert("Start date is required.");
                     return false;
@@ -526,6 +579,7 @@
                 
                 <form name="availabilitySearchForm" method="post" action="#" onsubmit="return validateAvailabilitySearch()">
                     <input type="hidden" name="max_days" id="max_days" value="[% max_days %]" />
+                    <input type="hidden" name="max_time" id="max_time" value="[% max_time %]" />
                     <table align="center">
                         <thead>
                             <tr>

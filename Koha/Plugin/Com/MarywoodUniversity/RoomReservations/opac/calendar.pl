@@ -98,8 +98,14 @@ elsif ( $op eq 'availability-search' ) {
 
     my $max_num_days = getFutureDays();
 
+    my $max_time = getMaxTime();
+
     if ( $max_num_days eq '0' ) {
         $max_num_days = '';
+    }
+
+    if ( $max_time eq '0' ) {
+        $max_time = '';
     }
 
     $template->param(
@@ -107,6 +113,7 @@ elsif ( $op eq 'availability-search' ) {
         available_room_equipment => $equipment,
         all_room_capacities => $capacities,
         max_days => $max_num_days,
+        max_time => $max_time,
     );
 }
 elsif ( $op eq 'availability-search-results' ) {
@@ -341,6 +348,17 @@ sub getFutureDays {
     my $sql = "SELECT plugin_value FROM plugin_data WHERE plugin_class = ? AND plugin_key = ?";
     my $sth = $dbh->prepare($sql);
     $sth->execute( 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations', 'max_future_days' );
+    my $row = $sth->fetchrow_hashref();
+
+    return $row->{'plugin_value'};
+}
+
+sub getMaxTime {
+
+    my $dbh = C4::Context->dbh;
+    my $sql = "SELECT plugin_value FROM plugin_data WHERE plugin_class = ? AND plugin_key = ?";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute( 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations', 'max_time' );
     my $row = $sth->fetchrow_hashref();
 
     return $row->{'plugin_value'};

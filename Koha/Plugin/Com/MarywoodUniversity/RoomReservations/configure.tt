@@ -97,6 +97,7 @@
                             <option value="action-select-display">Display rooms</option>
                             <option value="action-select-edit">Edit room</option>
                             <option value="action-max-future-date">OPAC max future date</option>
+                            <option value="action-max-time">OPAC max time</option>
                         </select><br />
                         <span style="float:right;"><input type="submit" name="config-actions-submit" value="Continue" /></span>
                 </div>
@@ -280,12 +281,98 @@
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td colspan="2"><input type="submit" value="Add Room" /></td>
+                        <td colspan="2"><input type="submit" value="Add restriction" /></td>
                     </tr>
                 </tfoot>
             </table>
         </form>
     [% END # op == 'max-future-date' %]
+
+    [% IF op == 'max-time' %]
+        <script type="text/javascript">
+            function validateMaxTime() {
+                //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;
+
+                var num_hours = document.getElementById("max-time-hours-field").value;
+
+                if (num === "null") {
+                    alert("Please select a valid number!");
+                    return false;
+                }
+            }
+        </script>
+        <form name="maxTimeForm" method="post" action="#" onsubmit="return validateMaxTime();">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="max-time" />
+            <input type="hidden" name="max-submitted" value="1" />
+            <table>
+                <thead class="table-header-bold table-row-centered">
+                    <tr>
+                        <td colspan="2">Set max time</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    [% IF max_time == '' %]
+                    <tr>
+                        <td style="text-align: right;">Current max time:</td>
+                        <td>n/a minutes</td>
+                    </tr>
+                    [% ELSE %]
+                    <tr>
+                        <td style="text-align: right;">Current max time:</td>
+                        <td>[% max_time %] minutes</td>
+                    </tr>
+                    [% END # max_time == '' %]
+                    <!-- <tr>
+                        <td style="text-align: right;">Set max time: </td>
+                        <td><input type="text" name="max-time-field" id="max-time-field" size="4" maxlength="4" /></td>
+                    </tr> -->
+                    <tr>
+                        <td style="text-align: right;">Set max time: </td>
+                        <td>
+                            <select name="max-time-hours-field" id="max-time-hours-field">
+                                <option value="null"></option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                            </select> hours &nbsp;
+                            <select name="max-time-minutes-field" id="max-time-minutes-field">
+                                <option value="0">00</option>
+                                <option value="30">30</option>
+                            </select> minutes
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-row-centered">
+                        <td colspan="2"><input type="submit" value="Add restriction" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    [% END # op == 'max-time' %]
 
     [% IF op == 'add-rooms' %]
         <script type="text/javascript">

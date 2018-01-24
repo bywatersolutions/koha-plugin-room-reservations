@@ -663,6 +663,41 @@ sub configure {
                 op => $op,
             );
         }
+        elsif ( $selected eq 'action-max-time' ) {
+
+            $action = 'max-time';
+
+            $template->param(
+                action => $action,
+                op => $op,
+            );
+        }
+    }
+    elsif ( $op eq 'max-time' ) {
+
+        my $submitted = $cgi->param('max-submitted') || q{};
+
+        if ( $submitted eq '1' ) {
+
+            my $max_time_hours = $cgi->param('max-time-hours-field');
+            my $max_time_minutes = $cgi->param('max-time-minutes-field');
+
+            my $max_time = ($max_time_hours * 60) + $max_time_minutes;
+
+            $self->store_data({ max_time => $max_time });
+        }
+
+        my $max_num_time = $self->retrieve_data('max_time');
+
+        if ( $max_num_time eq '0' ) {
+            $max_num_time = '';
+        }
+
+        $template->param(
+            op => $op,
+            max_time => $max_num_time,
+
+        );
     }
     elsif ( $op eq 'max-future-date' ) {
 
