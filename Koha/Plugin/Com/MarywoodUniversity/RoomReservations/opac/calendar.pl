@@ -27,6 +27,8 @@ use Mail::Sendmail;
 use MIME::QuotedPrint;
 use MIME::Base64;
 use Koha::Patrons;
+use Koha::Patron::Category;
+use Koha::Patron::Categories;
 use Koha::DateUtils;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
@@ -79,6 +81,29 @@ if ( !defined($op) ) {
     my $calendarBookings = getConfirmedCalendarBookingsByMonthAndYear($mon, $yr);
 
     my $month = sprintf("%02s", $mon);
+
+    my $userenv = C4::Context->userenv;
+    my $number = $userenv->{number};
+    my $patron = Koha::Patrons->find($number);
+    my $category = $patron->category->categorycode;
+
+    my $isRestricted = checkForRestrictedCategory($category);
+
+    my $restricted_message = getRestrictedMessage();
+
+    if ($isRestricted > 0) {
+        $template->param(
+            is_restricted => 1,
+            is_restricted_message => $restricted_message,
+            patron_category => $category,
+        );
+    }
+    else {
+        $template->param(
+            is_restricted => undef,
+            patron_category => $category,
+        );
+    }
 
     $template->param(
         current_month_cal => \@month_days,
@@ -340,6 +365,47 @@ END_OF_BODY
     $template->param(
         op => $op,
     );
+}
+
+sub checkForRestrictedCategory {
+
+    my ( $category ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        SELECT COUNT(categorycode)
+        FROM categories, plugin_data
+        WHERE plugin_class = 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations'
+        AND plugin_key LIKE 'rcat_%'
+        AND plugin_value = categorycode
+        AND plugin_value = ?;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute($category);
+
+    my $rows = $sth->fetchrow_arrayref->[0];
+
+    if ( $rows != 0 ) {
+        return 1; # restricted
+    }
+    else {
+        return 0; # not restricted
+    }
+}
+
+sub getRestrictedMessage {
+
+    my $dbh = C4::Context->dbh;
+    my $sql = "SELECT plugin_value FROM plugin_data WHERE plugin_class = ? AND plugin_key = ?";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute( 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations', 'restricted_message' );
+    my $row = $sth->fetchrow_hashref();
+
+    return $row->{'plugin_value'};
 }
 
 sub getFutureDays {

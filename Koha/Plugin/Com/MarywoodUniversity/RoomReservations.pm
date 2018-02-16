@@ -297,23 +297,16 @@ sub bookas {
         my $displayed_end = $cgi->param('confirmed-displayed-end');
         my $patronEmail = $cgi->param('confirmed-email');
 
-        #if ( $submitButton eq 'Start over' ) {
+        $valid = preBookingAvailabilityCheck($roomid, $start, $end);
 
-        #    $op = '';
-        #}
-        #else {
-
-            $valid = preBookingAvailabilityCheck($roomid, $start, $end);
-
-            if ($valid) {
-                addBooking($borrowernumber, $roomid, $start, $end);
-            }
-            else {
-                $template->param(
-                    invalid_booking => 1,
-                );
-            }
-        #}
+        if ($valid) {
+            addBooking($borrowernumber, $roomid, $start, $end);
+        }
+        else {
+            $template->param(
+                invalid_booking => 1,
+            );
+        }
 
     if ( $sendCopy eq '1' && $valid ) {
 
@@ -672,6 +665,67 @@ sub configure {
                 op => $op,
             );
         }
+        elsif ( $selected eq 'action-restrict-categories' ) {
+
+            $action = 'restrict-categories';
+
+            $template->param(
+                action => $action,
+                op => $op,
+            );
+        }
+    }
+    elsif ( $op eq 'restrict-categories' ) {
+
+        my $submitted = $cgi->param('restrict-categories-submitted') || q{};
+
+        my $rest_message = $cgi->param('restricted-message');
+
+        my $check_count;
+
+        if ( $submitted eq '1' ) {
+
+            my @restricted_categories_to_clear = $cgi->multi_param('currently-restricted-category');
+
+            if (scalar(@restricted_categories_to_clear) > 0) {
+                clearPatronCategoryRestriction(\@restricted_categories_to_clear);
+            }
+            else {
+                clearPatronCategoryRestriction(undef);
+            }
+
+            my @categories_to_restrict = $cgi->multi_param('patron-category');
+
+            for my $category (@categories_to_restrict) {
+
+                # workaround to convert string to hash ref
+                my %cat_hash;
+                $cat_hash{qq(rcat_$category)} = $category;
+
+                while ( my ( $key, $value ) = each %cat_hash ) {
+                    $self->store_data({ $key => $value });
+                }       
+            }
+
+
+            # store restricted message
+            $self->store_data({ restricted_message => $rest_message});
+        }
+
+        my $restricted = getRestrictedPatronCategories();
+
+        my $searchfield = q||;
+
+        my $categories = getPatronCategories();
+
+        my $restricted_message = $self->retrieve_data('restricted_message');
+
+        $template->param(
+            op => $op,
+            restricted_categories => $restricted,
+            categories => $categories,
+            restrict_message => $restricted_message,
+        );
     }
     elsif ( $op eq 'max-time' ) {
 
@@ -960,6 +1014,109 @@ sub getAllBookings {
     }
 
     return \@allBookings;
+}
+
+sub getRestrictedPatronCategories {
+
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        SELECT categorycode, description
+        FROM categories, plugin_data
+        WHERE plugin_class = 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations'
+        AND plugin_key LIKE 'rcat_%'
+        AND plugin_value = categorycode;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @categories;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @categories, $row );
+    }
+
+    return \@categories;
+}
+
+sub clearPatronCategoryRestriction {
+
+    my ($restricted_category) = @_;
+
+    my $delete_query;
+
+    if ($restricted_category == undef) {
+        my $dbh = C4::Context->dbh;
+
+        $delete_query = "
+            DELETE FROM plugin_data
+            WHERE plugin_class = 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations'
+            AND plugin_key LIKE 'rcat_%';";
+
+        $dbh->do($delete_query);
+    }
+    else {
+        my @restricted = @$restricted_category;
+
+        my $counter = scalar(@restricted);
+
+        my $dbh = C4::Context->dbh;
+
+        $delete_query = "
+            DELETE FROM plugin_data
+            WHERE plugin_class = 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations'
+            AND plugin_key LIKE 'rcat_%'";
+
+        if ($counter == 0) {
+            $delete_query .= ";";
+        }
+        else {
+            $delete_query .= " AND plugin_value NOT IN (";
+
+            for my $code (@restricted) {
+
+                if ($counter > 0 && $counter != 1) {
+                    $delete_query .= "'$code', ";
+                }
+                else {
+                    $delete_query .= "'$code'";
+                }
+
+                $counter--;
+            }
+
+            $delete_query .= ");";
+        }
+
+        $dbh->do($delete_query);
+    }
+}
+
+sub getPatronCategories {
+
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        SELECT categorycode, description
+        FROM categories
+        ORDER BY categorycode ASC;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @categories;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @categories, $row );
+    }
+
+    return \@categories;
 }
 
 sub getAllBlackedoutBookings {
@@ -1470,55 +1627,6 @@ sub getAllRoomNumbers {
     }
 
     return \@allRooms;
-
-    # my @allRooms;
-
-    # while ( my $roomno = $sth->fetchrow_hashref ) {
-    #     push (@allRooms, $roomno);
-    # }
-
-    # return \@allRooms;
-}
-
-## Used in display-rooms
-## param: an arrayref
-## return: multi-dimensional hashref
-sub displayAllRooms {
-
-    my ($listOfRooms) = @_;
-
-    my $dbh = C4::Context->dbh;
-
-    my $sth = "";
-
-    my $roomnumber = "";
-
-    my $query = "";
-
-    my $featurecount = 0;
-
-    # will be used as hashref (hash of hashes)
-    my %roomsAndFeatures;
-
-    foreach my $room ( keys %{ $listOfRooms } ) {
-
-        $roomnumber = "'" . $room . "'";
-
-        #$query = "SELECT $rooms_table.roomnumber, $rooms_table.maxcapacity, $features_table.featurename from $rooms_table, $features_table WHERE featureid IN
-        #    (SELECT featureid FROM $configs_table WHERE roomid = 
-        #        (SELECT roomid FROM $rooms_table WHERE roomnumber = $roomnumber)) AND $rooms_table.roomnumber = $roomnumber;";
-
-        $sth = $dbh->prepare($query);
-        $sth->execute();
-
-        while ( my $features = $sth->fetchrow_arrayref() ) {
-                            ##   roomnumber         featurename
-            $roomsAndFeatures{ $features->[0] } = $features->[1];
-        }
-    }
-
-    # returns hashref for performance boost
-    return \%roomsAndFeatures;
 }
 
 sub loadAllMaxCapacities {

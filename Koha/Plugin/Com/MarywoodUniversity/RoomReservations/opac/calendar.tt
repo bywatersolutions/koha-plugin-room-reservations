@@ -48,6 +48,13 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span12">
+                    [% IF is_restricted %]
+                        [% IF is_restricted_message == '' %]
+                            <h1>You do not have permission to access this page</h1>
+                        [% ELSE %]
+                            <h1>[% is_restricted_message %]</h1>
+                        [% END %]
+                    [% ELSE %]
                     <table class="calendar-table" id="study-room-calendar" border="2" height="80%" width="80%" align="center">
                         <thead>
                             <tr>
@@ -471,8 +478,9 @@
                          </tr>
                        </tfoot>
                      </table>
-                    [% IF month_is_active == 1 %]
-                        <p>[% current_month_cal.count %]</p>
+                        [% IF month_is_active == 1 %]
+                            <p>[% current_month_cal.count %]</p>
+                        [% END # month_is_active == 1 %]
                     [% END %]
                 </div> <!-- / .span12 -->
             </div> <!-- / .row-fluid -->

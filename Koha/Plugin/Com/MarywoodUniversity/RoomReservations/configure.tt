@@ -98,6 +98,7 @@
                             <option value="action-select-edit">Edit room</option>
                             <option value="action-max-future-date">OPAC max future date</option>
                             <option value="action-max-time">OPAC max time</option>
+                            <option value="action-restrict-categories">Restrict patron categories</option>
                         </select><br />
                         <span style="float:right;"><input type="submit" name="config-actions-submit" value="Continue" /></span>
                 </div>
@@ -373,6 +374,80 @@
             </table>
         </form>
     [% END # op == 'max-time' %]
+
+    [% IF op == 'restrict-categories' %]
+        <script type="text/javascript">
+            function validateRestrictCategories() {
+                //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;
+
+                var num_hours = document.getElementById("max-time-hours-field").value;
+
+                if (num === "null") {
+                    alert("Please select a valid number!");
+                    return false;
+                }
+            }
+        </script>
+        <form name="restrictCategoriesForm" method="post" action="#" onsubmit="return validateRestrictCategories();">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+            <input type="hidden" name="op" value="restrict-categories" />
+            <input type="hidden" name="restrict-categories-submitted" value="1" />
+            <table>
+                <thead class="table-header-bold table-row-centered">
+                    <tr>
+                        <td colspan="2">Restrict patron categories</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    [% IF restricted_categories == '' %]
+                    <tr>
+                        <td style="text-align: right;">Restricted categories:</td>
+                        <td>No restrictions</td>
+                    </tr>
+                    [% ELSE %]
+                    <tr>
+                        <td style="text-align: right;">Restricted categories:</td>
+                        <td>
+                        [% FOREACH cat IN restricted_categories %]
+                            <input type="checkbox" name="currently-restricted-category" value="[% cat.categorycode %]" checked="true" /> [% cat.description %]<br />
+                        [% END # FOREACH cat IN restricted_categories %]
+                        </td>
+                    </tr>
+                    [% END # restricted_categories == '' %]
+                    <tr>
+                        <td style="text-align: right;">Restrict categories:</td>
+                        <td>
+                            [% IF categories.size %]
+                            [% FOREACH category IN categories %]
+                            <input type="checkbox" name="patron-category" value="[% category.categorycode %]" /> [% category.description %]<br />
+                            [% END # FOREACH category IN categories %]
+                            [% ELSE %]
+                            <p>INVALID!</p>
+                            [% END # categories.size %]
+                        </td>
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td colspan="2">
+                            <p>Text entered here will be displayed to restricted patrons on the OPAC</p>
+                            [% IF restrict_message %]
+                                <!-- <input type="text" name="restricted-message" value="[% restrict_message %]"/> -->
+                                <textarea name="restricted-message" rows="4" cols="50">[% restrict_message %]</textarea>
+                            [% ELSE %]
+                                <!-- <input type="text" name="restricted-message"/> -->
+                                <textarea name="restricted-message" rows="4" cols="50"></textarea>
+                            [% END %]
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-row-centered">
+                        <td colspan="2"><input type="submit" value="Update" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    [% END # op == 'restrict-categories' %]
 
     [% IF op == 'add-rooms' %]
         <script type="text/javascript">
