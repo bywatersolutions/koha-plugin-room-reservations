@@ -74,6 +74,7 @@ sub install() {
     if ($isUpgrade) { # previous version already installed, modify existing tables as necessary
         my @installer_statements = (
             qq{ALTER TABLE $bookings_table
+                DROP PRIMARY KEY,
                 ADD COLUMN bookingid INT NOT NULL AUTO_INCREMENT FIRST,
                 ADD COLUMN blackedout TINYINT(1) NOT NULL DEFAULT 0,
                 ADD PRIMARY KEY (bookingid);},
