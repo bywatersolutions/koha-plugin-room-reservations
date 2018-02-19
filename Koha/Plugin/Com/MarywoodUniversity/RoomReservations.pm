@@ -72,18 +72,18 @@ sub install() {
     my $isUpgrade = isUpgrading();
 
     if ($isUpgrade) { # previous version already installed, modify existing tables as necessary
-        my @installer_statements = (
-            qq{ALTER TABLE $bookings_table
-                DROP PRIMARY KEY,
-                ADD COLUMN bookingid INT NOT NULL AUTO_INCREMENT FIRST,
-                ADD COLUMN blackedout TINYINT(1) NOT NULL DEFAULT 0,
-                ADD PRIMARY KEY (bookingid);},
-        );
 
-        for (@installer_statements) {
-            my $sth = C4::Context->dbh->prepare($_);
-            $sth->execute or die C4::Context->dbh->errstr;
-        }
+        my $query = "
+            ALTER TABLE $bookings_table
+            DROP PRIMARY KEY,
+            ADD COLUMN bookingid INT NOT NULL AUTO_INCREMENT FIRST,
+            ADD COLUMN blackedout TINYINT(1) NOT NULL DEFAULT 0,
+            ADD PRIMARY KEY (bookingid);
+        ";
+
+        my $dbh = C4::Context->dbh;
+
+        $dbh->do($query);
     }
     else { # new installation/not upgrading from a previous version
         my @installer_statements = (
