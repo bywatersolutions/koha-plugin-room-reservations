@@ -32,16 +32,16 @@ our $metadata = {
 ## Table names and associated MySQL indexes
 #
 
-my $rooms_table = 'booking_rooms';
-my $rooms_index = 'bookingrooms_idx';
-my $bookings_table = 'bookings';
-my $bookings_index = 'bookingbookings_idx';
-my $equipment_table = 'booking_equipment';
-my $equipment_index = 'bookingequipment_idx';
-my $roomequipment_table = 'booking_room_equipment';
-my $roomequipment_index = 'bookingroomequipment_idx';
+our $rooms_table = 'booking_rooms';
+our $rooms_index = 'bookingrooms_idx';
+our $bookings_table = 'bookings';
+our $bookings_index = 'bookingbookings_idx';
+our $equipment_table = 'booking_equipment';
+our $equipment_index = 'bookingequipment_idx';
+our $roomequipment_table = 'booking_room_equipment';
+our $roomequipment_index = 'bookingroomequipment_idx';
 
-my $valid; # used to check if booking still valid prior to insertion of new booking
+our $valid; # used to check if booking still valid prior to insertion of new booking
 
 sub new {
     my ( $class, $args ) = @_;
