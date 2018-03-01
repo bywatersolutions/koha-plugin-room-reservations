@@ -84,6 +84,7 @@ sub install() {
         my $dbh = C4::Context->dbh;
 
         $dbh->do($query);
+        print "Install query: $query";
     }
     else { # new installation/not upgrading from a previous version
         my @installer_statements = (
