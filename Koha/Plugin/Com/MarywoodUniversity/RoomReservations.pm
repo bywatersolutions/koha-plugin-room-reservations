@@ -145,12 +145,14 @@ Please do not modify */
 $(document).ready(function() {
 var data = $("div.patroninfo h5").html();
 
-    if (data) {
-        var regExp = /\(([^)]+)\)/;
-        var matches = regExp.exec(data);
-        var cardnumber = matches[1];
+    if (typeof borrowernumber !== 'undefined') {
+        if (data) {
+            var regExp = /\(([^)]+)\)/;
+            var matches = regExp.exec(data);
+            var cardnumber = matches[1];
 
-        $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;Reserve room as patron</a>').insertAfter($('#addnewmessageLabel'));
+            $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;Reserve room as patron</a>').insertAfter($('#addnewmessageLabel'));
+        }
     }
 }\);
 
