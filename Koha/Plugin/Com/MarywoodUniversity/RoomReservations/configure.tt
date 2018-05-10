@@ -2,20 +2,26 @@
     <title>Koha: Room Reservations Plugin: Configuration</title>
 [% INCLUDE 'doc-head-close.inc' %]
     <style type="text/css">
-        .fieldset-auto-width {
-            display: inline-block;
-        }
-
+		#doc {
+			margin-top: 20px;
+		}
+		table {
+			margin: 15px 0;
+			width: 100%;
+		}
         .table-header-bold {
             font-weight: bold;
         }
         .table-row-centered {
             text-align: center;
         }
+		.fieldset-auto-width {
+			display: inline-block;
+		}
         button {
             background:none!important;
             color:#0000EE;
-            border:none; 
+            border:none;
             padding:0!important;
             font: inherit;
             cursor: pointer;
@@ -73,10 +79,10 @@
 
 <div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Configuration</div>
 
-<div id="doc3">
+<div id="doc">
 
     <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
-    <h3>Koha: Room Reservations Plugin: Configuration</h3>
+    <h1>Koha: Room Reservations Plugin: Configuration</h1>
 
     [% IF op == '' %]
     <form name="config_actions" method="post" action="#" onsubmit="return validateConfigActions()">
@@ -84,10 +90,10 @@
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="action-selected" />
 
-        <fieldset class="fieldset-auto-width">
+        <fieldset>
             <legend>Actions</legend>
                 <div>
-                        Select an action: 
+                        Select an action:
                         <select name="config_actions_selection">
                             <option value="null"></option>
                             <option value="action-select-add">Add room</option>
@@ -162,12 +168,12 @@
         <input type="hidden" name="op" value="display-rooms-detail" />
         <table>
         <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Room</th>
+            <tr class="table-header-bold table-row-centered">
+                <td>&nbsp;</td>
+                <td>Room</td>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-row-centered">
         [% FOREACH room IN roomnumbers %]
             <tr>
                 <td>
@@ -263,20 +269,20 @@
                         <td colspan="2">Set max number days</td>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-row-centered">
                     [% IF max_num_days == '' %]
                     <tr>
-                        <td style="text-align: right;">Current max number days:</td>
+                        <td style="width: 40%;">Current max number days:</td>
                         <td>n/a</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Current max number days:</td>
+                        <td style="width: 40%;">Current max number days:</td>
                         <td>[% max_num_days %]</td>
                     </tr>
                     [% END # max_num_days == '' %]
                     <tr>
-                        <td style="text-align: right;">Set max number of days: </td>
+                        <td style="width: 40%; vertical-align: middle;">Set max number of days: </td>
                         <td><input type="text" name="max-days-field" id="max-days-field" size="4" maxlength="4" /></td>
                     </tr>
                 </tbody>
@@ -313,15 +319,15 @@
                         <td colspan="2">Set max time</td>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-row-centered">
                     [% IF max_time == '' %]
                     <tr>
-                        <td style="text-align: right;">Current max time:</td>
+                        <td>Current max time:</td>
                         <td>n/a minutes</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Current max time:</td>
+                        <td>Current max time:</td>
                         <td>[% max_time %] minutes</td>
                     </tr>
                     [% END # max_time == '' %]
@@ -330,7 +336,7 @@
                         <td><input type="text" name="max-time-field" id="max-time-field" size="4" maxlength="4" /></td>
                     </tr> -->
                     <tr>
-                        <td style="text-align: right;">Set max time: </td>
+                        <td style="vertical-align: middle;">Set max time: </td>
                         <td>
                             <select name="max-time-hours-field" id="max-time-hours-field">
                                 <option value="null"></option>
@@ -402,13 +408,13 @@
                 <tbody>
                     [% IF restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">Restricted categories:</td>
-                        <td>No restrictions</td>
+                        <td style="text-align: center;">Restricted categories:</td>
+                        <td style="text-align: left; padding-left: 80px;">No restrictions</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Restricted categories:</td>
-                        <td>
+                        <td style="text-align: center;">Restricted categories:</td>
+                        <td style="text-align: left; padding-left: 80px;">
                         [% FOREACH cat IN restricted_categories %]
                             <input type="checkbox" name="currently-restricted-category" value="[% cat.categorycode %]" checked="true" /> [% cat.description %]<br />
                         [% END # FOREACH cat IN restricted_categories %]
@@ -416,8 +422,8 @@
                     </tr>
                     [% END # restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">Restrict categories:</td>
-                        <td>
+                        <td style="text-align: center;">Restrict categories:</td>
+                        <td style="text-align: left; padding-left: 80px;">
                             [% IF categories.size %]
                             [% FOREACH category IN categories %]
                             <input type="checkbox" name="patron-category" value="[% category.categorycode %]" /> [% category.description %]<br />
@@ -593,7 +599,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td></td>
+                        <td>&nbsp;</td>
                         <td>
                             <select name="edit-rooms-choice">
                                 <option value="">Actions</option>
@@ -604,7 +610,7 @@
                         </td>
                     </tr>
                 </tfoot>
-            </table> 
+            </table>
         </form>
     [% END # op == 'edit-rooms' %]
 
@@ -829,6 +835,7 @@
             </tbody>
             <tfoot>
                 <tr class="table-row-centered">
+					<td>&nbsp;</td>
                     <td colspan="2">
                         <input type="submit" name="room-delete-submit" id="room-delete-submit" value="Delete" />
                     </td>
@@ -888,11 +895,11 @@
                     <td>Add Equipment</td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-row-centered">
                 <tr>
                     <td>Name: <input type="text" name="add-equipment-text-field" /></td>
                 </tr>
-                <tr class="table-row-centered">
+                <tr>
                     <td><input type="submit" value="Add" /></td>
                 </tr>
             </tbody>
@@ -959,6 +966,7 @@
             </tbody>
             <tfoot>
                 <tr class="table-row-centered">
+					<td>&nbsp;</td>
                     <td colspan="2">
                         <input type="submit" name="equipment-delete-submit" id="equipment-delete-submit" value="Delete" />
                     </td>

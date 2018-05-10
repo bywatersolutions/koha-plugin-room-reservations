@@ -5,27 +5,74 @@
 
 [% INCLUDE 'doc-head-close.inc' %]
     <style>
+		.table th,
+		.table-availability legend {
+			padding: 10px 0;
+			text-align: center;
+			font-weight: normal;
+			background-color: #ededed;
+		}
+		.table thead tr:first-child th {
+			font-size: 20px;
+		}
+		.table-bordered {
+			max-width: 1100px;
+			border-collapse: collapse;
+		}
+		.table-availability {
+			margin: 30px auto;
+			max-width: 500px;
+			border: 1px solid #dddddd;
+		}
+		.table-availability td {
+			text-align: center;
+			padding: 10px 0 20px 0;
+		}
+		.badge {
+			font-size: 14px;
+			white-space: normal;
+		}
+		.book-msg {
+			margin-top: 50px;
+			text-align: center;
+		}
+		.book-btn {
+			margin: 10px auto;
+			display: block;
+		}
+		.btn-group {
+			margin-top: 30px;
+			text-align: center;
+		}
+		.btn-group .btn {
+			margin-right: 5px;
+		}
         .avail-room {
             text-align: center;
         }
         .calendar-table {
+			margin-top: 30px;
+			width: 80%;
             table-layout: auto;
             border-collapse: collapse;
         }
         #study-room-calendar td {
+			padding: 5px;
             vertical-align: top;
             text-align: left;
-            min-width:100px;
+            min-width: 150px;
         }
         /* used for <div> in calendar <td> */
         .min-height {
-            min-height: 50px;
+			padding-top: 30px;
+            min-height: 100px;
             text-align: center;
+			box-sizing: border-box;
         }
         button {
             background:none!important;
             color:#0000EE;
-            border:none; 
+            border:none;
             padding:0!important;
             font: inherit;
             cursor: pointer;
@@ -55,7 +102,7 @@
                             <h1>[% is_restricted_message %]</h1>
                         [% END %]
                     [% ELSE %]
-                    <table class="calendar-table" id="study-room-calendar" border="2" height="80%" width="80%" align="center">
+                    <table class="table table-bordered calendar-table" id="study-room-calendar" align="center">
                         <thead>
                             <tr>
                                 <th colspan="10" align="center">[% active_month %] [% active_year %]</th>
@@ -78,7 +125,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -89,7 +139,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -100,7 +153,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -111,7 +167,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -122,7 +181,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -133,7 +195,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -144,86 +209,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -236,7 +225,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -247,7 +239,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -258,7 +253,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -269,7 +267,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -280,7 +281,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -291,7 +295,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -302,86 +309,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
-                                        [% END %]
-                                    [% END # FOREACH booking IN calendar_bookings %]
-                                </div>
-                                </td>
-                                [% n = n + 1 %]
-                                <td>
-                                [% current_month_cal.$n %]
-                                <div class="min-height">
-                                    [% FOREACH booking IN calendar_bookings %]
-                                        [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -394,7 +325,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -405,7 +339,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -416,7 +353,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -427,7 +367,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -438,7 +381,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -449,7 +395,10 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -460,7 +409,210 @@
                                 <div class="min-height">
                                     [% FOREACH booking IN calendar_bookings %]
                                         [% IF booking.monthdate == current_month_cal.$n %]
-                                            [% booking.roomnumber %] ([% booking.bookedtime %])<br />
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
+                                        [% END %]
+                                    [% END # FOREACH booking IN calendar_bookings %]
+                                </div>
+                                </td>
+                                [% n = n + 1 %]
+                                <td>
+                                [% current_month_cal.$n %]
+                                <div class="min-height">
+                                    [% FOREACH booking IN calendar_bookings %]
+                                        [% IF booking.monthdate == current_month_cal.$n %]
+											<span class="badge badge-info">
+                                            	[% booking.roomnumber %] ([% booking.bookedtime %])
+											</span>
+											<br />
                                         [% END %]
                                     [% END # FOREACH booking IN calendar_bookings %]
                                 </div>
@@ -472,7 +624,7 @@
                            <td style="text-align:left" colspan="10">
                              <form method="post" name="book-room" action="#">
                                <input type="hidden" name="op" value="availability-search" />
-                               <input type="submit" name="book-room-btn" value="Book a Room" />
+                               <input type="submit" name="book-room-btn" value="Book a Room" class="btn btn-primary book-btn" />
                              </form>
                            </td>
                          </tr>
@@ -584,11 +736,11 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span12">
-                
+
                 <form name="availabilitySearchForm" method="post" action="#" onsubmit="return validateAvailabilitySearch()">
                     <input type="hidden" name="max_days" id="max_days" value="[% max_days %]" />
                     <input type="hidden" name="max_time" id="max_time" value="[% max_time %]" />
-                    <table align="center">
+                    <table class="table table-availability" align="center">
                         <thead>
                             <tr>
                                 <th style="text-align:center;">Availability Search</th>
@@ -599,7 +751,7 @@
                             <td>
                             <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="Start date" />
                             <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
-                            
+
                             <select name="availability-search-start-time">
                                 <option value="">Time</option>
                                 <option value="00:00:00">12:00 AM</option>
@@ -745,13 +897,13 @@
                               <td>
                                 <br />
                                 <input type="hidden" name="op" value="availability-search-results" />
-                                <input type="submit" value="Check Room Availability">
+                                <input type="submit" class="btn btn-primary book-btn" value="Check Room Availability">
                               </td>
                           </tr>
                         </tbody>
                     </table>
                 </form>
-                
+
                 </div> <!-- / .span12 -->
             </div> <!-- / .row-fluid -->
         </div> <!-- / .container-fluid -->
@@ -792,7 +944,7 @@
             <div class="span12">
                 <form method="post" action="#" onsubmit="return validateAvailabilitySearchResults()">
                 [% IF are_rooms_available == 1 %]
-                    <table border="2">
+                    <table border="2" class="table table-bordered table-availability">
                         <thead>
                             <tr>
                                 <th colspan="4">Available Rooms</th>
@@ -820,21 +972,22 @@
                                 <input type="hidden" name="event-start-time" value="[% event_start_time %]" />
                                 <input type="hidden" name="event-end-time" value="[% event_end_time %]" />
                                 <input type="hidden" name="op" value="room-selection-confirmation" />
-                                <td></td>
-                                <td colspan="2"><input type="submit" value="Select Room" /></td>
+                                <td colspan="3"><input type="submit" value="Select Room" class="btn btn-primary book-btn"/></td>
                             <tr>
                         </tfoot>
                     </table>
                 [% ELSE %]
-                <h2 class="no-rooms-match">No rooms match your criteria!</h2>
-                <form method="post" action="#">
-                    <input type="hidden" name="op" value="availability-search" />
+					<div class="book-msg">
+		                <h2 class="no-rooms-match">No rooms match your criteria!</h2>
+		                <form method="post" action="#">
+		                    <input type="hidden" name="op" value="availability-search" />
 
-                    <button>Click here to try another search</button>
-                </form>
+		                    <button class="btn btn-link">Click here to try another search</button>
+		                </form>
+					</div>
                 [% END # IF are_rooms_available == 1 %]
                 </form>
-            
+
             </div> <!-- / .span12 -->
         </div> <!-- / .row-fluid -->
     </div> <!-- / .container-fluid -->
@@ -847,62 +1000,71 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span12">
-            
-            <form method="post" action="#">
-                <fieldset style="float:left;">
+
+            <form method="post" action="#" class="table-availability">
+                <fieldset>
                     <legend>Confirmation</legend>
-                    <p>Name: <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
-                    <input type="hidden" name="confirmed-user" value="[% current_user %]" />
-                    <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
-                    <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />
-                    <p>Email: <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
-                    <input type="hidden" name="confirmed-email" value="[% current_user_email %]" />
-                    [% FOREACH roomnumber IN selected_room_no %]
-                    <p>Room: <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
-                    <input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
-                    [% END %]
-                    <p style="float:right;">Time: <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
-                    <input type="hidden" name="confirmed-displayed-start" value="[% displayed_start %]" />
-                    <input type="hidden" name="confirmed-displayed-end" value="[% displayed_end %]" />
-                    <input type="hidden" name="confirmed-room-id" value="[% selected_room_id %]" />
-                    <input type="hidden" name="confirmed-start" value="[% selected_start_time %]" />
-                    <input type="hidden" name="confirmed-end" value="[% selected_end_time %]" />
-                    <input type="hidden" name="op" value="reservation-confirmed" />
-                    [% IF Koha.Preference('KohaAdminEmailAddress') %]
-                    <!-- Checked by default -->
-                    <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
-                    [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
-                    <p><input type="submit" name="confirmationSubmit" value="Confirm" /><input type="submit" name="confirmationSubmit" value="Start over" /></p>
+					<div style="margin: 0 auto; padding-bottom: 20px; width: 60%;">
+	                    <p>Name: <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
+	                    <input type="hidden" name="confirmed-user" value="[% current_user %]" />
+	                    <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
+	                    <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />
+	                    <p>Email: <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
+	                    <input type="hidden" name="confirmed-email" value="[% current_user_email %]" />
+	                    [% FOREACH roomnumber IN selected_room_no %]
+	                    <p>Room: <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
+	                    <input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
+	                    [% END %]
+	                    <p>Time: <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
+	                    <input type="hidden" name="confirmed-displayed-start" value="[% displayed_start %]" />
+	                    <input type="hidden" name="confirmed-displayed-end" value="[% displayed_end %]" />
+	                    <input type="hidden" name="confirmed-room-id" value="[% selected_room_id %]" />
+	                    <input type="hidden" name="confirmed-start" value="[% selected_start_time %]" />
+	                    <input type="hidden" name="confirmed-end" value="[% selected_end_time %]" />
+	                    <input type="hidden" name="op" value="reservation-confirmed" />
+	                    [% IF Koha.Preference('KohaAdminEmailAddress') %]
+	                    <!-- Checked by default -->
+	                    <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
+	                    [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
+	                    <p class="btn-group">
+							<input type="submit" name="confirmationSubmit" value="Confirm" class="btn btn-primary" />
+							<input type="submit" name="confirmationSubmit" value="Start over" class="btn btn-primary" />
+						</p>
+					</div>
                 </fieldset>
             </form>
-            
+
             </div> <!-- / .span12 -->
         </div> <!-- / .row-fluid -->
     </div> <!-- / .container-fluid -->
     [% ELSIF op == 'reservation-confirmed' %]
 
         [% IF invalid_booking == 1 %]
-            <h1>Sorry!</h1>
-            <br />
-            <h2>It appears there was a problem completing your reservation
-                <br />
-                This is most likely due to someone else placing a reservation for a conflicting time slot.
-            </h2>
+			<div class="book-msg">
+	            <h1>Sorry!</h1>
+	            <br />
+	            <h2>It appears there was a problem completing your reservation
+	                <br />
+	                This is most likely due to someone else placing a reservation for a conflicting time slot.
+	            </h2>
 
-            <form method="post" action="#">
+	            <form method="post" action="#">
 
-                <button>Click here to search again</button>
-            </form>
+	                <button>Click here to search again</button>
+	            </form>
+			</div>
         [% ELSE %]
-            <h1>Congratulations! Your reservation is confirmed!</h1>
-            <br />
-            [% IF SENT == '1' %]
-            <h3>An email confirmation has been sent to [% patron_email %]!</h3>
-            [% END %]
-            <form method="post" action="#">
+			<div class="book-msg">
+	            <h1>Congratulations! Your reservation is confirmed!</h1>
+	            <br />
+	            [% IF SENT == '1' %]
+	            <h3>An email confirmation has been sent to [% patron_email %]!</h3>
+	            [% END %]
+	            <form method="post" action="#">
 
-                <button>Back to calendar</button>
-            </form>
+	                <button class="btn btn-link book-btn">Back to calendar</button>
+	            </form>
+			</div>
         [% END # IF invalid_booking == 1 %]
 
     [% END %]
