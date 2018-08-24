@@ -69,66 +69,47 @@ sub new {
 sub install() {
     my ( $self, $args ) = @_;
 
-    my $isUpgrade = isUpgrading();
+    my @installer_statements = (
+        qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
+        qq{CREATE TABLE $rooms_table (
+              `roomid` INT NOT NULL AUTO_INCREMENT,
+              `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
+              `maxcapacity` INT NOT NULL, -- maximum number of people allowed in the room
+            PRIMARY KEY (roomid)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+        qq{CREATE INDEX $rooms_index ON $rooms_table(roomid);},
+        qq{CREATE TABLE $bookings_table (
+              `bookingid` INT NOT NULL AUTO_INCREMENT,
+              `borrowernumber` INT NOT NULL, -- foreign key; borrowers table
+              `roomid` INT NOT NULL, -- foreign key; $rooms_table table
+              `start` DATETIME NOT NULL, -- start date/time of booking
+              `end` DATETIME NOT NULL, -- end date/time of booking
+              `blackedout` TINYINT(1) NOT NULL DEFAULT 0,
+              PRIMARY KEY (bookingid),
+              CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
+              CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+        qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
+        qq{CREATE TABLE $equipment_table (
+              `equipmentid` INT NOT NULL AUTO_INCREMENT,
+              `equipmentname` VARCHAR(20) NOT NULL,
+              PRIMARY KEY (equipmentid)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+        qq{CREATE INDEX $equipment_index ON $equipment_table(equipmentid);},
+        qq{CREATE TABLE $roomequipment_table (
+              `roomid` INT NOT NULL,
+              `equipmentid` INT NOT NULL,
+              PRIMARY KEY (roomid, equipmentid),
+              CONSTRAINT roomequipment_iafk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
+              CONSTRAINT roomequipment_ibfk FOREIGN KEY (equipmentid) REFERENCES $equipment_table(equipmentid)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+        qq{CREATE INDEX $roomequipment_index ON $roomequipment_table(roomid, equipmentid);},
+        qq{INSERT INTO $equipment_table (equipmentname) VALUES ('none');},
+    );
 
-    if ($isUpgrade) { # previous version already installed, modify existing tables as necessary
-
-        my $query = "
-            ALTER TABLE $bookings_table
-            DROP PRIMARY KEY,
-            ADD COLUMN bookingid INT NOT NULL AUTO_INCREMENT FIRST,
-            ADD COLUMN blackedout TINYINT(1) NOT NULL DEFAULT 0,
-            ADD PRIMARY KEY (bookingid);
-        ";
-
-        my $dbh = C4::Context->dbh;
-
-        $dbh->do($query);
-        print "Install query: $query";
-    }
-    else { # new installation/not upgrading from a previous version
-        my @installer_statements = (
-            qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
-            qq{CREATE TABLE $rooms_table (
-                  `roomid` INT NOT NULL AUTO_INCREMENT,
-                  `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
-                  `maxcapacity` INT NOT NULL, -- maximum number of people allowed in the room
-                PRIMARY KEY (roomid)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-            qq{CREATE INDEX $rooms_index ON $rooms_table(roomid);},
-            qq{CREATE TABLE $bookings_table (
-                  `bookingid` INT NOT NULL AUTO_INCREMENT,
-                  `borrowernumber` INT NOT NULL, -- foreign key; borrowers table
-                  `roomid` INT NOT NULL, -- foreign key; $rooms_table table
-                  `start` DATETIME NOT NULL, -- start date/time of booking
-                  `end` DATETIME NOT NULL, -- end date/time of booking
-                  `blackedout` TINYINT(1) NOT NULL DEFAULT 0,
-                  PRIMARY KEY (bookingid),
-                  CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
-                  CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-            qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
-            qq{CREATE TABLE $equipment_table (
-                  `equipmentid` INT NOT NULL AUTO_INCREMENT,
-                  `equipmentname` VARCHAR(20) NOT NULL,
-                  PRIMARY KEY (equipmentid)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-            qq{CREATE INDEX $equipment_index ON $equipment_table(equipmentid);},
-            qq{CREATE TABLE $roomequipment_table (
-                  `roomid` INT NOT NULL,
-                  `equipmentid` INT NOT NULL,
-                  PRIMARY KEY (roomid, equipmentid),
-                  CONSTRAINT roomequipment_iafk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
-                  CONSTRAINT roomequipment_ibfk FOREIGN KEY (equipmentid) REFERENCES $equipment_table(equipmentid)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-            qq{CREATE INDEX $roomequipment_index ON $roomequipment_table(roomid, equipmentid);},
-            qq{INSERT INTO $equipment_table (equipmentname) VALUES ('none');},
-        );
-
-        for (@installer_statements) {
-            my $sth = C4::Context->dbh->prepare($_);
-            $sth->execute or die C4::Context->dbh->errstr;
-        }
+    for (@installer_statements) {
+        my $sth = C4::Context->dbh->prepare($_);
+        $sth->execute or die C4::Context->dbh->errstr;
     }
 
     # Add required IntranetUserJS entry to place
@@ -158,6 +139,8 @@ var data = $("div.patroninfo h5").html();
     );
 
     C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
+
+    $self->store_data({ plugin_version => $VERSION }); # used when upgrading to newer version 
 
     return 1;
 }
@@ -998,23 +981,6 @@ sub configure {
 
     print $cgi->header();
     print $template->output();
-}
-
-sub isUpgrading {
-
-    my $dbh = C4::Context->dbh;
-
-    my $db_name = C4::Context->config('database');
-
-    my $sth = $dbh->table_info(undef, $db_name, 'bookings', 'TABLE');
-
-    $sth->execute;
-
-    my @info = $sth->fetchrow_array;
-
-    my $exists = scalar(@info);
-
-    return $exists;
 }
 
 sub getCurrentTimestamp {
