@@ -52,17 +52,6 @@ The following directory stanza is only required in **Apache 2.4+**. `Require all
         AllowOverride None
         Require all granted
     </Directory>
-
-# File Configuration
-
-After installing the plugin, do the following for proper file permissions to prevent 500 errors:
-
-Run
-
-    sudo chmod a+x calendar.pl
-
-from within the RoomReservations folder
-
 # Prerequisite Modules
 
 This plugin requires the following modules to be installed:
