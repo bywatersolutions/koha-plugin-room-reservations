@@ -1,4 +1,4 @@
-# WARNING: Currently, there is no safeguard in place to prevent data from being deleted during an upgrade. Be sure to backup/save data prior to upgrading.
+# WARNING: Prior to version 1.1.15 there is no safeguard in place to prevent data from being deleted during an upgrade. Be sure to backup/save data prior to upgrading. Beginning with version 1.1.15 as a new install, existing table data (reservations, rooms, room equipment, etc.) will persist after upgrades. Even so, always remember to perform a database backup prior to upgrading any component!
 
 # Introduction
 
