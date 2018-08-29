@@ -791,6 +791,7 @@
         <div class="row-fluid">
             <div class="span12">
                 <form method="post" action="#" onsubmit="return validateAvailabilitySearchResults()">
+                    <input type="hidden" name="start-date" value="[% start_date %]" />
                 [% IF are_rooms_available == 1 %]
                     <table border="2">
                         <thead>
@@ -839,6 +840,18 @@
         </div> <!-- / .row-fluid -->
     </div> <!-- / .container-fluid -->
     [% ELSIF op == 'room-selection-confirmation' %]
+    <script type="text/javascript">
+        function validateConfirmationForm() {
+
+            var resLimit = document.getElementById('count-limit').value;
+            var userLimit = document.getElementById('user-daily-limit').value;
+
+            if (userLimit == resLimit && userLimit > 0) {
+                alert("Unable to continue!\nYou have reached the limit of daily reservations per user for today!");
+                return false;
+            }
+        }
+    </script>
     <ul class="breadcrumb">
             <li><a href="/cgi-bin/koha/opac-main.pl">Home</a> <span class="divider">&rsaquo;</span></li>
             <li><a href="#">Study Room Calendar</a> <span class="divider">&rsaquo;</span></li>
@@ -848,10 +861,12 @@
         <div class="row-fluid">
             <div class="span12">
             
-            <form method="post" action="#">
+            <form name="confirmationForm" id="confirmationForm" method="post" action="#" onsubmit="return validateConfirmationForm();">
                 <fieldset style="float:left;">
                     <legend>Confirmation</legend>
                     <p>Name: <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
+                    <input type="hidden" name="count-limit" id="count-limit" value="[% count_limit %]" />
+                    <input type="hidden" name="user-daily-limit" id="user-daily-limit" value="[% user_daily_limit %]" />
                     <input type="hidden" name="confirmed-user" value="[% current_user %]" />
                     <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
                     <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />

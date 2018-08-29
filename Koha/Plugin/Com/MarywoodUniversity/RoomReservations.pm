@@ -69,6 +69,8 @@ sub new {
 sub install() {
     my ( $self, $args ) = @_;
 
+    my $original_version = self->retrieve_data('plugin_version'); # is this a new install or an upgrade?
+
     my @installer_statements = (
         qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
         qq{CREATE TABLE $rooms_table (
@@ -107,12 +109,9 @@ sub install() {
         qq{INSERT INTO $equipment_table (equipmentname) VALUES ('none');},
     );
 
-    for (@installer_statements) {
-        my $sth = C4::Context->dbh->prepare($_);
-        $sth->execute or die C4::Context->dbh->errstr;
-    }
+    if (!defined($original_version)) { # clean install
 
-    # Add required IntranetUserJS entry to place
+        # Add required IntranetUserJS entry to place
     # reservations for a patron from circulation.pl
     my $IntranetUserJS = C4::Context->preference('IntranetUserJS');
 
@@ -138,7 +137,18 @@ var data = $("div.patroninfo h5").html();
     /* End of JS for Koha RoomReservation Plugin */
     );
 
-    C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
+        C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
+
+        for (@installer_statements) {
+            my $sth = C4::Context->dbh->prepare($_);
+            $sth->execute or die C4::Context->dbh->errstr;
+        }
+    }
+    else { # upgrade
+        if ($original_version eq '1.1.15') {
+            # do nothing..no database changes
+        }
+    }
 
     $self->store_data({ plugin_version => $VERSION }); # used when upgrading to newer version 
 
@@ -674,6 +684,37 @@ sub configure {
                 op => $op,
             );
         }
+        elsif ( $selected eq 'action-restrict-daily-reservations-per-patron' ) {
+
+            $action = 'restrict-daily-reservations-per-patron';
+
+            $template->param(
+                action => $action,
+                op => $op,
+            );
+        }
+    }
+    elsif ( $op eq 'restrict-daily-reservations-per-patron' ) {
+
+        my $limit = $cgi->param('limit-submitted') || q{};
+
+        if ($limit eq '1') {
+
+            my $limit_count = $cgi->param('reservations-limit-field');
+
+            $self->store_data({ count_limit => $limit_count });
+        }
+
+        my $current_limit = $self->retrieve_data('count_limit');
+
+        if ( $current_limit eq '0' ) {
+            $current_limit = '';
+        }
+
+        $template->param(
+            op => $op,
+            count_limit => $current_limit,
+        );
     }
     elsif ( $op eq 'restrict-categories' ) {
 

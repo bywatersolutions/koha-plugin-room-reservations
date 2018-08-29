@@ -121,9 +121,9 @@ elsif ( $op eq 'availability-search' ) {
 
     my $capacities = loadAllMaxCapacities();
 
-    my $max_num_days = getFutureDays();
+    my $max_num_days = getFutureDays() || '0';
 
-    my $max_time = getMaxTime();
+    my $max_time = getMaxTime() || '0';
 
     if ( $max_num_days eq '0' ) {
         $max_num_days = '';
@@ -188,6 +188,7 @@ elsif ( $op eq 'availability-search-results' ) {
         displayed_end => $displayed_event_end,
         event_start_time => $event_start,
         event_end_time => $event_end,
+        start_date => $availability_format_start_date,
     );
 }
 elsif ( $op eq 'room-selection-confirmation' ) {
@@ -198,15 +199,22 @@ elsif ( $op eq 'room-selection-confirmation' ) {
     my $event_start = $cgi->param('event-start-time');
     my $event_end = $cgi->param('event-end-time');
 
+    my $start_date = $cgi->param('start-date');
+
     my $displayed_event_time = "$displayed_start - $displayed_end";
 
-    my $user_fn = C4::Context->userenv->{'firstname'};
-    my $user_ln = C4::Context->userenv->{'surname'};
+    my $user_fn = C4::Context->userenv->{'firstname'} || q{};
+    my $user_ln = C4::Context->userenv->{'surname'} || q{};
+    my $user_bn = C4::Context->userenv->{'number'};
 
     my $user = "$user_fn $user_ln";
     my $email = C4::Context->userenv->{'emailaddress'};
 
     my $selectedRoomNumber = getRoomNumberById($selected_id);
+
+    my $count_limit = getDailyReservationLimit();
+
+    my $current_user_daily_limit = getUserDailyResLimit($user_bn, $start_date);
 
     $template->param(
         op                  => $op,
@@ -221,6 +229,8 @@ elsif ( $op eq 'room-selection-confirmation' ) {
         selected_end_time   => $event_end,
         displayed_start     => $displayed_start,
         displayed_end       => $displayed_end,
+        count_limit         => $count_limit,
+        user_daily_limit    => $current_user_daily_limit,
     );
 }
 elsif( $op eq 'reservation-confirmed' ) {
@@ -229,7 +239,7 @@ elsif( $op eq 'reservation-confirmed' ) {
     my $roomid = $cgi->param('confirmed-room-id');
     my $start   = $cgi->param('confirmed-start');
     my $end     = $cgi->param('confirmed-end');
-    my $sendCopy = $cgi->param('send-confirmation-copy');
+    my $sendCopy = $cgi->param('send-confirmation-copy') || q{};
     my $submitButton = $cgi->param('confirmationSubmit');
     my $user = $cgi->param('confirmed-user');
     my $roomnumber = $cgi->param('confirmed-roomnumber');
@@ -428,6 +438,32 @@ sub getMaxTime {
     my $row = $sth->fetchrow_hashref();
 
     return $row->{'plugin_value'};
+}
+
+sub getDailyReservationLimit {
+
+    my $dbh = C4::Context->dbh;
+    my $sql = "SELECT plugin_value FROM plugin_data WHERE plugin_class = ? AND plugin_key = ?";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute( 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations', 'count_limit' );
+    my $row = $sth->fetchrow_hashref();
+
+    return $row->{'plugin_value'};
+}
+
+sub getUserDailyResLimit {
+
+    my ($bn, $date) = @_;
+
+    $date = "$date%";
+
+    my $dbh = C4::Context->dbh;
+    my $sql = "SELECT COUNT(*) AS daily_total FROM bookings WHERE borrowernumber = ? AND start LIKE ?";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute( $bn, $date );
+    my $row = $sth->fetchrow_hashref();
+
+    return $row->{'daily_total'};
 }
 
 sub areAnyRoomsAvailable {
