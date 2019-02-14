@@ -69,7 +69,7 @@ sub new {
 sub install() {
     my ( $self, $args ) = @_;
 
-    my $original_version = self->retrieve_data('plugin_version'); # is this a new install or an upgrade?
+    my $original_version = $self->retrieve_data('plugin_version'); # is this a new install or an upgrade?
 
     my @installer_statements = (
         qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
