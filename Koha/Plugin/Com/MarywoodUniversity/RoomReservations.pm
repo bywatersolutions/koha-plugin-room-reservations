@@ -1,20 +1,23 @@
 package Koha::Plugin::Com::MarywoodUniversity::RoomReservations;
 
 use Modern::Perl;
+
 use base qw(Koha::Plugins::Base);
-use C4::Context;
-use Koha::Patrons;
-use Koha::DateUtils;
+
 use Carp;
-use C4::Output;
-use C4::Auth;
-use Koha::Email;
-use Mail::Sendmail;
-use MIME::QuotedPrint;
-use MIME::Base64;
-use Cwd qw( abs_path );
+use Cwd qw( abs_path cwd );
 use File::Basename qw( dirname );
+use MIME::Base64;
+use MIME::QuotedPrint;
+use Mail::Sendmail;
 use POSIX 'strftime';
+
+use C4::Auth;
+use C4::Context;
+use C4::Output;
+use Koha::DateUtils;
+use Koha::Email;
+use Koha::Patrons;
 
 our $VERSION = "{VERSION}";
 
@@ -588,7 +591,13 @@ sub configure {
     my ( $self, $args ) = @_;
 
     my $cgi = $self->{'cgi'};
+
     my $template = $self->get_template({ file => 'configure.tt' });
+    $template->param( 
+        language => C4::Languages::getlanguage($cgi) || 'en',
+        mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+    );
+
     my $op = $cgi->param('op') || q{};
 
     if ( $op eq '' ) { # Displays currently configured rooms
@@ -1020,7 +1029,6 @@ sub configure {
             available_equipment => $availableEquipment,
         );
     }
-
 
     print $cgi->header();
     print $template->output();

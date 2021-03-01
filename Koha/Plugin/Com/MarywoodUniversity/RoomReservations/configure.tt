@@ -1,5 +1,7 @@
+[% USE Gettext('com.marywooduniversity.roomreservations', 'de' 'utf-8', mbf_path) %]
+
 [% INCLUDE 'doc-head-open.inc' %]
-    <title>Koha: Room Reservations Plugin: Configuration</title>
+    <title>[% "Plugins" | gettext %]-[% Gettext.gettext("Koha: Room Reservations Plugin: Configuration") %]</title>
 [% INCLUDE 'doc-head-close.inc' %]
     <style type="text/css">
         .fieldset-auto-width {

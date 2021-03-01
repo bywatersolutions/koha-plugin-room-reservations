@@ -1,3 +1,5 @@
+[% USE Gettext('com.marywooduniversity.roomreservations', 'en' 'utf-8') %]
+
 [% USE Koha %]
 [% USE Branches %]
 [% INCLUDE 'doc-head-open.inc' %]
@@ -43,7 +45,7 @@
     [% IF op == 'undef' %]
     <ul class="breadcrumb">
         <li><a href="/cgi-bin/koha/opac-main.pl">Home</a> <span class="divider">&rsaquo;</span></li>
-        <li><a href="#">Study Room Calendar</a></li>
+        <li><a href="#">[% "Study Room Calendar" | gettext %]</a></li>
     </ul>
         <div class="container-fluid">
             <div class="row-fluid">
