@@ -1,0 +1,29 @@
+# German translations for PACKAGE package.
+# Copyright (C) 2021 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# root <root@kohadevbox>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: root <root@kohadevbox>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2021-03-01 17:38+0000\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: configure.tt:4 tool.tt:4
+msgid "Koha: Room Reservations Plugin: Configuration"
+msgstr "This should be in German"
+
+#: tool.tt:37
+msgid "Plugins"
+msgstr "GERMAN VERSION OF PLUGINS"
+
+#: opac/calendar.tt:48
+msgid "Study Room Calendar"
+msgstr "german version of plugins"

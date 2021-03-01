@@ -1,5 +1,7 @@
+[% USE Gettext('com.marywooduniversity.roomreservations', 'en' 'utf-8') %]
+
 [% INCLUDE 'doc-head-open.inc' %]
-    <title>Koha: Room Reservations Plugin: Tool</title>
+    <title>[% "Koha: Room Reservations Plugin: Configuration" | gettext %]</title>
 [% INCLUDE 'doc-head-close.inc' %]
     <style type="text/css">
         .fieldset-auto-width {
@@ -32,7 +34,7 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Tool</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% "Plugins" | gettext %]</a> &rsaquo; Room Reservations &rsaquo; Tool</div>
 
 <div id="doc3">
 
