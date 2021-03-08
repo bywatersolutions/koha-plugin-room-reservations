@@ -1,4 +1,4 @@
-[% USE Gettext('com.marywooduniversity.roomreservations', 'en' 'utf-8') %]
+[% USE gtx = Gettext('com.marywooduniversity.roomreservations', 'fr', 'utf-8', mbf_path) %]
 
 [% INCLUDE 'doc-head-open.inc' %]
     <title>[% "Koha: Room Reservations Plugin: Configuration" | gettext %]</title>
@@ -17,7 +17,7 @@
         button {
             background:none!important;
             color:#0000EE;
-            border:none; 
+            border:none;
             padding:0!important;
             font: inherit;
             cursor: pointer;
@@ -182,10 +182,10 @@
             var blackoutSelectionDiv = $('#b-selection');
             var fullBlackoutDiv = $('#full-blackout');
             var partialBlackoutDiv = $('#partial-blackout');
-            
+
             partialBlackoutDiv.hide();
             fullBlackoutDiv.hide();
-            
+
             blackoutType.change(function(){
                 if (blackoutType.val() == "full") {
                     blackoutSelectionDiv.hide();
@@ -335,20 +335,20 @@
            let matches = dateStr.match(regExp);
            let isValid = matches;
            let maxDate = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-           
+
            if (matches) {
              const month = parseInt(matches[1]);
              const date = parseInt(matches[2]);
              const year = parseInt(matches[3]);
-             
+
              isValid = month <= 12 && month > 0;
              isValid &= date <= maxDate[month] && date > 0;
-             
+
              const leapYear = (year % 400 == 0)
                 || (year % 4 == 0 && year % 100 != 0);
-             isValid &= month != 2 || leapYear || date <= 28; 
+             isValid &= month != 2 || leapYear || date <= 28;
            }
-           
+
            return isValid
         }
 
@@ -464,9 +464,9 @@
             var endTimestamp   = blackoutDate + " " + blackoutEndTime;
 
             // determines if invalid start/end values were entered
-            if (startTimestamp >= endTimestamp) {      
-                alert("Please select a valid start and end time!");     
-                return false;       
+            if (startTimestamp >= endTimestamp) {
+                alert("Please select a valid start and end time!");
+                return false;
             }
 
             for (var i = 0; i < rooms.length; i++) {

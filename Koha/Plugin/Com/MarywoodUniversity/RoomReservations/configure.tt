@@ -1,7 +1,7 @@
-[% USE Gettext('com.marywooduniversity.roomreservations', 'de' 'utf-8', mbf_path) %]
+[% USE gtx = Gettext('com.marywooduniversity.roomreservations', language, 'utf-8', mbf_path) %]
 
 [% INCLUDE 'doc-head-open.inc' %]
-    <title>[% "Plugins" | gettext %]-[% Gettext.gettext("Koha: Room Reservations Plugin: Configuration") %]</title>
+    <title>Plugins - [% gtx.gettext("Koha: Room Reservations Plugin: Configuration") %]</title>
 [% INCLUDE 'doc-head-close.inc' %]
     <style type="text/css">
         .fieldset-auto-width {
@@ -17,7 +17,7 @@
         button {
             background:none!important;
             color:#0000EE;
-            border:none; 
+            border:none;
             padding:0!important;
             font: inherit;
             cursor: pointer;
@@ -78,7 +78,7 @@
 <div id="doc3">
 
     <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
-    <h3>Koha: Room Reservations Plugin: Configuration</h3>
+    <h3>[% gtx.gettext("Koha: Room Reservations Plugin: Configuration") %]</h3>
 
     [% IF op == '' %]
     <form name="config_actions" method="post" action="#" onsubmit="return validateConfigActions()">
@@ -89,7 +89,7 @@
         <fieldset class="fieldset-auto-width">
             <legend>Actions</legend>
                 <div>
-                        Select an action: 
+                        Select an action:
                         <select name="config_actions_selection">
                             <option value="null"></option>
                             <option value="action-select-add">Add room</option>
@@ -682,7 +682,7 @@
                         </td>
                     </tr>
                 </tfoot>
-            </table> 
+            </table>
         </form>
     [% END # op == 'edit-rooms' %]
 
