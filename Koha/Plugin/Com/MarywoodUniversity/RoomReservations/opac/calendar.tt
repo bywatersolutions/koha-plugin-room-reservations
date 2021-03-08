@@ -1,4 +1,4 @@
-[% USE Gettext('com.marywooduniversity.roomreservations', 'en' 'utf-8') %]
+[% USE gtx = Gettext('com.marywooduniversity.roomreservations', 'fr', 'utf-8', mbf_path) %]
 
 [% USE Koha %]
 [% USE Branches %]
@@ -27,7 +27,7 @@
         button {
             background:none!important;
             color:#0000EE;
-            border:none; 
+            border:none;
             padding:0!important;
             font: inherit;
             cursor: pointer;
@@ -586,7 +586,7 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span12">
-                
+
                 <form name="availabilitySearchForm" method="post" action="#" onsubmit="return validateAvailabilitySearch()">
                     <input type="hidden" name="max_days" id="max_days" value="[% max_days %]" />
                     <input type="hidden" name="max_time" id="max_time" value="[% max_time %]" />
@@ -601,7 +601,7 @@
                             <td>
                             <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="Start date" />
                             <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
-                            
+
                             <select name="availability-search-start-time">
                                 <option value="">Time</option>
                                 <option value="00:00:00">12:00 AM</option>
@@ -753,7 +753,7 @@
                         </tbody>
                     </table>
                 </form>
-                
+
                 </div> <!-- / .span12 -->
             </div> <!-- / .row-fluid -->
         </div> <!-- / .container-fluid -->
@@ -837,7 +837,7 @@
                 </form>
                 [% END # IF are_rooms_available == 1 %]
                 </form>
-            
+
             </div> <!-- / .span12 -->
         </div> <!-- / .row-fluid -->
     </div> <!-- / .container-fluid -->
@@ -862,7 +862,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span12">
-            
+
             <form name="confirmationForm" id="confirmationForm" method="post" action="#" onsubmit="return validateConfirmationForm();">
                 <fieldset style="float:left;">
                     <legend>Confirmation</legend>
@@ -892,7 +892,7 @@
                     <p><input type="submit" name="confirmationSubmit" value="Confirm" /><input type="submit" name="confirmationSubmit" value="Start over" /></p>
                 </fieldset>
             </form>
-            
+
             </div> <!-- / .span12 -->
         </div> <!-- / .row-fluid -->
     </div> <!-- / .container-fluid -->

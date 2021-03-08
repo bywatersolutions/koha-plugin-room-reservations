@@ -1,5 +1,7 @@
 [% USE Koha %]
 [% USE Branches %]
+[% USE gtx = Gettext('com.marywooduniversity.roomreservations', 'fr', 'utf-8', mbf_path) %]
+
 [% INCLUDE 'doc-head-open.inc' %]
     <title>Koha: Room Reservations Plugin: Reserve as patron</title>
 [% INCLUDE 'doc-head-close.inc' %]
@@ -73,7 +75,7 @@
               <tr>
                 <td>
                 <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="Start date" />
-                
+
                 <select name="availability-search-start-time">
                     <option value="">Time</option>
                     <option value="00:00:00">12:00 AM</option>
