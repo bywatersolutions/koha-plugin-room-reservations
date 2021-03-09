@@ -27,10 +27,10 @@
         function validateSavedRooms() {
             var x = document.forms["saved_rooms"]["saved_rooms_action"].value;
             if (x == "null") {
-                alert("Please choose an action");
+                alert("[% 'Please choose an action' | gettext %]");
                 return false;
             } else if (x == "delete") {
-                if (confirm("Are you sure you want to remove the selected room?")) {
+                if (confirm(" [% 'Are you sure you want to remove the selected room?' %]")) {
                     // Yes
                     return true;
                 } else {
@@ -48,7 +48,7 @@
                 }
             }
             if (!roomValue) {
-                alert("Please select a room");
+                alert("[% 'Please select a room' | gettext %]");
                 return false;
             }
         }
@@ -57,7 +57,7 @@
         function validateConfigActions() {
             var x = document.forms["config_actions"]["config_actions_selection"].value;
             if (x == "null") {
-                alert("Please choose an action");
+                alert("[% 'Please choose an action' | gettext %]");
                 return false;
             }
         }
@@ -73,7 +73,7 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Configuration</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' | gettext %] &rsaquo; [% 'Configuration' | gettext %]</div>
 
 <div id="doc3">
 
