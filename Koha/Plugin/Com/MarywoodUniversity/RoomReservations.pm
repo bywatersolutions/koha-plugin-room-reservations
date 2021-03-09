@@ -19,6 +19,9 @@ use Koha::DateUtils;
 use Koha::Email;
 use Koha::Patrons;
 
+use Locale::Messages;
+Locale::Messages->select_package('gettext_pp');
+
 our $VERSION = "{VERSION}";
 
 our $metadata = {
@@ -121,7 +124,7 @@ sub install() {
     $IntranetUserJS =~ s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
 
     $IntranetUserJS .= q(
-/* JS for Koha RoomReservation Plugin 
+/* JS for Koha RoomReservation Plugin
 This JS was added automatically by installing the RoomReservation plugin
 Please do not modify */
 
@@ -155,7 +158,7 @@ var data = $("div.patroninfo h5").html();
         }
     }
 
-    $self->store_data({ plugin_version => $VERSION }); # used when upgrading to newer version 
+    $self->store_data({ plugin_version => $VERSION }); # used when upgrading to newer version
 
     return 1;
 }
@@ -414,7 +417,7 @@ END_OF_BODY
     }
     }
 
-    print $cgi->header();
+    print $cgi->header(-type => 'text/html',-charset => 'utf-8');
     print $template->output();
 }
 
@@ -528,7 +531,7 @@ sub tool {
 
             for (my $i = 0; $i < scalar(@rooms); $i++) {
                 addBlackoutBooking($current_user, $rooms[$i], $start_date, $end_date);
-            } 
+            }
         }
 
         my $blackouts = getAllBlackedoutBookings();
@@ -570,7 +573,7 @@ sub tool {
 
             for (my $i = 0; $i < scalar(@rooms); $i++) {
                 addBlackoutBooking($current_user, $rooms[$i], $start, $end);
-            } 
+            }
         }
 
         my $blackouts = getAllBlackedoutBookings();
@@ -583,7 +586,7 @@ sub tool {
         );
     }
 
-    print $cgi->header();
+    print $cgi->header(-type => 'text/html',-charset => 'utf-8');
     print $template->output();
 }
 
@@ -593,7 +596,7 @@ sub configure {
     my $cgi = $self->{'cgi'};
 
     my $template = $self->get_template({ file => 'configure.tt' });
-    $template->param( 
+    $template->param(
         language => C4::Languages::getlanguage($cgi) || 'en',
         mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
     );
@@ -756,7 +759,7 @@ sub configure {
 
                 while ( my ( $key, $value ) = each %cat_hash ) {
                     $self->store_data({ $key => $value });
-                }       
+                }
             }
 
 
@@ -1030,7 +1033,7 @@ sub configure {
         );
     }
 
-    print $cgi->header();
+    print $cgi->header(-type => 'text/html',-charset => 'utf-8');
     print $template->output();
 }
 
@@ -1204,7 +1207,7 @@ sub addBlackoutBooking {
     my $dbh = C4::Context->dbh;
 
     $dbh->do("
-        INSERT INTO $bookings_table (borrowernumber, roomid, start, end, blackedout) 
+        INSERT INTO $bookings_table (borrowernumber, roomid, start, end, blackedout)
         VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ', 1);');
 }
 
@@ -1841,7 +1844,7 @@ sub addBooking {
     my $dbh = C4::Context->dbh;
 
     $dbh->do("
-        INSERT INTO $bookings_table (borrowernumber, roomid, start, end) 
+        INSERT INTO $bookings_table (borrowernumber, roomid, start, end)
         VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ');');
 }
 

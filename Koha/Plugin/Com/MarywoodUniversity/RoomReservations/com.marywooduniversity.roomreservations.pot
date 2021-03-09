@@ -15,15 +15,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit"
 
-#: configure.tt:4 configure.tt:4 tool.tt:4 tool.tt:4
+#: configure.tt:4 configure.tt:81 tool.tt:4
 msgid "Koha: Room Reservations Plugin: Configuration"
 msgstr ""
 
-#: tool.tt:37 tool.tt:37
+#: tool.tt:37
 msgid "Plugins"
 msgstr ""
 
-#: opac/calendar.tt:48 opac/calendar.tt:48
+#: opac/calendar.tt:48
 msgid "Study Room Calendar"
 msgstr ""
 
