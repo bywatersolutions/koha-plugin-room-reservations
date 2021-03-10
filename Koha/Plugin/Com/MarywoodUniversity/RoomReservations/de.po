@@ -5,347 +5,364 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-03-10 12:31+0100\n"
 "Last-Translator: root <root@56ee6f0bd7d1>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-03-09 13:27+0000\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
 
-#: configure.tt:4 configure.tt:81 tool.tt:4
+#: configure.tt:4 configure.tt:81
 msgid "Koha: Room Reservations Plugin: Configuration"
-msgstr ""
-
-#: tool.tt:37 configure.tt:76
-msgid "Plugins"
-msgstr ""
-
-#: opac/calendar.tt:48
-msgid "Study Room Calendar"
-msgstr ""
+msgstr "Plugin für Raumreservierungen: Konfiguration"
 
 #: configure.tt:30 configure.tt:60
 msgid "Please choose an action"
-msgstr ""
+msgstr "Bitte wählen Sie eine Aktion"
 
 #: configure.tt:51
 msgid "Please select a room"
-msgstr ""
-
-#: configure.tt:76
-msgid "Room Reservations"
-msgstr ""
-
-#: configure.tt:76
-msgid "Configuration"
-msgstr ""
+msgstr "Bitte wählen Sie einen Raum aus"
 
 #: configure.tt:76
 msgid "Home"
-msgstr ""
+msgstr "Home"
+
+#: configure.tt:76
+msgid "Plugins"
+msgstr "Plugins"
+
+#: configure.tt:76
+msgid "Room Reservations"
+msgstr "Raumreservierungen"
+
+#: configure.tt:76
+msgid "Configuration"
+msgstr "Konfiguration"
 
 #: configure.tt:90 configure.tt:677
 msgid "Actions"
-msgstr ""
+msgstr "Aktionen"
 
 #: configure.tt:92
 msgid "Select an action:"
-msgstr ""
+msgstr "Eine Aktion wählen:"
 
 #: configure.tt:95
 msgid "Add room"
-msgstr ""
+msgstr "Raum hinzufügen"
 
 #: configure.tt:96
 msgid "Add room equipment"
-msgstr ""
+msgstr "Raumequipment hinzufügen"
 
 #: configure.tt:97
 msgid "Delete room"
-msgstr ""
+msgstr "Raum löschen"
 
 #: configure.tt:98
 msgid "Delete room equipment"
-msgstr ""
+msgstr "Raumequipment löschen"
 
 #: configure.tt:99
 msgid "Display rooms"
-msgstr ""
+msgstr "Räume anzeigen"
 
 #: configure.tt:100
 msgid "Edit room"
-msgstr ""
+msgstr "Raum bearbeiten"
 
 #: configure.tt:101
 msgid "OPAC max future date"
-msgstr ""
+msgstr "OPAC max. Datum"
 
 #: configure.tt:102
 msgid "OPAC max time"
-msgstr ""
+msgstr "OPAC max. Zeit"
 
 #: configure.tt:103
 msgid "Restrict daily reservations per patron"
-msgstr ""
+msgstr "Tägliche Reservierungen pro Benutzer begrenzen"
 
 #: configure.tt:104 configure.tt:477
 msgid "Restrict patron categories"
-msgstr ""
+msgstr "Auf Benutzerkategorie(n) einschränken"
 
 #: configure.tt:106
 msgid "Continue"
-msgstr ""
+msgstr "Weiter"
 
 #: configure.tt:127
 msgid "Processing..."
-msgstr ""
+msgstr "Arbeite..."
 
 #: configure.tt:149
 msgid "Select a room to display its details or select another action."
-msgstr ""
+msgstr "Einen Raum um Details anzuzeigen oder eine andere Aktion wählen."
 
 #: configure.tt:158 configure.tt:204 configure.tt:566 configure.tt:648
 #: configure.tt:733 configure.tt:799 configure.tt:883 configure.tt:937
 #: configure.tt:1014
 msgid "Select another action"
-msgstr ""
+msgstr "Eine andere Aktion wählen"
 
 #: configure.tt:170
 msgid "Room"
-msgstr ""
+msgstr "Raum"
 
 #: configure.tt:191
 msgid "Show details"
-msgstr ""
+msgstr "Zeige Details"
 
 #: configure.tt:213
 msgid "Select another room to display"
-msgstr ""
+msgstr "Einen anderen Raum zum bearbeiten wählen"
 
 #: configure.tt:221 configure.tt:971
 msgid "Name:"
-msgstr ""
+msgstr "Name:"
 
 #: configure.tt:224
 msgid "Room capacity:"
-msgstr ""
+msgstr "Raumkapazität:"
 
 #: configure.tt:228 configure.tt:606 configure.tt:831
 msgid "Equipment:"
-msgstr ""
+msgstr "Equipment:"
 
 #: configure.tt:248 configure.tt:253
 msgid "Please enter a valid number!"
-msgstr ""
+msgstr "Bitte eine Zahl eingeben!"
 
 #: configure.tt:266
 msgid "Set max number days"
-msgstr ""
+msgstr "Maximale Anzahl an Tagen"
 
 #: configure.tt:272 configure.tt:277
 msgid "Current max number days:"
-msgstr ""
+msgstr "Aktuelle max. Anzahl an Tagen:"
+
+#: configure.tt:273
+msgid "n/a"
+msgstr "nicht gesetzt"
 
 #: configure.tt:282
 msgid "Set max number of days:"
-msgstr ""
+msgstr "Maximale Anzahl an Tagen:"
 
 #: configure.tt:288 configure.tt:374
 msgid "Add restriction"
-msgstr ""
+msgstr "Beschränkung hinzufügen"
 
 #: configure.tt:303 configure.tt:464
 msgid "Please select a valid number!"
-msgstr ""
+msgstr "Bitte eine Zahl auswählen!"
 
 #: configure.tt:316
 msgid "Set max time"
-msgstr ""
+msgstr "Max. Zeit"
 
 #: configure.tt:322 configure.tt:327
 msgid "Current max time:"
-msgstr ""
+msgstr "Aktuelle max. Zeit:"
 
 #: configure.tt:323
 msgid "n/a minutes"
-msgstr ""
+msgstr "nicht gesetzt"
 
 #: configure.tt:328 configure.tt:368
 msgid "minutes"
-msgstr ""
+msgstr "Minuten"
 
 #: configure.tt:336
 msgid "Set max time:"
-msgstr ""
+msgstr "Max. Zeit:"
 
 #: configure.tt:364
 msgid "hours"
-msgstr ""
+msgstr "Stunden"
 
 #: configure.tt:402
 msgid "Set daily reservation per patron limit"
-msgstr ""
+msgstr "Tägliches Reservierungslimit pro Kunde festlegen"
 
 #: configure.tt:408 configure.tt:413
 msgid "Current limit:"
-msgstr ""
+msgstr "Aktuelles Limit:"
+
+#: configure.tt:409
+msgid "No Limit"
+msgstr "Kein Limit"
 
 #: configure.tt:414 configure.tt:443
 msgid "reservations"
-msgstr ""
+msgstr "Reservierungen"
 
 #: configure.tt:418
 msgid "Set limit:"
-msgstr ""
+msgstr "Limit festlegen:"
 
 #: configure.tt:422
 msgid "No limit"
-msgstr ""
+msgstr "Kein Limit"
 
 #: configure.tt:449
 msgid "Add limit"
-msgstr ""
+msgstr "Limit hinzufügen"
 
 #: configure.tt:483 configure.tt:488
 msgid "Restricted categories:"
-msgstr ""
+msgstr "Kategorien ohne Berechtigung:"
 
 #: configure.tt:484
 msgid "No restrictions"
-msgstr ""
+msgstr "Alle sind berechtigt"
 
 #: configure.tt:497
 msgid "Restrict categories:"
-msgstr ""
+msgstr "Kategorien ohne Berechtigung:"
 
 #: configure.tt:504
 msgid "INVALID!"
-msgstr ""
+msgstr "Ungültig!"
 
 #: configure.tt:510
 msgid "Text entered here will be displayed to restricted patrons on the OPAC"
 msgstr ""
+"Der hier eingegebene Text wird für Besucher ohne Berechtigung im OPAC "
+"angezeigt"
 
 #: configure.tt:523 configure.tt:843
 msgid "Update"
-msgstr ""
+msgstr "Übernehmen"
 
 #: configure.tt:540
 msgid "Please enter a roomname"
-msgstr ""
+msgstr "Bitte einen Raumnamen eingeben"
 
 #: configure.tt:545
 msgid "Please enter a max capacity for the room"
-msgstr ""
+msgstr "Bitte die max. Kapazität des Raumes eingeben"
 
 #: configure.tt:557
 msgid "Select room equipment. If no equipment then check `none`"
-msgstr ""
+msgstr "Raumequipment auswählen. Gibt es kein Equipment dann \"Kein\" wählen"
 
 #: configure.tt:574 configure.tt:661 configure.tt:897
 msgid "Current Rooms"
-msgstr ""
+msgstr "Aktuelle Räume"
 
 #: configure.tt:595 configure.tt:625
 msgid "Add Room"
-msgstr ""
+msgstr "Raum hinzufügen"
 
 #: configure.tt:600 configure.tt:761 configure.tt:827
 msgid "Room Number:"
-msgstr ""
+msgstr "Raum Nr:"
 
 #: configure.tt:603 configure.tt:764
 msgid "Max Capacity:"
-msgstr ""
+msgstr "Max. Kapazität:"
 
 #: configure.tt:638
 msgid "Please select an edit action."
-msgstr ""
+msgstr "Eine Bearbeitungsfunktion auswählen."
 
 #: configure.tt:678
 msgid "Edit Room"
-msgstr ""
+msgstr "Raum bearbeiten"
 
 #: configure.tt:679
 msgid "Edit Equipment"
-msgstr ""
+msgstr "Equipment bearbeiten"
 
 #: configure.tt:681
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: configure.tt:705
 msgid "Please wait..."
-msgstr ""
+msgstr "Bitte warten..."
 
 #: configure.tt:719
 msgid "Room Number cannot be blank."
-msgstr ""
+msgstr "Raum Nr. darf nicht leer sein."
 
 #: configure.tt:724
 msgid "Max Capacity cannot be blank."
-msgstr ""
+msgstr "Max. Kapazität darf nicht leer sein."
 
 #: configure.tt:742 configure.tt:808
 msgid "Select another room to edit"
-msgstr ""
+msgstr "Einen anderen Raum zum bearbeiten auswählen"
 
 #: configure.tt:754
 msgid "Edit Room Details"
-msgstr ""
+msgstr "Raumdetails bearbeiten"
 
 #: configure.tt:790
 msgid "Room equipment cannot be empty. If no equipment then check `none`"
 msgstr ""
+"Raumequipment darf nicht leer sein. Gibt es kein Equipment, dann \"Kein\" "
+"auswählen"
 
 #: configure.tt:820
 msgid "Edit Room Equipment"
-msgstr ""
+msgstr "Raumequipment bearbeiten"
 
 #: configure.tt:863
 msgid "Select a room to delete."
-msgstr ""
+msgstr "Einen Raum zum löschen auswählen."
 
 #: configure.tt:868
 msgid "Are you sure you want to delete the selected room?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie den gewählten Raum löschen wollen?"
 
 #: configure.tt:876
 msgid "Only rooms not linked to a booking are listed below"
-msgstr ""
+msgstr "Es werden nur Räume ohne Buchung(en) angezeigt"
+
+#: configure.tt:911 configure.tt:1041
+msgid "Delete"
+msgstr "Löschen"
 
 #: configure.tt:917
 msgid "No rooms available to delete!"
-msgstr ""
+msgstr "Keine Räume verfügbar zum Löschen!"
 
 #: configure.tt:928
 msgid "Equipment name cannot be blank."
-msgstr ""
+msgstr "Equipment Name darf nicht leer sein."
 
 #: configure.tt:944 configure.tt:1027
 msgid "Current Equipment"
-msgstr ""
+msgstr "Aktuelles Equipment"
 
 #: configure.tt:966
 msgid "Add Equipment"
-msgstr ""
+msgstr "Equipment hinzufügen"
 
 #: configure.tt:974
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: configure.tt:994
 msgid "Select equipment to delete."
-msgstr ""
+msgstr "Equipment zum Löschen auswählen."
 
 #: configure.tt:999
 msgid "Are you sure you want to delete the selected equipment?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie das gewählte Equipment löschen wollen?"
 
-#: configure.tt:1041
-msgid "Delete"
-msgstr ""
+#: configure.tt:1007
+msgid "Only equipment not currently associated with a room is listed below"
+msgstr "Es werden nur Räume ohne Buchung(en) angezeigt"
+
+#~ msgid "Study Room Calendar"
+#~ msgstr "Studienraum Kalender"
