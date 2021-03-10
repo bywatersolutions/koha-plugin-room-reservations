@@ -1,4 +1,4 @@
-[% USE gtx = Gettext('com.marywooduniversity.roomreservations', 'fr', 'utf-8', mbf_path) %]
+[% USE gtx = Gettext('com.marywooduniversity.roomreservations', language, 'utf-8', mbf_path) %]
 
 [% USE Koha %]
 [% USE Branches %]

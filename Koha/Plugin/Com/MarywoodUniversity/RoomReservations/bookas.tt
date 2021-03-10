@@ -1,6 +1,6 @@
 [% USE Koha %]
 [% USE Branches %]
-[% USE gtx = Gettext('com.marywooduniversity.roomreservations', 'fr', 'utf-8', mbf_path) %]
+[% USE gtx = Gettext('com.marywooduniversity.roomreservations', language, 'utf-8', mbf_path) %]
 
 [% INCLUDE 'doc-head-open.inc' %]
     <title>Koha: Room Reservations Plugin: Reserve as patron</title>

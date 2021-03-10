@@ -195,6 +195,11 @@ sub bookas {
 
     my $cgi = $self->{'cgi'};
     my $template = $self->get_template({ file => 'bookas.tt' });
+    $template->param(
+        language => C4::Languages::getlanguage($cgi) || 'en',
+        mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+    );
+
     my $op = $cgi->param('op') || q{};
 
     my $borrowernumber = $cgi->param('borrowernumber');
@@ -340,6 +345,10 @@ sub bookas {
         # Since we are already logged in, no need to check credentials again
         # when loading a second template.
         my $template2 = $self->get_template({ file => 'calendar-sendconfirmation.tt' });
+        $template->param(
+            language => C4::Languages::getlanguage($cgi) || 'en',
+            mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+        );
 
         my $timestamp = getCurrentTimestamp();
 
@@ -426,6 +435,11 @@ sub tool {
 
     my $cgi = $self->{'cgi'};
     my $template = $self->get_template({ file => 'tool.tt' });
+    $template->param(
+        language => C4::Languages::getlanguage($cgi) || 'en',
+        mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+    );
+
     my $op = $cgi->param('op') || q{};
     my $tool_action = $cgi->param('tool_actions_selection');
 
