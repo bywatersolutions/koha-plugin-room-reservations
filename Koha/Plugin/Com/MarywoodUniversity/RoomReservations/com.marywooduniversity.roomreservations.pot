@@ -15,43 +15,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit"
 
-#: configure.tt:4 configure.tt:81 tool.tt:4 configure.tt:4 configure.tt:81
-#: configure.tt:4 configure.tt:81 tool.tt:4 tool.tt:4 configure.tt:4
-#: configure.tt:81 configure.tt:4 configure.tt:81 tool.tt:4 tool.tt:4
-#: configure.tt:4 configure.tt:81 configure.tt:4 configure.tt:81 tool.tt:4
-#: configure.tt:4 configure.tt:81 tool.tt:4 tool.tt:4
+#: configure.tt:4 configure.tt:81
 msgid "Koha: Room Reservations Plugin: Configuration"
 msgstr ""
 
-#: tool.tt:37 configure.tt:76 tool.tt:37 tool.tt:37 configure.tt:76 tool.tt:37
-#: tool.tt:37 configure.tt:76 tool.tt:37 tool.tt:37 configure.tt:76 tool.tt:37
-msgid "Plugins"
-msgstr ""
-
-#: opac/calendar.tt:48 opac/calendar.tt:48 opac/calendar.tt:48
-#: opac/calendar.tt:48 opac/calendar.tt:48
-msgid "Study Room Calendar"
-msgstr ""
-
-#: configure.tt:30 configure.tt:60 configure.tt:30 configure.tt:60
-#: configure.tt:30 configure.tt:60 configure.tt:30 configure.tt:60
+#: configure.tt:30 configure.tt:60
 msgid "Please choose an action"
 msgstr ""
 
-#: configure.tt:51 configure.tt:51 configure.tt:51 configure.tt:51
+#: configure.tt:51
 msgid "Please select a room"
-msgstr ""
-
-#: configure.tt:76 configure.tt:76 configure.tt:76 configure.tt:76
-msgid "Room Reservations"
-msgstr ""
-
-#: configure.tt:76 configure.tt:76 configure.tt:76 configure.tt:76
-msgid "Configuration"
 msgstr ""
 
 #: configure.tt:76
 msgid "Home"
+msgstr ""
+
+#: configure.tt:76
+msgid "Plugins"
+msgstr ""
+
+#: configure.tt:76
+msgid "Room Reservations"
+msgstr ""
+
+#: configure.tt:76
+msgid "Configuration"
 msgstr ""
 
 #: configure.tt:90 configure.tt:677
@@ -156,6 +145,10 @@ msgstr ""
 msgid "Current max number days:"
 msgstr ""
 
+#: configure.tt:273
+msgid "n/a"
+msgstr ""
+
 #: configure.tt:282
 msgid "Set max number of days:"
 msgstr ""
@@ -198,6 +191,10 @@ msgstr ""
 
 #: configure.tt:408 configure.tt:413
 msgid "Current limit:"
+msgstr ""
+
+#: configure.tt:409
+msgid "No Limit"
 msgstr ""
 
 #: configure.tt:414 configure.tt:443
@@ -324,6 +321,10 @@ msgstr ""
 msgid "Only rooms not linked to a booking are listed below"
 msgstr ""
 
+#: configure.tt:911 configure.tt:1041
+msgid "Delete"
+msgstr ""
+
 #: configure.tt:917
 msgid "No rooms available to delete!"
 msgstr ""
@@ -352,7 +353,7 @@ msgstr ""
 msgid "Are you sure you want to delete the selected equipment?"
 msgstr ""
 
-#: configure.tt:1041
-msgid "Delete"
+#: configure.tt:1007
+msgid "Only equipment not currently associated with a room is listed below"
 msgstr ""
 

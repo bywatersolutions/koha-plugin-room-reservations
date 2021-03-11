@@ -270,7 +270,7 @@
                     [% IF max_num_days == '' %]
                     <tr>
                         <td style="text-align: right;">[% 'Current max number days:' | gettext %]</td>
-                        <td>n/a</td>
+                        <td>[% 'n/a' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
@@ -406,7 +406,7 @@
                     [% IF count_limit == '' %]
                     <tr>
                         <td style="text-align: right;">[% 'Current limit:' | gettext %]</td>
-                        <td>No limit</td>
+                        <td>[% 'No Limit' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
@@ -908,7 +908,7 @@
             <tfoot>
                 <tr class="table-row-centered">
                     <td colspan="2">
-                        <input type="submit" name="room-delete-submit" id="room-delete-submit" value="Delete" />
+                        <input type="submit" name="room-delete-submit" id="room-delete-submit" value="[% 'Delete' | gettext %]" />
                     </td>
                 </tr>
             </tfoot>
@@ -1004,7 +1004,7 @@
                 }
             }
         </script>
-    <h3>Only equipment not currently associated with a room is listed below</h3>
+    <h3>[% 'Only equipment not currently associated with a room is listed below' | gettext %]</h3>
     <br />
     <br />
     <form method="post" action="#">
