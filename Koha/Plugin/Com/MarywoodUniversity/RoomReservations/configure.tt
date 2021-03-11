@@ -27,10 +27,10 @@
         function validateSavedRooms() {
             var x = document.forms["saved_rooms"]["saved_rooms_action"].value;
             if (x == "null") {
-                alert("Please choose an action");
+                alert("[% 'Please choose an action' | gettext %]");
                 return false;
             } else if (x == "delete") {
-                if (confirm("Are you sure you want to remove the selected room?")) {
+                if (confirm(" [% 'Are you sure you want to remove the selected room?' %]")) {
                     // Yes
                     return true;
                 } else {
@@ -48,7 +48,7 @@
                 }
             }
             if (!roomValue) {
-                alert("Please select a room");
+                alert("[% 'Please select a room' | gettext %]");
                 return false;
             }
         }
@@ -57,7 +57,7 @@
         function validateConfigActions() {
             var x = document.forms["config_actions"]["config_actions_selection"].value;
             if (x == "null") {
-                alert("Please choose an action");
+                alert("[% 'Please choose an action' | gettext %]");
                 return false;
             }
         }
@@ -73,7 +73,7 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Configuration</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">[% 'Home' | gettext %]</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' | gettext %] &rsaquo; [% 'Configuration' | gettext %]</div>
 
 <div id="doc3">
 
@@ -87,23 +87,23 @@
         <input type="hidden" name="op" value="action-selected" />
 
         <fieldset class="fieldset-auto-width">
-            <legend>Actions</legend>
+            <legend>[% 'Actions' | gettext %]</legend>
                 <div>
-                        Select an action:
+                        [% 'Select an action:' | gettext %]
                         <select name="config_actions_selection">
                             <option value="null"></option>
-                            <option value="action-select-add">Add room</option>
-                            <option value="action-select-add-equipment">Add room equipment</option>
-                            <option value="action-select-delete">Delete room</option>
-                            <option value="action-select-delete-equipment">Delete room equipment</option>
-                            <option value="action-select-display">Display rooms</option>
-                            <option value="action-select-edit">Edit room</option>
-                            <option value="action-max-future-date">OPAC max future date</option>
-                            <option value="action-max-time">OPAC max time</option>
-                            <option value="action-restrict-daily-reservations-per-patron">Restrict daily reservations per patron</option>
-                            <option value="action-restrict-categories">Restrict patron categories</option>
+                            <option value="action-select-add">[% 'Add room' | gettext %]</option>
+                            <option value="action-select-add-equipment">[% 'Add room equipment' | gettext %]</option>
+                            <option value="action-select-delete">[% 'Delete room' | gettext %]</option>
+                            <option value="action-select-delete-equipment">[% 'Delete room equipment' | gettext %]</option>
+                            <option value="action-select-display">[% 'Display rooms' | gettext %]</option>
+                            <option value="action-select-edit">[% 'Edit room' | gettext %]</option>
+                            <option value="action-max-future-date">[% 'OPAC max future date' | gettext %]</option>
+                            <option value="action-max-time">[% 'OPAC max time' | gettext %]</option>
+                            <option value="action-restrict-daily-reservations-per-patron">[% 'Restrict daily reservations per patron' | gettext %]</option>
+                            <option value="action-restrict-categories">[% 'Restrict patron categories' | gettext %]</option>
                         </select><br />
-                        <span style="float:right;"><input type="submit" name="config-actions-submit" value="Continue" /></span>
+                        <span style="float:right;"><input type="submit" name="config-actions-submit" value="[% 'Continue' | gettext %]" /></span>
                 </div>
         </fieldset>
     </form>
@@ -124,7 +124,7 @@
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="[% action %]" />
 
-        <p>Processing...</p>
+        <p>[% 'Processing...' | gettext %]</p>
         <div style="display:none;">
             <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
         </div>
@@ -146,7 +146,7 @@
                 }
 
                 if ( !roomChecked ) {
-                    alert("Select a room to display its details or select another action.");
+                    alert("[% 'Select a room to display its details or select another action.' | gettext %]");
                     return false;
                 }
             }
@@ -155,7 +155,7 @@
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 
-        <button>Select another action</button>
+        <button>[% 'Select another action' | gettext %]</button>
     </form>
     <br />
     <br />
@@ -167,7 +167,7 @@
         <thead>
             <tr>
                 <th>&nbsp;</th>
-                <th>Room</th>
+                <th>[% 'Room' | gettext %]</th>
             </tr>
         </thead>
         <tbody>
@@ -188,7 +188,7 @@
                     <!-- Empty to force submit button to "Room" column -->
                 </td>
                 <td>
-                    <input type="submit" name="submitSelectedDisplayedRoom" value="Show details" />
+                    <input type="submit" name="submitSelectedDisplayedRoom" value="[% 'Show details' | gettext %]" />
                 </td>
             </tr>
         </tfoot>
@@ -201,7 +201,7 @@
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -210,7 +210,7 @@
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="display-rooms" />
 
-        <button>Select another room to display</button>
+        <button>[% 'Select another room to display' | gettext %]</button>
     </form>
     <br />
     <br />
@@ -218,14 +218,14 @@
         <tbody>
             [% FOREACH room IN selected_room_details %]
             <tr>
-                <td><strong>Name:</strong> [% room.roomnumber %]</td>
+                <td><strong>[% 'Name:' | gettext %]</strong> [% room.roomnumber %]</td>
             </tr>
             <tr>
-                <td><strong>Room capacity:</strong> [% room.maxcapacity %]</td>
+                <td><strong>[% 'Room capacity:' | gettext %]</strong> [% room.maxcapacity %]</td>
             </tr>
             <tr>
                 <td>
-                <strong>Equipment:</strong><br />
+                <strong>[% 'Equipment:' | gettext %]</strong><br />
                 [% FOREACH item IN selected_room_equipment %]
                 <!-- <pre>&#9; &bull; [% item %]</pre> -->
                 [% item.equipmentname %]<br />
@@ -245,12 +245,12 @@
                 var num = document.getElementById("max-days-field").value;
 
                 if (isNaN(num)) {
-                    alert("Please enter a valid number!");
+                    alert("[% 'Please enter a valid number!' | gettext %]");
                     return false;
                 }
 
                 if (num === "") {
-                    alert("Please enter a valid number!");
+                    alert("[% 'Please enter a valid number!' | gettext %]");
                     return false;
                 }
             }
@@ -263,29 +263,29 @@
             <table>
                 <thead class="table-header-bold table-row-centered">
                     <tr>
-                        <td colspan="2">Set max number days</td>
+                        <td colspan="2">[% 'Set max number days' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     [% IF max_num_days == '' %]
                     <tr>
-                        <td style="text-align: right;">Current max number days:</td>
-                        <td>n/a</td>
+                        <td style="text-align: right;">[% 'Current max number days:' | gettext %]</td>
+                        <td>[% 'n/a' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Current max number days:</td>
+                        <td style="text-align: right;">[% 'Current max number days:' | gettext %]</td>
                         <td>[% max_num_days %]</td>
                     </tr>
                     [% END # max_num_days == '' %]
                     <tr>
-                        <td style="text-align: right;">Set max number of days: </td>
+                        <td style="text-align: right;">[% 'Set max number of days:' | gettext %] </td>
                         <td><input type="text" name="max-days-field" id="max-days-field" size="4" maxlength="4" /></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td colspan="2"><input type="submit" value="Add restriction" /></td>
+                        <td colspan="2"><input type="submit" value="[% 'Add restriction' | gettext %]" /></td>
                     </tr>
                 </tfoot>
             </table>
@@ -300,7 +300,7 @@
                 var num_hours = document.getElementById("max-time-hours-field").value;
 
                 if (num_hours == "null") {
-                    alert("Please select a valid number!");
+                    alert("[% 'Please select a valid number!' | gettext %]");
                     return false;
                 }
             }
@@ -313,19 +313,19 @@
             <table>
                 <thead class="table-header-bold table-row-centered">
                     <tr>
-                        <td colspan="2">Set max time</td>
+                        <td colspan="2">[% 'Set max time' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     [% IF max_time == '' %]
                     <tr>
-                        <td style="text-align: right;">Current max time:</td>
-                        <td>n/a minutes</td>
+                        <td style="text-align: right;">[% 'Current max time:' | gettext %]</td>
+                        <td>[% 'n/a minutes' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Current max time:</td>
-                        <td>[% max_time %] minutes</td>
+                        <td style="text-align: right;">[% 'Current max time:' | gettext %]</td>
+                        <td>[% max_time %] [% 'minutes' | gettext %]</td>
                     </tr>
                     [% END # max_time == '' %]
                     <!-- <tr>
@@ -333,7 +333,7 @@
                         <td><input type="text" name="max-time-field" id="max-time-field" size="4" maxlength="4" /></td>
                     </tr> -->
                     <tr>
-                        <td style="text-align: right;">Set max time: </td>
+                        <td style="text-align: right;">[% 'Set max time:' | gettext %] </td>
                         <td>
                             <select name="max-time-hours-field" id="max-time-hours-field">
                                 <option value="null"></option>
@@ -361,17 +361,17 @@
                                 <option value="21">21</option>
                                 <option value="22">22</option>
                                 <option value="23">23</option>
-                            </select> hours &nbsp;
+                            </select> [% 'hours' | gettext %] &nbsp;
                             <select name="max-time-minutes-field" id="max-time-minutes-field">
                                 <option value="0">00</option>
                                 <option value="30">30</option>
-                            </select> minutes
+                            </select> [% 'minutes' | gettext %]
                         </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td colspan="2"><input type="submit" value="Add restriction" /></td>
+                        <td colspan="2"><input type="submit" value="[% 'Add restriction' | gettext %]" /></td>
                     </tr>
                 </tfoot>
             </table>
@@ -399,27 +399,27 @@
             <table>
                 <thead class="table-header-bold table-row-centered">
                     <tr>
-                        <td colspan="2">Set daily reservation per patron limit</td>
+                        <td colspan="2">[% 'Set daily reservation per patron limit' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     [% IF count_limit == '' %]
                     <tr>
-                        <td style="text-align: right;">Current limit:</td>
-                        <td>No limit</td>
+                        <td style="text-align: right;">[% 'Current limit:' | gettext %]</td>
+                        <td>[% 'No Limit' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Current limit:</td>
-                        <td>[% count_limit %] reservations</td>
+                        <td style="text-align: right;">[% 'Current limit:' | gettext %]</td>
+                        <td>[% count_limit %] [% 'reservations' | gettext %]</td>
                     </tr>
                     [% END # count_limit == '' %]
                     <tr>
-                        <td style="text-align: right;">Set limit: </td>
+                        <td style="text-align: right;">[% 'Set limit:' | gettext %] </td>
                         <td>
                             <select name="reservations-limit-field" id="reservations-limit-field">
                                 <option value="null"></option>
-                                <option value="0">No limit</option>
+                                <option value="0">[% 'No limit' | gettext %]</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -440,13 +440,13 @@
                                 <option value="18">18</option>
                                 <option value="19">19</option>
                                 <option value="20">20</option>
-                            </select> reservations
+                            </select> [% 'reservations' | gettext %]
                         </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td colspan="2"><input type="submit" value="Add limit" /></td>
+                        <td colspan="2"><input type="submit" value="[% 'Add limit' | gettext %]" /></td>
                     </tr>
                 </tfoot>
             </table>
@@ -461,7 +461,7 @@
                 var num_hours = document.getElementById("max-time-hours-field").value;
 
                 if (num_hours == "null") {
-                    alert("Please select a valid number!");
+                    alert("[% 'Please select a valid number!' | gettext %]");
                     return false;
                 }
             }
@@ -474,18 +474,18 @@
             <table>
                 <thead class="table-header-bold table-row-centered">
                     <tr>
-                        <td colspan="2">Restrict patron categories</td>
+                        <td colspan="2">[% 'Restrict patron categories' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     [% IF restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">Restricted categories:</td>
-                        <td>No restrictions</td>
+                        <td style="text-align: right;">[% 'Restricted categories:' | gettext %]</td>
+                        <td>[% 'No restrictions' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">Restricted categories:</td>
+                        <td style="text-align: right;">[% 'Restricted categories:' | gettext %]</td>
                         <td>
                         [% FOREACH cat IN restricted_categories %]
                             <input type="checkbox" name="currently-restricted-category" value="[% cat.categorycode %]" checked="true" /> [% cat.description %]<br />
@@ -494,20 +494,20 @@
                     </tr>
                     [% END # restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">Restrict categories:</td>
+                        <td style="text-align: right;">[% 'Restrict categories:' | gettext %]</td>
                         <td>
                             [% IF categories.size %]
                             [% FOREACH category IN categories %]
                             <input type="checkbox" name="patron-category" value="[% category.categorycode %]" /> [% category.description %]<br />
                             [% END # FOREACH category IN categories %]
                             [% ELSE %]
-                            <p>INVALID!</p>
+                            <p>[% 'INVALID!' | gettext %]</p>
                             [% END # categories.size %]
                         </td>
                     </tr>
                     <tr style="text-align: center;">
                         <td colspan="2">
-                            <p>Text entered here will be displayed to restricted patrons on the OPAC</p>
+                            <p>[% 'Text entered here will be displayed to restricted patrons on the OPAC' | gettext %]</p>
                             [% IF restrict_message %]
                                 <!-- <input type="text" name="restricted-message" value="[% restrict_message %]"/> -->
                                 <textarea name="restricted-message" rows="4" cols="50">[% restrict_message %]</textarea>
@@ -520,7 +520,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td colspan="2"><input type="submit" value="Update" /></td>
+                        <td colspan="2"><input type="submit" value="[% 'Update' | gettext %]" /></td>
                     </tr>
                 </tfoot>
             </table>
@@ -537,12 +537,12 @@
 
 
                 if ( roomname == "" ) {
-                    alert("Please enter a roomname");
+                    alert("[% 'Please enter a roomname' | gettext %]");
                     return false;
                 }
 
                 if ( maxcapacity == "" ) {
-                    alert("Please enter a max capacity for the room");
+                    alert("[% 'Please enter a max capacity for the room' | gettext %]");
                     return false;
                 }
 
@@ -554,7 +554,7 @@
                 }
 
                 if ( !equipmentChecked ) {
-                    alert("Select room equipment. If no equipment then check 'none'");
+                    alert("[% 'Select room equipment. If no equipment then check `none`' | gettext %]");
                     return false;
                 }
             }
@@ -563,7 +563,7 @@
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -571,7 +571,7 @@
         <table>
             <thead>
                 <tr class="table-header-bold table-row-centered">
-                    <td>Current Rooms</td>
+                    <td>[% 'Current Rooms' | gettext %]</td>
                 </tr>
             </thead>
             <tbody>
@@ -592,18 +592,18 @@
             <table>
                 <thead class="table-header-bold table-row-centered">
                     <tr class="table-row-centered">
-                        <td>Add Room</td>
+                        <td>[% 'Add Room' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Room Number: <input type="text" name="add-room-roomnumber" /></td>
+                        <td>[% 'Room Number:' | gettext %] <input type="text" name="add-room-roomnumber" /></td>
                     </tr>
                     <tr>
-                        <td>Max Capacity <input type="text" name="add-room-maxcapacity" size="4" maxlength="4" /></td>
+                        <td>[% 'Max Capacity:' | gettext %] <input type="text" name="add-room-maxcapacity" size="4" maxlength="4" /></td>
                     </tr>
                     <tr>
-                        <td>Equipment:</td>
+                        <td>[% 'Equipment:' | gettext %]</td>
                     </tr>
                     <tr>
                         <td>
@@ -622,7 +622,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td><input type="submit" value="Add Room" /></td>
+                        <td><input type="submit" value="[% 'Add Room' | gettext %]" /></td>
                     </tr>
                 </tfoot>
             </table>
@@ -635,7 +635,7 @@
                 var editChoice = document.forms["editRoomsForm"]["edit-rooms-choice"].value;
 
                 if (editChoice == "") {
-                    alert('Please select an edit action.');
+                    alert("[% 'Please select an edit action.' | gettext %]");
                     return false;
                 }
 
@@ -645,7 +645,7 @@
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -658,7 +658,7 @@
                 <thead>
                     <tr class="table-header-bold table-row-centered">
                         <td>&nbsp;</td>
-                        <td>Current Rooms</td>
+                        <td>[% 'Current Rooms' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -674,11 +674,11 @@
                         <td></td>
                         <td>
                             <select name="edit-rooms-choice">
-                                <option value="">Actions</option>
-                                <option value="room">Edit Room</option>
-                                <option value="equipment">Edit Equipment</option>
+                                <option value="">[% 'Actions' | gettext %]</option>
+                                <option value="room">[% 'Edit Room' | gettext %]</option>
+                                <option value="equipment">[% 'Edit Equipment' | gettext %]</option>
                             </select>
-                            <input type="submit" value="Edit" /></td>
+                            <input type="submit" value="[% 'Edit' | gettext %]" /></td>
                         </td>
                     </tr>
                 </tfoot>
@@ -702,7 +702,7 @@
         <input type="hidden" name="op" value="[% edit_action %]" />
         <input type="hidden" name="selected-room-id" value="[% selected_room_id %]" />
 
-        <p>Please wait...</p>
+        <p>[% 'Please wait...' | gettext %]</p>
         <div style="display:none;">
             <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
         </div>
@@ -716,12 +716,12 @@
                 var maxcapacity = document.forms["editRoomDetails"]["edit-rooms-room-maxcapacity"].value;
 
                 if ( roomname == "" ) {
-                    alert("Room Number cannot be blank.");
+                    alert("[% 'Room Number cannot be blank.' | gettext %]");
                     return false;
                 }
 
                 if ( maxcapacity == "" ) {
-                    alert("Max Capacity cannot be blank.");
+                    alert("[% 'Max Capacity cannot be blank.' | gettext %]");
                     return false;
                 }
             }
@@ -730,7 +730,7 @@
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -739,7 +739,7 @@
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms" />
 
-            <button>Select another room to edit</button>
+            <button>[% 'Select another room to edit' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -751,17 +751,17 @@
             <table>
                 <thead>
                     <tr class="table-header-bold table-row-centered">
-                        <td>Edit Room Details</td>
+                        <td>[% 'Edit Room Details' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     [% FOREACH room IN room_details %]
                     <input type="hidden" name="room-details-updated-roomid" value="[% room.roomid %]" />
                     <tr>
-                        <td><strong>Room Number: </strong><input type="text" name="edit-rooms-room-roomnumber" value="[% room.roomnumber %]" /></td>
+                        <td><strong>[% 'Room Number:' | gettext %] </strong><input type="text" name="edit-rooms-room-roomnumber" value="[% room.roomnumber %]" /></td>
                     </tr>
                     <tr>
-                        <td><strong>Max Capacity: </strong><input type="text" name="edit-rooms-room-maxcapacity" size="4" maxlength="4" value="[% room.maxcapacity %]" /></td>
+                        <td><strong>[% 'Max Capacity:' | gettext %] </strong><input type="text" name="edit-rooms-room-maxcapacity" size="4" maxlength="4" value="[% room.maxcapacity %]" /></td>
                     </tr>
                     [% END # FOREACH room IN room_details %]
                 </tbody>
@@ -787,7 +787,7 @@
                 }
 
                 if ( !equipmentChecked ) {
-                    alert("Room equipment cannot be empty. If no equipment then check 'none'");
+                    alert("[% 'Room equipment cannot be empty. If no equipment then check `none`' | gettext %]");
                     return false;
                 }
             }
@@ -796,7 +796,7 @@
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -805,7 +805,7 @@
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms" />
 
-            <button>Select another room to edit</button>
+            <button>[% 'Select another room to edit' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -817,18 +817,18 @@
             <table>
                 <thead>
                     <tr class="table-header-bold table-row-centered">
-                        <td>Edit Room Equipment</td>
+                        <td>[% 'Edit Room Equipment' | gettext %]</td>
                     </tr>
                 </thead>
                 <tbody>
                     [% FOREACH room IN room_details %]
                     <input type="hidden" name="room-equipment-updated-roomid" value="[% room.roomid %]" />
                     <tr>
-                        <td><strong>Room Number: </strong>[% room.roomnumber %]</td>
+                        <td><strong>[% 'Room Number:' | gettext %] </strong>[% room.roomnumber %]</td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Equipment:</strong><br />
+                            <strong>[% 'Equipment:' | gettext %]</strong><br />
                             [% FOREACH available IN all_available_equipment %]
 
                                 <input type="checkbox" name="edit-rooms-current-equipment" value="[% available.equipmentid %]" />[% available.equipmentname %]<br />
@@ -840,7 +840,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
-                        <td><input type="submit" value="Update" /></td>
+                        <td><input type="submit" value="[% 'Update' | gettext %]" /></td>
                     </tr>
                 </tfoot>
             </table>
@@ -860,12 +860,12 @@
                 }
 
                 if ( !roomChecked ) {
-                    alert("Select a room to delete.");
+                    alert("[% 'Select a room to delete.' | gettext %]");
                     return false;
                 }
 
                 if ( roomChecked ) {
-                    if (confirm("Are you sure you want to delete the selected room?") == true) {
+                    if (confirm("[% 'Are you sure you want to delete the selected room?' | gettext %]") == true) {
                         return true;
                     } else {
                         return false;
@@ -873,14 +873,14 @@
                 }
             }
         </script>
-    <h3>Only rooms not linked to a booking are listed below</h3>
+    <h3>[% 'Only rooms not linked to a booking are listed below' | gettext %]</h3>
     <br />
     <br />
     <form method="post" action="#">
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 
-        <button>Select another action</button>
+        <button>[% 'Select another action' | gettext %]</button>
     </form>
     <br />
     <br />
@@ -894,7 +894,7 @@
             <thead>
                 <tr class="table-header-bold table-row-centered">
                     <td>&nbsp;</td>
-                    <td>Current Rooms</td>
+                    <td>[% 'Current Rooms' | gettext %]</td>
                 </tr>
             </thead>
             <tbody>
@@ -908,13 +908,13 @@
             <tfoot>
                 <tr class="table-row-centered">
                     <td colspan="2">
-                        <input type="submit" name="room-delete-submit" id="room-delete-submit" value="Delete" />
+                        <input type="submit" name="room-delete-submit" id="room-delete-submit" value="[% 'Delete' | gettext %]" />
                     </td>
                 </tr>
             </tfoot>
         </table>
     [% ELSE %]
-    <h2>No rooms available to delete!</h2>
+    <h2>[% 'No rooms available to delete!' | gettext %]</h2>
     [% END %]
     </form>
     [% END # op == 'delete-rooms' %]
@@ -925,7 +925,7 @@
                 var equipmentname = document.forms["addEquipment"]["add-equipment-text-field"].value;
 
                 if ( equipmentname == "" ) {
-                    alert("Equipment name cannot be blank.");
+                    alert("[% 'Equipment name cannot be blank.' | gettext %]");
                     return false;
                 }
             }
@@ -934,14 +934,14 @@
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
     <table>
         <thead>
             <tr class="table-header-bold table-row-centered">
-                <td>Current Equipment</td>
+                <td>[% 'Current Equipment' | gettext %]</td>
             </tr>
         </thead>
         <tbody>
@@ -963,15 +963,15 @@
         <table>
             <thead class="table-header-bold table-row-centered">
                 <tr>
-                    <td>Add Equipment</td>
+                    <td>[% 'Add Equipment' | gettext %]</td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Name: <input type="text" name="add-equipment-text-field" /></td>
+                    <td>[% 'Name:' | gettext %] <input type="text" name="add-equipment-text-field" /></td>
                 </tr>
                 <tr class="table-row-centered">
-                    <td><input type="submit" value="Add" /></td>
+                    <td><input type="submit" value="[% 'Add' | gettext %]" /></td>
                 </tr>
             </tbody>
         </table>
@@ -991,12 +991,12 @@
                 }
 
                 if ( !equipmentChecked ) {
-                    alert("Select equipment to delete.");
+                    alert("[% 'Select equipment to delete.' | gettext %]");
                     return false;
                 }
 
                 if ( equipmentChecked ) {
-                    if (confirm("Are you sure you want to delete the selected equipment?") == true) {
+                    if (confirm("[% 'Are you sure you want to delete the selected equipment?' | gettext %]") == true) {
                         return true;
                     } else {
                         return false;
@@ -1004,14 +1004,14 @@
                 }
             }
         </script>
-    <h3>Only equipment not currently associated with a room is listed below</h3>
+    <h3>[% 'Only equipment not currently associated with a room is listed below' | gettext %]</h3>
     <br />
     <br />
     <form method="post" action="#">
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>Select another action</button>
+            <button>[% 'Select another action' | gettext %]</button>
         </form>
         <br />
         <br />
@@ -1024,7 +1024,7 @@
             <thead>
                 <tr class="table-header-bold table-row-centered">
                     <td>&nbsp;</td>
-                    <td>Current Equipment</td>
+                    <td>[% 'Current Equipment' | gettext %]</td>
                 </tr>
             </thead>
             <tbody>
@@ -1038,7 +1038,7 @@
             <tfoot>
                 <tr class="table-row-centered">
                     <td colspan="2">
-                        <input type="submit" name="equipment-delete-submit" id="equipment-delete-submit" value="Delete" />
+                        <input type="submit" name="equipment-delete-submit" id="equipment-delete-submit" value="[% 'Delete' | gettext %]" />
                     </td>
                 </tr>
             </tfoot>
