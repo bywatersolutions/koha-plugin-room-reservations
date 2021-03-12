@@ -198,13 +198,13 @@
 
     [% IF op == 'display-rooms-detail' %]
     <form method="post" action="#">
-            <input type="hidden" name="class" value="[% CLASS %]" />
-            <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
 
-            <button>[% 'Select another action' | gettext %]</button>
-        </form>
-        <br />
-        <br />
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
+    <br />
+    <br />
     <form method="post" action="#">
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
@@ -242,6 +242,14 @@
     [% END # op == 'display-rooms-detail' %]
 
     [% IF op == 'max-future-date' %]
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>[% 'Select another action' | gettext %]</button>
+        </form>
+      </br>
+      </br>
         <script type="text/javascript">
             function validateMaxFutureDate() {
                 //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;
@@ -297,6 +305,14 @@
     [% END # op == 'max-future-date' %]
 
     [% IF op == 'max-time' %]
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>[% 'Select another action' | gettext %]</button>
+        </form>
+      </br>
+      </br>
         <script type="text/javascript">
             function validateMaxTime() {
                 //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;
@@ -383,6 +399,14 @@
     [% END # op == 'max-time' %]
 
     [% IF op == 'restrict-daily-reservations-per-patron' %]
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>[% 'Select another action' | gettext %]</button>
+        </form>
+      </br>
+      </br>
         <script type="text/javascript">
             function validateLimitRestriction() {
                 //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;
@@ -458,6 +482,14 @@
     [% END # op == 'restrict-daily-reservations-per-patron' %]
 
     [% IF op == 'restrict-categories' %]
+        <form method="post" action="#">
+            <input type="hidden" name="class" value="[% CLASS %]" />
+            <input type="hidden" name="method" value="[% METHOD %]" />
+
+            <button>[% 'Select another action' | gettext %]</button>
+        </form>
+        </br>
+        </br>
         <script type="text/javascript">
             function validateRestrictCategories() {
                 //var num = document.forms["maxFutureDateForm"]["max-days-field"].value;

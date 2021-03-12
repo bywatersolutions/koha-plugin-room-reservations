@@ -3,7 +3,7 @@
 [% USE gtx = Gettext('com.marywooduniversity.roomreservations', language, 'utf-8', mbf_path) %]
 
 [% INCLUDE 'doc-head-open.inc' %]
-    <title>Koha: Room Reservations Plugin: Reserve as patron</title>
+    <title>[% 'Koha: Room Reservations Plugin: Reserve as patron' | gettext %]</title>
 [% INCLUDE 'doc-head-close.inc' %]
     <style>
         .avail-room {
@@ -16,12 +16,12 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; Room Reservations &rsaquo; Tool</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">[% 'Home' | gettext %]</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' | gettext %] &rsaquo; [% 'Tool' | gettext %]</div>
 
 <div id="doc3">
 
     <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
-    <h3>Reserve as [% firstname %]&nbsp;[% surname %]</h3>
+    <h3>[% 'Reserve as' | gettext %] [% firstname %]&nbsp;[% surname %]</h3>
 
     [% IF op == '' %]
     <script type="text/javascript">
@@ -36,27 +36,27 @@
             var equipments = document.getElementsByName("availability-search-selected-equipment");
 
             if ( startDate == "" ) {
-                alert("Start date is required.");
+                alert("[% 'Start date is required.' | gettext %]");
                 return false;
             }
 
             if ( startTime == "" ) {
-                alert("Start time is required.");
+                alert("[% 'Start time is required.' | gettext %]");
                 return false;
             }
 
             if ( endDate == "" ) {
-                alert("End date is required.");
+                alert("[% 'End date is required.' | gettext %]");
                 return false;
             }
 
             if ( endTime == "" ) {
-                alert("End time is required.");
+                alert("[% 'End time is required.' | gettext %]");
                 return false;
             }
 
             if ( maxCapacity == "" ) {
-                alert("Room capacity is required.");
+                alert("[% 'Room capacity is required.' | gettext %]");
                 return false;
             }
         }
@@ -68,129 +68,129 @@
         <table>
             <thead>
                 <tr>
-                    <th style="text-align:center;">Availability Search</th>
+                    <th style="text-align:center;">[% 'Availability Search' | gettext %]</th>
                 </tr>
             </thead>
             <tbody>
               <tr>
                 <td>
-                <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="Start date" />
+                <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="[% 'Start date' | gettext %]" />
 
                 <select name="availability-search-start-time">
-                    <option value="">Time</option>
-                    <option value="00:00:00">12:00 AM</option>
-                    <option value="00:30:00">12:30 AM</option>
-                    <option value="01:00:00">1:00 AM</option>
-                    <option value="01:30:00">1:30 AM</option>
-                    <option value="02:00:00">2:00 AM</option>
-                    <option value="02:30:00">2:30 AM</option>
-                    <option value="03:00:00">3:00 AM</option>
-                    <option value="03:30:00">3:30 AM</option>
-                    <option value="04:00:00">4:00 AM</option>
-                    <option value="04:30:00">4:30 AM</option>
-                    <option value="05:00:00">5:00 AM</option>
-                    <option value="05:30:00">5:30 AM</option>
-                    <option value="06:00:00">6:00 AM</option>
-                    <option value="06:30:00">6:30 AM</option>
-                    <option value="07:00:00">7:00 AM</option>
-                    <option value="07:30:00">7:30 AM</option>
-                    <option value="08:00:00">8:00 AM</option>
-                    <option value="08:30:00">8:30 AM</option>
-                    <option value="09:00:00">9:00 AM</option>
-                    <option value="09:30:00">9:30 AM</option>
-                    <option value="10:00:00">10:00 AM</option>
-                    <option value="10:30:00">10:30 AM</option>
-                    <option value="11:00:00">11:00 AM</option>
-                    <option value="11:30:00">11:30 AM</option>
-                    <option value="12:00:00">12:00 PM</option>
-                    <option value="12:30:00">12:30 PM</option>
-                    <option value="13:00:00">1:00 PM</option>
-                    <option value="13:30:00">1:30 PM</option>
-                    <option value="14:00:00">2:00 PM</option>
-                    <option value="14:30:00">2:30 PM</option>
-                    <option value="15:00:00">3:00 PM</option>
-                    <option value="15:30:00">3:30 PM</option>
-                    <option value="16:00:00">4:00 PM</option>
-                    <option value="16:30:00">4:30 PM</option>
-                    <option value="17:00:00">5:00 PM</option>
-                    <option value="17:30:00">5:30 PM</option>
-                    <option value="18:00:00">6:00 PM</option>
-                    <option value="18:30:00">6:30 PM</option>
-                    <option value="19:00:00">7:00 PM</option>
-                    <option value="19:30:00">7:30 PM</option>
-                    <option value="20:00:00">8:00 PM</option>
-                    <option value="20:30:00">8:30 PM</option>
-                    <option value="21:00:00">9:00 PM</option>
-                    <option value="21:30:00">9:30 PM</option>
-                    <option value="22:00:00">10:00 PM</option>
-                    <option value="22:30:00">10:30 PM</option>
-                    <option value="23:00:00">11:00 PM</option>
-                    <option value="23:30:00">11:30 PM</option>
+                    <option value="">[% 'Time' | gettext %]</option>
+                    <option value="00:00:00">[% '12:00 AM' | gettext %]</option>
+                    <option value="00:30:00">[% '12:30 AM' | gettext %]</option>
+                    <option value="01:00:00">[% '1:00 AM' | gettext %]</option>
+                    <option value="01:30:00">[% '1:30 AM' | gettext %]</option>
+                    <option value="02:00:00">[% '2:00 AM' | gettext %]</option>
+                    <option value="02:30:00">[% '2:30 AM' | gettext %]</option>
+                    <option value="03:00:00">[% '3:00 AM' | gettext %]</option>
+                    <option value="03:30:00">[% '3:30 AM' | gettext %]</option>
+                    <option value="04:00:00">[% '4:00 AM' | gettext %]</option>
+                    <option value="04:30:00">[% '4:30 AM' | gettext %]</option>
+                    <option value="05:00:00">[% '5:00 AM' | gettext %]</option>
+                    <option value="05:30:00">[% '5:30 AM' | gettext %]</option>
+                    <option value="06:00:00">[% '6:00 AM' | gettext %]</option>
+                    <option value="06:30:00">[% '6:30 AM' | gettext %]</option>
+                    <option value="07:00:00">[% '7:00 AM' | gettext %]</option>
+                    <option value="07:30:00">[% '7:30 AM' | gettext %]</option>
+                    <option value="08:00:00">[% '8:00 AM' | gettext %]</option>
+                    <option value="08:30:00">[% '8:30 AM' | gettext %]</option>
+                    <option value="09:00:00">[% '9:00 AM' | gettext %]</option>
+                    <option value="09:30:00">[% '9:30 AM' | gettext %]</option>
+                    <option value="10:00:00">[% '10:00 AM' | gettext %]</option>
+                    <option value="10:30:00">[% '10:30 AM' | gettext %]</option>
+                    <option value="11:00:00">[% '11:00 AM' | gettext %]</option>
+                    <option value="11:30:00">[% '11:30 AM' | gettext %]</option>
+                    <option value="12:00:00">[% '12:00 PM' | gettext %]</option>
+                    <option value="12:30:00">[% '12:30 PM' | gettext %]</option>
+                    <option value="13:00:00">[% '1:00 PM' | gettext %]</option>
+                    <option value="13:30:00">[% '1:30 PM' | gettext %]</option>
+                    <option value="14:00:00">[% '2:00 PM' | gettext %]</option>
+                    <option value="14:30:00">[% '2:30 PM' | gettext %]</option>
+                    <option value="15:00:00">[% '3:00 PM' | gettext %]</option>
+                    <option value="15:30:00">[% '3:30 PM' | gettext %]</option>
+                    <option value="16:00:00">[% '4:00 PM' | gettext %]</option>
+                    <option value="16:30:00">[% '4:30 PM' | gettext %]</option>
+                    <option value="17:00:00">[% '5:00 PM' | gettext %]</option>
+                    <option value="17:30:00">[% '5:30 PM' | gettext %]</option>
+                    <option value="18:00:00">[% '6:00 PM' | gettext %]</option>
+                    <option value="18:30:00">[% '6:30 PM' | gettext %]</option>
+                    <option value="19:00:00">[% '7:00 PM' | gettext %]</option>
+                    <option value="19:30:00">[% '7:30 PM' | gettext %]</option>
+                    <option value="20:00:00">[% '8:00 PM' | gettext %]</option>
+                    <option value="20:30:00">[% '8:30 PM' | gettext %]</option>
+                    <option value="21:00:00">[% '9:00 PM' | gettext %]</option>
+                    <option value="21:30:00">[% '9:30 PM' | gettext %]</option>
+                    <option value="22:00:00">[% '10:00 PM' | gettext %]</option>
+                    <option value="22:30:00">[% '10:30 PM' | gettext %]</option>
+                    <option value="23:00:00">[% '11:00 PM' | gettext %]</option>
+                    <option value="23:30:00">[% '11:30 PM' | gettext %]</option>
                 </select><br />
 
-                <input class ="datefield" name="availability-search-end-date" id="availability-search-end-date" size="10" placeholder="End date" />
+                <input class ="datefield" name="availability-search-end-date" id="availability-search-end-date" size="10" placeholder="[% 'End date' | gettext %]" />
 
                 <select name="availability-search-end-time">
-                    <option value="">Time</option>
-                    <option value="00:00:00">12:00 AM</option>
-                    <option value="00:30:00">12:30 AM</option>
-                    <option value="01:00:00">1:00 AM</option>
-                    <option value="01:30:00">1:30 AM</option>
-                    <option value="02:00:00">2:00 AM</option>
-                    <option value="02:30:00">2:30 AM</option>
-                    <option value="03:00:00">3:00 AM</option>
-                    <option value="03:30:00">3:30 AM</option>
-                    <option value="04:00:00">4:00 AM</option>
-                    <option value="04:30:00">4:30 AM</option>
-                    <option value="05:00:00">5:00 AM</option>
-                    <option value="05:30:00">5:30 AM</option>
-                    <option value="06:00:00">6:00 AM</option>
-                    <option value="06:30:00">6:30 AM</option>
-                    <option value="07:00:00">7:00 AM</option>
-                    <option value="07:30:00">7:30 AM</option>
-                    <option value="08:00:00">8:00 AM</option>
-                    <option value="08:30:00">8:30 AM</option>
-                    <option value="09:00:00">9:00 AM</option>
-                    <option value="09:30:00">9:30 AM</option>
-                    <option value="10:00:00">10:00 AM</option>
-                    <option value="10:30:00">10:30 AM</option>
-                    <option value="11:00:00">11:00 AM</option>
-                    <option value="11:30:00">11:30 AM</option>
-                    <option value="12:00:00">12:00 PM</option>
-                    <option value="12:30:00">12:30 PM</option>
-                    <option value="13:00:00">1:00 PM</option>
-                    <option value="13:30:00">1:30 PM</option>
-                    <option value="14:00:00">2:00 PM</option>
-                    <option value="14:30:00">2:30 PM</option>
-                    <option value="15:00:00">3:00 PM</option>
-                    <option value="15:30:00">3:30 PM</option>
-                    <option value="16:00:00">4:00 PM</option>
-                    <option value="16:30:00">4:30 PM</option>
-                    <option value="17:00:00">5:00 PM</option>
-                    <option value="17:30:00">5:30 PM</option>
-                    <option value="18:00:00">6:00 PM</option>
-                    <option value="18:30:00">6:30 PM</option>
-                    <option value="19:00:00">7:00 PM</option>
-                    <option value="19:30:00">7:30 PM</option>
-                    <option value="20:00:00">8:00 PM</option>
-                    <option value="20:30:00">8:30 PM</option>
-                    <option value="21:00:00">9:00 PM</option>
-                    <option value="21:30:00">9:30 PM</option>
-                    <option value="22:00:00">10:00 PM</option>
-                    <option value="22:30:00">10:30 PM</option>
-                    <option value="23:00:00">11:00 PM</option>
-                    <option value="23:30:00">11:30 PM</option>
+                    <option value="">[% 'Time' | gettext %]</option>
+                    <option value="00:00:00">[% '12:00 AM' | gettext %]</option>
+                    <option value="00:30:00">[% '12:30 AM' | gettext %]</option>
+                    <option value="01:00:00">[% '1:00 AM' | gettext %]</option>
+                    <option value="01:30:00">[% '1:30 AM' | gettext %]</option>
+                    <option value="02:00:00">[% '2:00 AM' | gettext %]</option>
+                    <option value="02:30:00">[% '2:30 AM' | gettext %]</option>
+                    <option value="03:00:00">[% '3:00 AM' | gettext %]</option>
+                    <option value="03:30:00">[% '3:30 AM' | gettext %]</option>
+                    <option value="04:00:00">[% '4:00 AM' | gettext %]</option>
+                    <option value="04:30:00">[% '4:30 AM' | gettext %]</option>
+                    <option value="05:00:00">[% '5:00 AM' | gettext %]</option>
+                    <option value="05:30:00">[% '5:30 AM' | gettext %]</option>
+                    <option value="06:00:00">[% '6:00 AM' | gettext %]</option>
+                    <option value="06:30:00">[% '6:30 AM' | gettext %]</option>
+                    <option value="07:00:00">[% '7:00 AM' | gettext %]</option>
+                    <option value="07:30:00">[% '7:30 AM' | gettext %]</option>
+                    <option value="08:00:00">[% '8:00 AM' | gettext %]</option>
+                    <option value="08:30:00">[% '8:30 AM' | gettext %]</option>
+                    <option value="09:00:00">[% '9:00 AM' | gettext %]</option>
+                    <option value="09:30:00">[% '9:30 AM' | gettext %]</option>
+                    <option value="10:00:00">[% '10:00 AM' | gettext %]</option>
+                    <option value="10:30:00">[% '10:30 AM' | gettext %]</option>
+                    <option value="11:00:00">[% '11:00 AM' | gettext %]</option>
+                    <option value="11:30:00">[% '11:30 AM' | gettext %]</option>
+                    <option value="12:00:00">[% '12:00 PM' | gettext %]</option>
+                    <option value="12:30:00">[% '12:30 PM' | gettext %]</option>
+                    <option value="13:00:00">[% '1:00 PM' | gettext %]</option>
+                    <option value="13:30:00">[% '1:30 PM' | gettext %]</option>
+                    <option value="14:00:00">[% '2:00 PM' | gettext %]</option>
+                    <option value="14:30:00">[% '2:30 PM' | gettext %]</option>
+                    <option value="15:00:00">[% '3:00 PM' | gettext %]</option>
+                    <option value="15:30:00">[% '3:30 PM' | gettext %]</option>
+                    <option value="16:00:00">[% '4:00 PM' | gettext %]</option>
+                    <option value="16:30:00">[% '4:30 PM' | gettext %]</option>
+                    <option value="17:00:00">[% '5:00 PM' | gettext %]</option>
+                    <option value="17:30:00">[% '5:30 PM' | gettext %]</option>
+                    <option value="18:00:00">[% '6:00 PM' | gettext %]</option>
+                    <option value="18:30:00">[% '6:30 PM' | gettext %]</option>
+                    <option value="19:00:00">[% '7:00 PM' | gettext %]</option>
+                    <option value="19:30:00">[% '7:30 PM' | gettext %]</option>
+                    <option value="20:00:00">[% '8:00 PM' | gettext %]</option>
+                    <option value="20:30:00">[% '8:30 PM' | gettext %]</option>
+                    <option value="21:00:00">[% '9:00 PM' | gettext %]</option>
+                    <option value="21:30:00">[% '9:30 PM' | gettext %]</option>
+                    <option value="22:00:00">[% '10:00 PM' | gettext %]</option>
+                    <option value="22:30:00">[% '10:30 PM' | gettext %]</option>
+                    <option value="23:00:00">[% '11:00 PM' | gettext %]</option>
+                    <option value="23:30:00">[% '11:30 PM' | gettext %]</option>
                 </select><br />
                 </td>
               </tr>
               <tr>
                   <td>
                       <div class="headcount-selection" style="text-align: center;">
-                            <h3>Maximum Room Capacity</h3>
+                            <h3>[% 'Maximum Room Capacity' | gettext %]</h3>
                             <select name="availability-search-room-capacity">
                                 <option value=""></option>
                                 [% FOREACH capacity IN all_room_capacities %]
-                                <option value="[% capacity.maxcapacity %]">[% capacity.maxcapacity %] people </option>
+                                <option value="[% capacity.maxcapacity %]">[% capacity.maxcapacity %] [% 'people' | gettext %] </option>
                                 [% END # FOREACH capacity IN all_room_capacities %]
                             </select>
                       </div>
@@ -199,7 +199,7 @@
               <tr>
                 <td>
                   <div class="room-features-selection" style="text-align: center;">
-                    <h3>Room Equipment</h3>
+                    <h3>[% 'Room Equipment' | gettext %]</h3>
                     [% count = 1 %]
                     [% FOREACH equipment IN available_room_equipment %]
 
@@ -220,7 +220,7 @@
                   <td style="text-align: center;">
                     <br />
                     <input type="hidden" name="op" value="availability-search-results" />
-                    <input type="submit" value="Check Room Availability">
+                    <input type="submit" value="[% 'Check Room Availability' | gettext %]">
                   </td>
               </tr>
             </tbody>
@@ -247,7 +247,7 @@
                 }
                 else {
                     if ( !roomChecked ) {
-                        alert('Select a room to continue.');
+                        alert('[% 'Select a room to continue.' | gettext %]');
                         return false;
                     }
                 }
@@ -261,12 +261,12 @@
         <table border="2">
             <thead>
                 <tr>
-                    <th colspan="4">Available Rooms</th>
+                    <th colspan="4">[% 'Available Rooms' | gettext %]</th>
                 </tr>
                 <tr>
-                    <th>Select</th>
-                    <th>Room #</th>
-                    <th>Max Capacity</th>
+                    <th>[% 'Select' | gettext %]</th>
+                    <th>[% 'Room #' | gettext %]</th>
+                    <th>[% 'Max Capacity' | gettext %]</th>
                 </tr>
             </thead>
             <tbody>
@@ -287,16 +287,16 @@
                     <input type="hidden" name="event-end-time" value="[% event_end_time %]" />
                     <input type="hidden" name="op" value="room-selection-confirmation" />
                     <td></td>
-                    <td colspan="2"><input type="submit" value="Select Room" /></td>
+                    <td colspan="2"><input type="submit" value="[% 'Select Room' | gettext %]" /></td>
                 <tr>
             </tfoot>
         </table>
         [% ELSE %]
-        <h2 class="no-rooms-match">No rooms match your criteria!</h2>
+        <h2 class="no-rooms-match">[% 'No rooms match your criteria!' | gettext %]</h2>
         <form method="post" action="#">
             <input type="hidden" name="op" value="" />
 
-            <button>Click here to try another search</button>
+            <button>[% 'Click here to try another search' | gettext %]</button>
         [% END # IF are_rooms_available == 1 %]
         </form>
     [% ELSIF op == 'room-selection-confirmation' %]
@@ -305,18 +305,18 @@
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
             <fieldset style="float:left;">
-                <legend>Confirmation</legend>
-                <p>Name: <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
+                <legend>[% 'Confirmation' | gettext %]</legend>
+                <p>[% 'Name:' | gettext %] <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
                 <input type="hidden" name="confirmed-user" value="[% current_user %]" />
                 <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
                 <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />
-                <p>Email: <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
+                <p>[% 'Email:' | gettext %] <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
                 <input type="hidden" name="confirmed-email" value="[% current_user_email %]" />
                 [% FOREACH roomnumber IN selected_room_no %]
-                <p>Room: <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
+                <p>[% 'Room:' | gettext %] <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
                 <input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
                 [% END %]
-                <p style="float:right;">Time: <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
+                <p style="float:right;">[% 'Time:' | gettext %] <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
                 <input type="hidden" name="confirmed-displayed-start" value="[% displayed_start %]" />
                 <input type="hidden" name="confirmed-displayed-end" value="[% displayed_end %]" />
                 <input type="hidden" name="confirmed-room-id" value="[% selected_room_id %]" />
@@ -327,7 +327,7 @@
                 <!-- Checked by default -->
                 <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
                 [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
-                <p><input type="submit" name="confirmationSubmit" value="Confirm" /><input type="submit" name="confirmationSubmit" value="Start over" /></p>
+                <p><input type="submit" name="confirmationSubmit" value="[% 'Confirm' | gettext %]" /><input type="submit" name="confirmationSubmit" value="[% 'Start over' | gettext %]" /></p>
             </fieldset>
         </form>
     [% ELSIF op == 'reservation-confirmed' %]
@@ -337,30 +337,30 @@
             }
         </script>
         [% IF invalid_booking == 1 %]
-            <h1>Sorry!</h1>
+            <h1>[% 'Sorry!' | gettext %]</h1>
             <br />
-            <h2>It appears there was a problem completing your reservation
+            <h2>[% 'It appears there was a problem completing your reservation' | gettext %]
                 <br />
-                This is most likely due to someone else placing a reservation for a conflicting time slot.
+                [% 'This is most likely due to someone else placing a reservation for a conflicting time slot.' | gettext %]
             </h2>
 
             <form method="post" action="#">
                 <input type="hidden" name="class" value="[% CLASS %]" />
                 <input type="hidden" name="method" value="[% METHOD %]" />
                 <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
-                <button>Click here to search again</button>
+                <button>[% 'Click here to search again' | gettext %]</button>
             </form>
         [% ELSE %]
-            <h1>Congratulations! Your reservation is confirmed!</h1>
+            <h1>[% 'Congratulations! Your reservation is confirmed!' | gettext %]</h1>
             <br />
             [% IF SENT == '1' %]
-            <h3>An email confirmation has been sent to [% patron_email %]!</h3>
+            <h3>[% 'An email confirmation has been sent to' | gettext %] [% patron_email %]!</h3>
             [% END %]
             <form method="post" action="#">
                 <input type="hidden" name="class" value="[% CLASS %]" />
                 <input type="hidden" name="method" value="[% METHOD %]" />
                 <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
-                <button onclick="close_window(); return false;">Back to patron record</button>
+                <button onclick="close_window(); return false;">[% 'Back to patron record' | gettext %]</button>
             </form>
         [% END # IF invalid_booking == 1 %]
 

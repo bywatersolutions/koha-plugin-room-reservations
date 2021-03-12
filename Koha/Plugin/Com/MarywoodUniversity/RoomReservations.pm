@@ -19,15 +19,26 @@ use Koha::DateUtils;
 use Koha::Email;
 use Koha::Patrons;
 
-use Locale::Messages;
+use Locale::Messages;;
 Locale::Messages->select_package('gettext_pp');
+
+use Locale::TextDomain qw(com.marywooduniversity.roomreservations);
+use Locale::Messages qw(:locale_h :libintl_h);
+use POSIX qw(setlocale);
+
+# Set the locale from the environment.  Locale::TextDomain sets the default domain for us.
+setlocale Locale::Messages::LC_ALL(), '';
+
+BEGIN {
+    unshift @INC, 'RoomReservations/translations';
+}
 
 our $VERSION = "{VERSION}";
 
 our $metadata = {
-    name            => 'Room Reservations Plugin',
+    name            => gettext('Room Reservations Plugin'),
     author          => 'Lee Jamison',
-    description     => 'This plugin provides a room reservation solution on both intranet and OPAC interfaces.',
+    description     => gettext('This plugin provides a room reservation solution on both intranet and OPAC interfaces.'),
     date_authored   => '2017-05-08',
     date_updated    => '1900-01-01',
     minimum_version => '3.22',
@@ -137,7 +148,7 @@ var data = $("div.patroninfo h5").html();
             var matches = regExp.exec(data);
             var cardnumber = matches[1];
 
-            $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;Reserve room as patron</a>').insertAfter($('#addnewmessageLabel'));
+            $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;gettext(Reserve room as patron)</a>').insertAfter($('#addnewmessageLabel'));
         }
     }
 }\);

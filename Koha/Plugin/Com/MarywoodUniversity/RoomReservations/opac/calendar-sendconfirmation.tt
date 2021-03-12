@@ -3,15 +3,15 @@
 [% USE gtx = Gettext('com.marywooduniversity.roomreservations', language, 'utf-8', mbf_path) %]
 
 <SUBJECT>
-Study Room Reservation Confirmation
+[% 'Study Room Reservation Confirmation' | gettext %]
 <END_SUBJECT>
 
 <HEADER>
 
 [% FILTER html2text %]
-	<p>Your study room request has been completed!</p>
+	<p>[% 'Your study room request has been completed!' | gettext %]</p>
 
-	<p>For proof of reservation, print or save this email containing the reservation details!</p>
+	<p>[% 'For proof of reservation, print or save this email containing the reservation details!' | gettext %]</p>
 
 	<hr />
 [% END %]
@@ -21,15 +21,15 @@ Study Room Reservation Confirmation
 [% FILTER html2text %]
 
 <hr />
-	Name: [% user %]<br />
+	[% 'Name:' | gettext %] [% user %]<br />
 	-----<br />
-	Room: [% room %]<br />
+	[% 'Room:' | gettext %] [% room %]<br />
 	-----<br />
-	From: [% from %]<br />
+	[% 'From:' | gettext %] [% from %]<br />
 	-----<br />
-	To: [% to %]<br />
+	[% 'To:' | gettext %] [% to %]<br />
 	-----<br />
-	Reservation confirmed: [% confirmed_timestamp %]
+	[% 'Reservation confirmed:' | gettext %] [% confirmed_timestamp %]
 <hr />
 [% END %]
 <END_MESSAGE>
