@@ -43,7 +43,7 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: configure.tt:90 configure.tt:677
+#: configure.tt:90 configure.tt:684
 msgid "Actions"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Restrict daily reservations per patron"
 msgstr ""
 
-#: configure.tt:104 configure.tt:477
+#: configure.tt:104 configure.tt:481
 msgid "Restrict patron categories"
 msgstr ""
 
@@ -103,9 +103,9 @@ msgstr ""
 msgid "Select a room to display its details or select another action."
 msgstr ""
 
-#: configure.tt:158 configure.tt:204 configure.tt:566 configure.tt:648
-#: configure.tt:733 configure.tt:799 configure.tt:883 configure.tt:937
-#: configure.tt:1014
+#: configure.tt:158 configure.tt:204 configure.tt:570 configure.tt:655
+#: configure.tt:740 configure.tt:806 configure.tt:893 configure.tt:947
+#: configure.tt:1028
 msgid "Select another action"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Select another room to display"
 msgstr ""
 
-#: configure.tt:221 configure.tt:971
+#: configure.tt:221 configure.tt:985
 msgid "Name:"
 msgstr ""
 
@@ -129,231 +129,236 @@ msgstr ""
 msgid "Room capacity:"
 msgstr ""
 
-#: configure.tt:228 configure.tt:606 configure.tt:831
+#: configure.tt:228 configure.tt:610 configure.tt:838
 msgid "Equipment:"
 msgstr ""
 
-#: configure.tt:248 configure.tt:253
+#: configure.tt:233 configure.tt:618 configure.tt:842 configure.tt:961
+#: configure.tt:1048
+msgid "none"
+msgstr ""
+
+#: configure.tt:252 configure.tt:257
 msgid "Please enter a valid number!"
 msgstr ""
 
-#: configure.tt:266
+#: configure.tt:270
 msgid "Set max number days"
 msgstr ""
 
-#: configure.tt:272 configure.tt:277
+#: configure.tt:276 configure.tt:281
 msgid "Current max number days:"
 msgstr ""
 
-#: configure.tt:273
+#: configure.tt:277
 msgid "n/a"
 msgstr ""
 
-#: configure.tt:282
+#: configure.tt:286
 msgid "Set max number of days:"
 msgstr ""
 
-#: configure.tt:288 configure.tt:374
+#: configure.tt:292 configure.tt:378
 msgid "Add restriction"
 msgstr ""
 
-#: configure.tt:303 configure.tt:464
+#: configure.tt:307 configure.tt:468
 msgid "Please select a valid number!"
 msgstr ""
 
-#: configure.tt:316
+#: configure.tt:320
 msgid "Set max time"
 msgstr ""
 
-#: configure.tt:322 configure.tt:327
+#: configure.tt:326 configure.tt:331
 msgid "Current max time:"
 msgstr ""
 
-#: configure.tt:323
+#: configure.tt:327
 msgid "n/a minutes"
 msgstr ""
 
-#: configure.tt:328 configure.tt:368
+#: configure.tt:332 configure.tt:372
 msgid "minutes"
 msgstr ""
 
-#: configure.tt:336
+#: configure.tt:340
 msgid "Set max time:"
 msgstr ""
 
-#: configure.tt:364
+#: configure.tt:368
 msgid "hours"
 msgstr ""
 
-#: configure.tt:402
+#: configure.tt:406
 msgid "Set daily reservation per patron limit"
 msgstr ""
 
-#: configure.tt:408 configure.tt:413
+#: configure.tt:412 configure.tt:417
 msgid "Current limit:"
 msgstr ""
 
-#: configure.tt:409
+#: configure.tt:413
 msgid "No Limit"
 msgstr ""
 
-#: configure.tt:414 configure.tt:443
+#: configure.tt:418 configure.tt:447
 msgid "reservations"
 msgstr ""
 
-#: configure.tt:418
+#: configure.tt:422
 msgid "Set limit:"
 msgstr ""
 
-#: configure.tt:422
+#: configure.tt:426
 msgid "No limit"
 msgstr ""
 
-#: configure.tt:449
+#: configure.tt:453
 msgid "Add limit"
 msgstr ""
 
-#: configure.tt:483 configure.tt:488
+#: configure.tt:487 configure.tt:492
 msgid "Restricted categories:"
 msgstr ""
 
-#: configure.tt:484
+#: configure.tt:488
 msgid "No restrictions"
 msgstr ""
 
-#: configure.tt:497
+#: configure.tt:501
 msgid "Restrict categories:"
 msgstr ""
 
-#: configure.tt:504
+#: configure.tt:508
 msgid "INVALID!"
 msgstr ""
 
-#: configure.tt:510
+#: configure.tt:514
 msgid "Text entered here will be displayed to restricted patrons on the OPAC"
 msgstr ""
 
-#: configure.tt:523 configure.tt:843
+#: configure.tt:527 configure.tt:853
 msgid "Update"
 msgstr ""
 
-#: configure.tt:540
+#: configure.tt:544
 msgid "Please enter a roomname"
 msgstr ""
 
-#: configure.tt:545
+#: configure.tt:549
 msgid "Please enter a max capacity for the room"
 msgstr ""
 
-#: configure.tt:557
+#: configure.tt:561
 msgid "Select room equipment. If no equipment then check `none`"
 msgstr ""
 
-#: configure.tt:574 configure.tt:661 configure.tt:897
+#: configure.tt:578 configure.tt:668 configure.tt:907
 msgid "Current Rooms"
 msgstr ""
 
-#: configure.tt:595 configure.tt:625
+#: configure.tt:599 configure.tt:632
 msgid "Add Room"
 msgstr ""
 
-#: configure.tt:600 configure.tt:761 configure.tt:827
+#: configure.tt:604 configure.tt:768 configure.tt:834
 msgid "Room Number:"
 msgstr ""
 
-#: configure.tt:603 configure.tt:764
+#: configure.tt:607 configure.tt:771
 msgid "Max Capacity:"
 msgstr ""
 
-#: configure.tt:638
+#: configure.tt:645
 msgid "Please select an edit action."
 msgstr ""
 
-#: configure.tt:678
+#: configure.tt:685
 msgid "Edit Room"
 msgstr ""
 
-#: configure.tt:679
+#: configure.tt:686
 msgid "Edit Equipment"
 msgstr ""
 
-#: configure.tt:681
+#: configure.tt:688
 msgid "Edit"
 msgstr ""
 
-#: configure.tt:705
+#: configure.tt:712
 msgid "Please wait..."
 msgstr ""
 
-#: configure.tt:719
+#: configure.tt:726
 msgid "Room Number cannot be blank."
 msgstr ""
 
-#: configure.tt:724
+#: configure.tt:731
 msgid "Max Capacity cannot be blank."
 msgstr ""
 
-#: configure.tt:742 configure.tt:808
+#: configure.tt:749 configure.tt:815
 msgid "Select another room to edit"
 msgstr ""
 
-#: configure.tt:754
+#: configure.tt:761
 msgid "Edit Room Details"
 msgstr ""
 
-#: configure.tt:790
+#: configure.tt:797
 msgid "Room equipment cannot be empty. If no equipment then check `none`"
 msgstr ""
 
-#: configure.tt:820
+#: configure.tt:827
 msgid "Edit Room Equipment"
 msgstr ""
 
-#: configure.tt:863
+#: configure.tt:873
 msgid "Select a room to delete."
 msgstr ""
 
-#: configure.tt:868
+#: configure.tt:878
 msgid "Are you sure you want to delete the selected room?"
 msgstr ""
 
-#: configure.tt:876
+#: configure.tt:886
 msgid "Only rooms not linked to a booking are listed below"
 msgstr ""
 
-#: configure.tt:911 configure.tt:1041
+#: configure.tt:921 configure.tt:1059
 msgid "Delete"
 msgstr ""
 
-#: configure.tt:917
+#: configure.tt:927
 msgid "No rooms available to delete!"
 msgstr ""
 
-#: configure.tt:928
+#: configure.tt:938
 msgid "Equipment name cannot be blank."
 msgstr ""
 
-#: configure.tt:944 configure.tt:1027
+#: configure.tt:954 configure.tt:1041
 msgid "Current Equipment"
 msgstr ""
 
-#: configure.tt:966
+#: configure.tt:980
 msgid "Add Equipment"
 msgstr ""
 
-#: configure.tt:974
+#: configure.tt:988
 msgid "Add"
 msgstr ""
 
-#: configure.tt:994
+#: configure.tt:1008
 msgid "Select equipment to delete."
 msgstr ""
 
-#: configure.tt:999
+#: configure.tt:1013
 msgid "Are you sure you want to delete the selected equipment?"
 msgstr ""
 
-#: configure.tt:1007
+#: configure.tt:1021
 msgid "Only equipment not currently associated with a room is listed below"
 msgstr ""
 
