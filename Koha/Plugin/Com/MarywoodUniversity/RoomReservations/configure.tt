@@ -228,7 +228,11 @@
                 <strong>[% 'Equipment:' | gettext %]</strong><br />
                 [% FOREACH item IN selected_room_equipment %]
                 <!-- <pre>&#9; &bull; [% item %]</pre> -->
-                [% item.equipmentname %]<br />
+                [% equipmentname = item.equipmentname %]
+                [% IF equipmentname == 'none' %]
+                    [% equipmentname = gtx.gettext('none') %]
+                [% END %]
+                [% equipmentname %]<br />
                 [% END # FOREACH item IN selected_room_equipment %]
                 </td>
             </tr>
@@ -609,11 +613,14 @@
                         <td>
                         [% count = 1 %]
                         [% FOREACH equipment IN available_equipment %]
-
+                            [% equipmentname = equipment.equipmentname %]
+                            [% IF equipmentname == 'none' %]
+                                [% equipmentname = gtx.gettext('none') %]
+                            [% END %]
                             [% IF count mod 4 == 0 %]
-                                <input type="checkbox" name="selected-equipment" value="[% equipment.equipmentid %]" />&nbsp;[% equipment.equipmentname %]&nbsp;<br />
+                                <input type="checkbox" name="selected-equipment" value="[% equipment.equipmentid %]" />&nbsp;[% equipmentname %]&nbsp;<br />
                             [% ELSE %]
-                                <input type="checkbox" name="selected-equipment" value="[% equipment.equipmentid %]" />&nbsp;[% equipment.equipmentname %]&nbsp;
+                                <input type="checkbox" name="selected-equipment" value="[% equipment.equipmentid %]" />&nbsp;[% equipmentname %]&nbsp;
                             [% END %]
                             [% count = count + 1 %]
                         [% END # FOREACH equipment IN available_equipment %]
@@ -830,8 +837,11 @@
                         <td>
                             <strong>[% 'Equipment:' | gettext %]</strong><br />
                             [% FOREACH available IN all_available_equipment %]
-
-                                <input type="checkbox" name="edit-rooms-current-equipment" value="[% available.equipmentid %]" />[% available.equipmentname %]<br />
+                                [% equipmentname = available.equipmentname %]
+                                [% IF equipmentname == 'none' %]
+                                    [% equipmentname = gtx.gettext('none') %]
+                                [% END %]
+                                <input type="checkbox" name="edit-rooms-current-equipment" value="[% available.equipmentid %]" />[% equipmentname %]<br />
 
                             [% END # FOREACH available IN all_available_equipment %]
                         </td>
@@ -946,9 +956,13 @@
         </thead>
         <tbody>
             [% FOREACH equipment IN available_equipment %]
-            <tr class="table-row-centered">
-                <td>[% equipment.equipmentname %]</td>
-            </tr>
+                [% equipmentname = equipment.equipmentname %]
+                [% IF equipmentname == 'none' %]
+                    [% equipmentname = gtx.gettext('none') %]
+                [% END %]
+                <tr class="table-row-centered">
+                    <td>[% equipmentname %]</td>
+                </tr>
             [% END # FOREACH equipment IN available_equipment %]
         </tbody>
     </table>
@@ -1029,10 +1043,14 @@
             </thead>
             <tbody>
                 [% FOREACH equipment IN available_equipment %]
-                <tr class="table-row-centered">
-                    <td><input type="radio" name="delete-equipment-radio-button" value="[% equipment.equipmentid %]" /></td>
-                    <td>[% equipment.equipmentname %]</td>
-                </tr>
+                    [% equipmentname = equipment.equipmentname %]
+                    [% IF equipmentname == 'none' %]
+                        [% equipmentname = gtx.gettext('none') %]
+                    [% END %]
+                    <tr class="table-row-centered">
+                        <td><input type="radio" name="delete-equipment-radio-button" value="[% equipment.equipmentid %]" /></td>
+                        <td>[% equipmentname %]</td>
+                    </tr>
                 [% END # FOREACH equipment IN available_equipment %]
             </tbody>
             <tfoot>
