@@ -36,6 +36,9 @@ use POSIX 'strftime';
 
 use CGI qw ( -utf8 );
 
+use Locale::Messages;
+Locale::Messages->select_package('gettext_pp');
+
 use Calendar::Simple;
 my @months = qw(January February March April May June July August September October November December);
 
@@ -65,6 +68,11 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
         authnotrequired => 0,
         is_plugin       => 1,
     }
+);
+
+$template->param(
+    language => C4::Languages::getlanguage($cgi) || 'en',
+    mbf_path => abs_path( '../translations' )
 );
 
 if ( !defined($op) ) {
@@ -495,14 +503,14 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
 
     ## Returns hashref of the fields:
     ## roomnumber, monthdate, bookedtime
-    my $query = 
-    'SELECT 
-        r.roomnumber, 
+    my $query =
+    'SELECT
+        r.roomnumber,
         DATE_FORMAT(b.start, "%e") AS monthdate,
         CONCAT(DATE_FORMAT(b.start, "%h:%i %p"), " - ", DATE_FORMAT(b.end, "%h:%i %p")) AS bookedtime
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
         'WHERE r.roomid = b.roomid
-        AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" . 
+        AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" .
         'ORDER BY b.roomid ASC, start ASC';
 
     $sth = $dbh->prepare($query);
@@ -553,7 +561,7 @@ sub addBooking {
     my $dbh = C4::Context->dbh;
 
     $dbh->do("
-        INSERT INTO $bookings_table (borrowernumber, roomid, start, end) 
+        INSERT INTO $bookings_table (borrowernumber, roomid, start, end)
         VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ');');
 }
 
@@ -700,4 +708,7 @@ sub getCurrentTimestamp {
     return $timestamp;
 }
 
-output_html_with_http_headers $cgi, $cookie, $template->output;
+print $cgi->header(-type => 'text/html',-charset => 'utf-8');
+print $template->output();
+
+#output_html_with_http_headers $cgi, $cookie, $template->output;
