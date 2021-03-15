@@ -1,4 +1,4 @@
-[% USE gtx = Gettext('com.marywooduniversity.roomreservations', language, 'utf-8', mbf_path) %]
+[%- USE gtx = Gettext(textdomain, lang) -%]
 
 [% INCLUDE 'doc-head-open.inc' %]
     <title>Plugins - [% gtx.gettext("Koha: Room Reservations Plugin: Configuration") %]</title>
