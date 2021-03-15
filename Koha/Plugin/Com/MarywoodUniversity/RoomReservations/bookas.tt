@@ -202,15 +202,18 @@
                     <h3>[% 'Room Equipment' | gettext %]</h3>
                     [% count = 1 %]
                     [% FOREACH equipment IN available_room_equipment %]
-
+                      [% equipmentname = equipment.equipmentname %]
+                      [% IF equipmentname == 'none' %]
+                          [% equipmentname = gtx.gettext('none') %]
+                      [% END %]
                     <!-- the modulo wraps the list around to the next row with 4 pieces of equipment to a row -->
                     [% IF count mod 4 == 0 %]
-                    <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipment.equipmentname %]<br />
+                    <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipmentname %]<br />
                     [% ELSE %]
-                    <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipment.equipmentname %]
+                    <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipmentname %]
                     [% END # IF count %]
                     [% count = count + 1 %] <!-- equal to count++ to advance the loop -->
-                    <input type="hidden" name="availability-search-selected-equipment-name" value="[% equipment.equipmentname %]" />
+                    <input type="hidden" name="availability-search-selected-equipment-name" value="[% equipmentname %]" />
 
                     [% END # FOREACH equipment IN available_room_equipment %]
                   </div>
