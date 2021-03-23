@@ -710,7 +710,4 @@ sub getCurrentTimestamp {
     return $timestamp;
 }
 
-# print $cgi->header(-type => 'text/html',-charset => 'utf-8');
-# print $template->output();
-
 output_html_with_http_headers $cgi, $cookie, $template->output;
