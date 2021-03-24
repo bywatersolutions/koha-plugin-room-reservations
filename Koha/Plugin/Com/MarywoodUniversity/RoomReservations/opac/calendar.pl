@@ -39,16 +39,7 @@ use CGI qw ( -utf8 );
 use Locale::Messages;
 Locale::Messages->select_package('gettext_pp');
 
-use Locale::TextDomain qw(com.marywooduniversity.roomreservations);
 use Locale::Messages qw(:locale_h :libintl_h);
-use POSIX qw(setlocale);
-
-# Set the locale from the environment.  Locale::TextDomain sets the default domain for us.
-setlocale Locale::Messages::LC_ALL(), '';
-
-BEGIN {
-    unshift @INC, abs_path( '../translations' );
-}
 
 use Calendar::Simple;
 my @months = (gettext('January'), gettext('February'), gettext('March'), gettext('April'), gettext('May'). gettext('June'), gettext('July'), gettext('August'), gettext('September'), gettext('October'), gettext('November'), gettext('December'));
@@ -718,8 +709,5 @@ sub getCurrentTimestamp {
 
     return $timestamp;
 }
-
-# print $cgi->header(-type => 'text/html',-charset => 'utf-8');
-# print $template->output();
 
 output_html_with_http_headers $cgi, $cookie, $template->output;
