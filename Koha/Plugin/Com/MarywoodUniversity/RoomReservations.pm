@@ -40,17 +40,17 @@ our $roomequipment_table = 'booking_room_equipment';
 our $roomequipment_index = 'bookingroomequipment_idx';
 
 # set locale settings for gettext
-my $self = new('Koha::Plugin::Com::MarywoodUniversity::RoomReservations');
-my $cgi = $self->{'cgi'};
+#my $self = new('Koha::Plugin::Com::MarywoodUniversity::RoomReservations');
+#my $cgi = $self->{'cgi'};
 
-my $locale = C4::Languages::getlanguage($cgi);
-$locale = substr( $locale, 0, 2 );
-$ENV{'LANGUAGE'} = $locale;
-setlocale Locale::Messages::LC_ALL(), '';
-textdomain "com.marywooduniversity.roomreservations";
+#my $locale = C4::Languages::getlanguage($cgi);
+#$locale = substr( $locale, 0, 2 );
+#$ENV{'LANGUAGE'} = $locale;
+#setlocale Locale::Messages::LC_ALL(), '';
+#textdomain "com.marywooduniversity.roomreservations";
 
-my $locale_path = abs_path( $self->mbf_path( 'translations' ) );
-bindtextdomain "com.marywooduniversity.roomreservations" => $locale_path;
+#my $locale_path = abs_path( $self->mbf_path( 'translations' ) );
+#bindtextdomain "com.marywooduniversity.roomreservations" => $locale_path;
 
 our $metadata = {
     name            => getTranslation('Room Reservations Plugin'),
@@ -281,8 +281,8 @@ sub bookas {
         $event_start = dt_from_string($event_start);
         $event_end = dt_from_string($event_end);
 
-        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'us', timeformat => '12hr' });
-        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'us', timeformat => '12hr' });
+        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'iso', timeformat => '24hr' });
+        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'iso', timeformat => '24hr' });
 
         my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 

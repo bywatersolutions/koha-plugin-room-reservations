@@ -182,8 +182,8 @@ elsif ( $op eq 'availability-search-results' ) {
     $event_start = dt_from_string($event_start);
     $event_end = dt_from_string($event_end);
 
-    my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'us', timeformat => '12hr' });
-    my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'us', timeformat => '12hr' });
+    my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'iso', timeformat => '24hr' });
+    my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'iso', timeformat => '24hr' });
 
     my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 
