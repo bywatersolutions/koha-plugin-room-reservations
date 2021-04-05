@@ -585,7 +585,7 @@
             <div class="row-fluid">
                 <div class="span12">
                 
-                <form name="availabilitySearchForm" method="post" action="#" onsubmit="return validateAvailabilitySearch()">
+                <form name="availabilitySearchForm" method="post" action="#" onsubmit="return (validateAvailabilitySearch() && checkExistingBookings())">
                     <input type="hidden" name="max_days" id="max_days" value="[% max_days %]" />
                     <input type="hidden" name="max_time" id="max_time" value="[% max_time %]" />
                     <table align="center">
