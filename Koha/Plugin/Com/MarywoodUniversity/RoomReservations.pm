@@ -18,26 +18,18 @@ use C4::Output;
 use Koha::DateUtils;
 use Koha::Email;
 use Koha::Patrons;
+use Encode;
 
-use Locale::Messages;
+use Locale::Messages;;
 Locale::Messages->select_package('gettext_pp');
+
+use Locale::Messages qw(:locale_h :libintl_h);
+use POSIX qw(setlocale);
 
 our $VERSION = "{VERSION}";
 
-our $metadata = {
-    name            => 'Room Reservations Plugin',
-    author          => 'Lee Jamison',
-    description     => 'This plugin provides a room reservation solution on both intranet and OPAC interfaces.',
-    date_authored   => '2017-05-08',
-    date_updated    => '1900-01-01',
-    minimum_version => '3.22',
-    maximum_version => undef,
-    version         => $VERSION,
-};
-
 ## Table names and associated MySQL indexes
 #
-
 our $rooms_table = 'booking_rooms';
 our $rooms_index = 'bookingrooms_idx';
 our $bookings_table = 'bookings';
@@ -46,6 +38,30 @@ our $equipment_table = 'booking_equipment';
 our $equipment_index = 'bookingequipment_idx';
 our $roomequipment_table = 'booking_room_equipment';
 our $roomequipment_index = 'bookingroomequipment_idx';
+
+# set locale settings for gettext
+#my $self = new('Koha::Plugin::Com::MarywoodUniversity::RoomReservations');
+#my $cgi = $self->{'cgi'};
+
+#my $locale = C4::Languages::getlanguage($cgi);
+#$locale = substr( $locale, 0, 2 );
+#$ENV{'LANGUAGE'} = $locale;
+#setlocale Locale::Messages::LC_ALL(), '';
+#textdomain "com.marywooduniversity.roomreservations";
+
+#my $locale_path = abs_path( $self->mbf_path( 'translations' ) );
+#bindtextdomain "com.marywooduniversity.roomreservations" => $locale_path;
+
+our $metadata = {
+    name            => getTranslation('Room Reservations Plugin'),
+    author          => 'Lee Jamison',
+    description     => getTranslation('This plugin provides a room reservation solution on both intranet and OPAC interfaces.'),
+    date_authored   => '2017-05-08',
+    date_updated    => '1900-01-01',
+    minimum_version => '3.22',
+    maximum_version => undef,
+    version         => $VERSION,
+};
 
 our $valid; # used to check if booking still valid prior to insertion of new booking
 
@@ -123,12 +139,13 @@ sub install() {
 
     $IntranetUserJS =~ s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
 
-    $IntranetUserJS .= q(
-/* JS for Koha RoomReservation Plugin
+    $IntranetUserJS .= q[/* JS for Koha RoomReservation Plugin
 This JS was added automatically by installing the RoomReservation plugin
 Please do not modify */
 
 $(document).ready(function() {
+var buttonText = "];
+$IntranetUserJS .= getTranslation('Reserve room as patron').q[";
 var data = $("div.patroninfo h5").html();
 
     if (typeof borrowernumber !== 'undefined') {
@@ -137,13 +154,12 @@ var data = $("div.patroninfo h5").html();
             var matches = regExp.exec(data);
             var cardnumber = matches[1];
 
-            $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;Reserve room as patron</a>').insertAfter($('#addnewmessageLabel'));
+            $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;' + buttonText + '</a>').insertAfter($('#addnewmessageLabel'));
         }
     }
-}\);
+});
 
-    /* End of JS for Koha RoomReservation Plugin */
-    );
+    /* End of JS for Koha RoomReservation Plugin */];
 
         C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
 
@@ -265,8 +281,8 @@ sub bookas {
         $event_start = dt_from_string($event_start);
         $event_end = dt_from_string($event_end);
 
-        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'us', timeformat => '12hr' });
-        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'us', timeformat => '12hr' });
+        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'iso', timeformat => '24hr' });
+        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'iso', timeformat => '24hr' });
 
         my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 
@@ -1860,6 +1876,11 @@ sub addBooking {
     $dbh->do("
         INSERT INTO $bookings_table (borrowernumber, roomid, start, end)
         VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ');');
+}
+
+sub getTranslation {
+  my ( $string ) = @_;
+  return Encode::decode('UTF-8', gettext($string));
 }
 
 1;

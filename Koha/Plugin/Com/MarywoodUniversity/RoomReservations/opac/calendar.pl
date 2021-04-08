@@ -36,8 +36,13 @@ use POSIX 'strftime';
 
 use CGI qw ( -utf8 );
 
+use Locale::Messages;
+Locale::Messages->select_package('gettext_pp');
+
+use Locale::Messages qw(:locale_h :libintl_h);
+
 use Calendar::Simple;
-my @months = qw(January February March April May June July August September October November December);
+my @months = (gettext('January'), gettext('February'), gettext('March'), gettext('April'), gettext('May'). gettext('June'), gettext('July'), gettext('August'), gettext('September'), gettext('October'), gettext('November'), gettext('December'));
 
 my $pluginDir = dirname(abs_path($0));
 
@@ -65,6 +70,11 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
         authnotrequired => 0,
         is_plugin       => 1,
     }
+);
+
+$template->param(
+    language => C4::Languages::getlanguage($cgi) || 'en',
+    mbf_path => abs_path( '../translations' )
 );
 
 if ( !defined($op) ) {
@@ -172,8 +182,8 @@ elsif ( $op eq 'availability-search-results' ) {
     $event_start = dt_from_string($event_start);
     $event_end = dt_from_string($event_end);
 
-    my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'us', timeformat => '12hr' });
-    my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'us', timeformat => '12hr' });
+    my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'iso', timeformat => '24hr' });
+    my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'iso', timeformat => '24hr' });
 
     my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 
@@ -495,14 +505,14 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
 
     ## Returns hashref of the fields:
     ## roomnumber, monthdate, bookedtime
-    my $query = 
-    'SELECT 
-        r.roomnumber, 
+    my $query =
+    'SELECT
+        r.roomnumber,
         DATE_FORMAT(b.start, "%e") AS monthdate,
         CONCAT(DATE_FORMAT(b.start, "%h:%i %p"), " - ", DATE_FORMAT(b.end, "%h:%i %p")) AS bookedtime
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
         'WHERE r.roomid = b.roomid
-        AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" . 
+        AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" .
         'ORDER BY b.roomid ASC, start ASC';
 
     $sth = $dbh->prepare($query);
@@ -553,7 +563,7 @@ sub addBooking {
     my $dbh = C4::Context->dbh;
 
     $dbh->do("
-        INSERT INTO $bookings_table (borrowernumber, roomid, start, end) 
+        INSERT INTO $bookings_table (borrowernumber, roomid, start, end)
         VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ');');
 }
 
