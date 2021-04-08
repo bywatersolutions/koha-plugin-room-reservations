@@ -281,8 +281,8 @@ sub bookas {
         $event_start = dt_from_string($event_start);
         $event_end = dt_from_string($event_end);
 
-        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'iso', timeformat => '24hr' });
-        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'iso', timeformat => '24hr' });
+        my $displayed_event_start = output_pref({ dt => $event_start, }); # dateformat => 'us', timeformat => '12hr' });
+        my $displayed_event_end = output_pref({ dt => $event_end, }); #dateformat => 'us', timeformat => '12hr' });
 
         my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 
@@ -1081,7 +1081,7 @@ sub getAllBookings {
     my $sth = '';
 
     my $query = "
-        SELECT bk.bookingid, r.roomnumber, b.firstname, b.surname, DATE_FORMAT(bk.start, \"%m/%d/%Y %h:%i %p\") AS start, DATE_FORMAT(bk.end, \"%m/%d/%Y %h:%i %p\") AS end
+        SELECT bk.bookingid, r.roomnumber, b.firstname, b.surname, DATE_FORMAT(bk.start, \"%d.%m.%Y %H:%i\") AS start, DATE_FORMAT(bk.end, \"%d.%m.%Y %H:%i\") AS end
         FROM borrowers b, $bookings_table bk, $rooms_table r
         WHERE b.borrowernumber = bk.borrowernumber
         AND bk.roomid = r.roomid

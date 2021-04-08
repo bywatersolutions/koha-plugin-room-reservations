@@ -191,8 +191,8 @@ elsif ( $op eq 'availability-search-results' ) {
     $event_start = dt_from_string($event_start);
     $event_end = dt_from_string($event_end);
 
-    my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'iso', timeformat => '24hr' });
-    my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'iso', timeformat => '24hr' });
+    my $displayed_event_start = output_pref({ dt => $event_start, }); # dateformat => 'us', timeformat => '12hr' });
+    my $displayed_event_end = output_pref({ dt => $event_end, }); #dateformat => 'us', timeformat => '12hr' });
 
     my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 
@@ -518,7 +518,7 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
     'SELECT
         r.roomnumber,
         DATE_FORMAT(b.start, "%e") AS monthdate,
-        CONCAT(DATE_FORMAT(b.start, "%h:%i %p"), " - ", DATE_FORMAT(b.end, "%h:%i %p")) AS bookedtime
+        CONCAT(DATE_FORMAT(b.start, "%H:%i"), " - ", DATE_FORMAT(b.end, "%H:%i")) AS bookedtime
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
         'WHERE r.roomid = b.roomid
         AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" .
