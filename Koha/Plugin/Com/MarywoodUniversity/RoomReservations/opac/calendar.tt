@@ -14,6 +14,15 @@
             table-layout: auto;
             border-collapse: collapse;
         }
+        .calendar-form {
+			margin: 0;
+			display: inline;
+        }
+        .calendar-submit
+        {
+			margin: 0 10px 2px;
+			line-height: 12px;
+        }
         #study-room-calendar td {
             vertical-align: top;
             text-align: left;
@@ -43,6 +52,7 @@
     <!-- op defaults to 'undef' if template param is undef (meaning show calendar) -->
     [% DEFAULT op = 'undef' %]
     [% IF op == 'undef' %]
+    [% DEFAULT selected_mon_cnt = 0 %]
     <ul class="breadcrumb">
         <li><a href="/cgi-bin/koha/opac-main.pl">[% 'Home' | gettext %]</a> <span class="divider">&rsaquo;</span></li>
         <li><a href="#">[% "Study Room Calendar" | gettext %]</a></li>
@@ -60,7 +70,17 @@
                     <table class="calendar-table" id="study-room-calendar" border="2" height="80%" width="80%" align="center">
                         <thead>
                             <tr>
-                                <th colspan="10" align="center">[% active_month | gettext %] [% active_year %]</th>
+                                <th colspan="10" align="center">
+								 <form class="calendar-form" method="post" name="prev-month" action="#">
+									<input type="hidden" name="selected_mon_cnt" value="[% selected_mon_cnt - 1 %]" />
+									<input class="calendar-submit" type="submit" name="prev-month" value="<" />
+								 </form>
+								 [% active_month | gettext %] [% active_year %]
+								 <form class="calendar-form" method="post" name="next-month" action="#">
+								   <input type="hidden" name="selected_mon_cnt" value="[% selected_mon_cnt + 1 %]" />
+								   <input class="calendar-submit" type="submit" name="next-month" value=">" />
+								 </form>
+								</th>
                             </tr>
                             <tr>
                                 <th>[% 'SUN' | gettext %]</th>

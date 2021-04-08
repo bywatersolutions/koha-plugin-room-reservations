@@ -33,6 +33,7 @@ use Koha::DateUtils;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 use POSIX 'strftime';
+use POSIX 'floor';
 
 use CGI qw ( -utf8 );
 
@@ -42,7 +43,7 @@ Locale::Messages->select_package('gettext_pp');
 use Locale::Messages qw(:locale_h :libintl_h);
 
 use Calendar::Simple;
-my @months = (gettext('January'), gettext('February'), gettext('March'), gettext('April'), gettext('May'). gettext('June'), gettext('July'), gettext('August'), gettext('September'), gettext('October'), gettext('November'), gettext('December'));
+my @months = (gettext('January'), gettext('February'), gettext('March'), gettext('April'), gettext('May'), gettext('June'), gettext('July'), gettext('August'), gettext('September'), gettext('October'), gettext('November'), gettext('December'));
 
 my $pluginDir = dirname(abs_path($0));
 
@@ -78,8 +79,15 @@ $template->param(
 );
 
 if ( !defined($op) ) {
-    my $mon = shift || (localtime)[4] + 1;
-    my $yr  = shift || (localtime)[5] + 1900;
+	my $selected_mon_cnt = $cgi->param('selected_mon_cnt');
+	
+	my $mon = (localtime)[4] + 1;
+    my $yr  = (localtime)[5] + 1900;
+
+	if ( defined($selected_mon_cnt) ) {
+		$yr  = $yr + floor(($mon + $selected_mon_cnt - 1) / 12);
+		$mon = ($mon + $selected_mon_cnt) % 12;
+	}
 
     my @month = calendar($mon, $yr);
     my @month_days;
@@ -123,6 +131,7 @@ if ( !defined($op) ) {
         month_is_active   => 1,
         plugin_dir        => $pluginDir,
         op                => $op,
+        selected_mon_cnt  => $selected_mon_cnt,
     );
 }
 elsif ( $op eq 'availability-search' ) {
