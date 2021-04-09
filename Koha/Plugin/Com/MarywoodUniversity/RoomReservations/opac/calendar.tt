@@ -910,9 +910,9 @@
                     <input type="hidden" name="op" value="reservation-confirmed" />
                     [% IF Koha.Preference('KohaAdminEmailAddress') %]
                     <!-- Checked by default -->
-                    <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
+                    <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />[% 'Send me a copy of my confirmation' | gettext %]</p>
                     [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
-                    <p><input type="submit" name="confirmationSubmit" value="[% 'Confirm' | gettext %]" /><input type="submit" name="confirmationSubmit" value="[% 'Start over' | gettext %]" /></p>
+                    <p><input type="submit" name="confirmationSubmit" value="[% 'Confirm' | gettext %]" /><input type="submit" name="startOverSubmit" value="[% 'Start over' | gettext %]" /></p>
                 </fieldset>
             </form>
 

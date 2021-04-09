@@ -260,17 +260,18 @@ elsif( $op eq 'reservation-confirmed' ) {
     my $end     = $cgi->param('confirmed-end');
     my $sendCopy = $cgi->param('send-confirmation-copy') || q{};
     my $submitButton = $cgi->param('confirmationSubmit');
+    my $startOverButton = $cgi->param('startOverSubmit');
     my $user = $cgi->param('confirmed-user');
     my $roomnumber = $cgi->param('confirmed-roomnumber');
     my $displayed_start = $cgi->param('confirmed-displayed-start');
     my $displayed_end = $cgi->param('confirmed-displayed-end');
     my $patronEmail = $cgi->param('confirmed-email');
 
-    if ( $submitButton eq 'Start over' ) {
+    if ( $startOverButton ne '' ) {
 
         $op = 'availability-search';
     }
-    else {
+    elsif ( $submitButton ne '' ) {
 
         $valid = preBookingAvailabilityCheck($roomid, $start, $end);
 
