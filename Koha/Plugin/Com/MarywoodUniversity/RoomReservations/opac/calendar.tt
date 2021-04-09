@@ -34,7 +34,7 @@
             text-align: center;
         }
         button {
-            background:none!important;
+            /*background:none!important;*/
             color:#0000EE;
             border:none;
             padding:0!important;
