@@ -452,7 +452,7 @@
             var roomChecked = false;
 
             if (!validateDate(blackoutDate)) {
-                alert("Date is required.");
+                alert("[% 'Date is required.' | gettext %]");
                 return false;
             }
 
@@ -607,7 +607,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>All day<input type="checkbox" disabled="true"/></td>
+                    <td>[% 'All day' | gettext %]<input type="checkbox" disabled="true"/></td>
                 </tr>
                 [% IF current_rooms %]
                 <tr>
