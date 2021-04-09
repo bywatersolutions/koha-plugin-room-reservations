@@ -41,6 +41,13 @@
             font: inherit;
             cursor: pointer;
         }
+        label {
+			display: initial;
+			margin-bottom: 0;
+		}
+		input[type="radio"], input[type="checkbox"] {
+     		margin: 0;
+		}
     </style>
 </head>
 [% BLOCK cssinclude %][% END %]
@@ -886,22 +893,34 @@
         <div class="row-fluid">
             <div class="span12">
 
-            <form name="confirmationForm" id="confirmationForm" method="post" action="#" onsubmit="return validateConfirmationForm();">
+            <form style="display:table;" name="confirmationForm" id="confirmationForm" method="post" action="#" onsubmit="return validateConfirmationForm();">
                 <fieldset style="float:left;">
                     <legend>[% 'Confirmation' | gettext %]</legend>
-                    <p>[% 'Name:' | gettext %] <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
+                    <p style="display:table-row;">
+						<label style="display:table-cell;" for="username">[% 'Name:' | gettext %]&nbsp;</label> 
+						<input type="text" id="username" name="username" size="36" value="[% current_user %]" readonly="true" />
+					</p>
                     <input type="hidden" name="count-limit" id="count-limit" value="[% count_limit %]" />
                     <input type="hidden" name="user-daily-limit" id="user-daily-limit" value="[% user_daily_limit %]" />
                     <input type="hidden" name="confirmed-user" value="[% current_user %]" />
                     <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
                     <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />
-                    <p>[% 'Email:' | gettext %] <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
+                    <p style="display:table-row;">
+						<label style="display:table-cell;" for="email">[% 'Email:' | gettext %]&nbsp;</label> 
+						<input type="text" id="email" name="email" size="36" value="[% current_user_email %]" readonly="true" />
+					</p>
                     <input type="hidden" name="confirmed-email" value="[% current_user_email %]" />
                     [% FOREACH roomnumber IN selected_room_no %]
-                    <p>[% 'Room:' | gettext %] <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
-                    <input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
+						<p style="display:table-row;">
+							<label style="display:table-cell;" for="room">[% 'Room:' | gettext %]&nbsp;</label> 
+							<input style="display:table-cell;" type="text" id="room" name="room" size="36" value="[% roomnumber.roomnumber %]" readonly="true" />
+						</p>
+						<input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
                     [% END %]
-                    <p style="float:right;">[% 'Time:' | gettext %] <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
+                    <p style="display:table-row;">
+						<label style="display:table-cell;" for="time">[% 'Time:' | gettext %]&nbsp;</label> 
+						<input style="display:table-cell;" type="text" id="time" name="time" size="36" value="[% displayed_time %]" readonly="true" />
+                    </p>
                     <input type="hidden" name="confirmed-displayed-start" value="[% displayed_start %]" />
                     <input type="hidden" name="confirmed-displayed-end" value="[% displayed_end %]" />
                     <input type="hidden" name="confirmed-room-id" value="[% selected_room_id %]" />
@@ -910,9 +929,15 @@
                     <input type="hidden" name="op" value="reservation-confirmed" />
                     [% IF Koha.Preference('KohaAdminEmailAddress') %]
                     <!-- Checked by default -->
-                    <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />[% 'Send me a copy of my confirmation' | gettext %]</p>
+                    <p>
+						<input type="checkbox" id="send-confirmation-copy" name="send-confirmation-copy" value="1" checked> 
+						<label for="send-confirmation-copy">[% 'Send me a copy of my confirmation' | gettext %]</label>
+					</p>
                     [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
-                    <p><input type="submit" name="confirmationSubmit" value="[% 'Confirm' | gettext %]" /><input type="submit" name="startOverSubmit" value="[% 'Start over' | gettext %]" /></p>
+                    <p>
+						<input type="submit" name="confirmationSubmit" value="[% 'Confirm' | gettext %]" /> 
+						<input type="submit" name="startOverSubmit" value="[% 'Start over' | gettext %]" />
+					</p>
                 </fieldset>
             </form>
 
