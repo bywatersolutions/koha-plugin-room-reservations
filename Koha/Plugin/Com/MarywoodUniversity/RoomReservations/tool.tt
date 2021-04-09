@@ -40,7 +40,6 @@
 
 	<!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
     <h3>[% 'Koha: Room Reservations Plugin: Tool' | gettext %]</h3>
-
     [% IF op == '' %]
     <script type="text/javascript">
         function validateAction() {
@@ -238,10 +237,10 @@
                 <tr>
                     <td colspan="5">
                         <select name="manage-blackouts-action">
-                            <option value="">Actions</option>
-                            <option value="delete">Delete</option>
+                            <option value="">[% 'Actions' | gettext %]</option>
+                            <option value="delete">[% 'Delete' | gettext %]</option>
                         </select>
-                        &nbsp;<input type="submit" name="manage-blackouts-submit" value="Submit" />
+                        &nbsp;<input type="submit" name="manage-blackouts-submit" value="[% 'Submit' | gettext %]" />
                     </td>
                 </tr>
             </tbody>
@@ -330,43 +329,11 @@
             });
         });
 
-        function validateDate(dateStr) {
-           const regExp = /^(\d\d?)\/(\d\d?)\/(\d{4})$/;
-           let matches = dateStr.match(regExp);
-           let isValid = matches;
-           let maxDate = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-           if (matches) {
-             const month = parseInt(matches[1]);
-             const date = parseInt(matches[2]);
-             const year = parseInt(matches[3]);
-
-             isValid = month <= 12 && month > 0;
-             isValid &= date <= maxDate[month] && date > 0;
-
-             const leapYear = (year % 400 == 0)
-                || (year % 4 == 0 && year % 100 != 0);
-             isValid &= month != 2 || leapYear || date <= 28;
-           }
-
-           return isValid
-        }
-
         function validateFullBlackout() {
             var startDate = document.forms["fullBlackoutForm"]["blackout-start-date"].value;
             var endDate   = document.forms["fullBlackoutForm"]["blackout-end-date"].value;
             var rooms     = document.getElementsByName("current-room-blackout");
             var roomChecked = false;
-
-            if (!validateDate(startDate)) {
-                alert("[% 'Start date is required.' | gettext %]");
-                return false;
-            }
-
-            if (!validateDate(endDate)) {
-                alert("[% 'End date is required.' | gettext %]");
-                return false;
-            }
 
             for (var i = 0; i < rooms.length; i++) {
                 if (rooms[i].checked) {
@@ -391,14 +358,13 @@
             <table>
                 <tr>
                     <td>
-                        <input class="datefield" name="blackout-start-date" id="blackout-start-date" size="10" placeholder="[% 'Start' | gettext %]" required="required" />
-                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                        <input type="date" name="blackout-start-date" id="blackout-start-date" required pattern="\d{4}-\d{2}-\d{2}" />
+                        <!--<span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>-->
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input class="datefield" name="blackout-end-date" id="blackout-end-date" size="10" placeholder="[% 'End' | gettext %]" required="required" />
-                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                        <input type="date" name="blackout-end-date" id="blackout-end-date" required pattern="\d{4}-\d{2}-\d{2}" />
                     </td>
                 </tr>
                 <tr>
@@ -451,18 +417,6 @@
             var rooms = document.getElementsByName("current-room-blackout");
             var roomChecked = false;
 
-            if (!validateDate(blackoutDate)) {
-                alert("[% 'Date is required.' | gettext %]");
-                return false;
-            }
-
-            // convert date format from mm/dd/yyyy to yyyy-mm-dd
-            blackoutDate = blackoutDate.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
-
-            // timestamp of MySQL type DATETIME
-            var startTimestamp = blackoutDate + " " + blackoutStartTime;
-            var endTimestamp   = blackoutDate + " " + blackoutEndTime;
-
             // determines if invalid start/end values were entered
             if (startTimestamp >= endTimestamp) {
                 alert("[% 'Please select a valid start and end time!' | gettext %]");
@@ -492,8 +446,7 @@
             <table>
                 <tr>
                     <td>
-                        <input class ="datefield" name="blackout-date" id="blackout-date" size="10" placeholder="Date" />
-                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                        <input type ="date" name="blackout-date" id="blackout-date" required pattern="\d{4}-\d{2}-\d{2}"/>
                     </td>
                 </tr>
                 <tr>
@@ -630,13 +583,13 @@
                 [% IF current_rooms %]
                 <tr>
                     <td>
-                        <input type="submit" name="submit-partial-blackout" value="Add" />
+                        <input type="submit" name="submit-partial-blackout" value="[% 'Add' | gettext %]" />
                     </td>
                 </tr>
                 [% ELSE %]
                 <tr>
                     <td>
-                        <input type="submit" name="submit-partial-blackout" value="Add" disabled="true" />
+                        <input type="submit" name="submit-partial-blackout" value="[% 'Add' | gettext %]" disabled="true" />
                     </td>
                 </tr>
                 [% END # IF current_rooms %]
@@ -647,55 +600,5 @@
     [% END # op == 'manage-blackouts' %]
 
 [% INCLUDE calendar.inc %]
-<!-- Full blackout -->
-<script type="text/javascript">
-// <![CDATA[
 
-    $(document).ready(function() {
-        $(".datefield").prop("readOnly", true);
-    });
-
-    // http://jqueryui.com/demos/datepicker/#date-range
-    var requestdates = $( "#blackout-start-date, #blackout-end-date" ).datepicker({
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onSelect: function( selectedDate ) {
-            var option = this.id == "blackout-start-date" ? "minDate" : "maxDate",
-                instance = $( this ).data( "datepicker" );
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
-            requestdates.not( this ).datepicker("option", option, date);
-        }
-    });
-// ]]>
-</script>
-
-<!-- Partial blackout -->
-<script type="text/javascript">
-// <![CDATA[
-
-    $(document).ready(function() {
-        $(".datefield").prop("readOnly", true);
-    });
-
-    // http://jqueryui.com/demos/datepicker/#date-range
-    var requestdates = $( "#blackout-date" ).datepicker({
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onSelect: function( selectedDate ) {
-            var option = this.id == "blackout-date" ? "minDate" : "maxDate",
-                instance = $( this ).data( "datepicker" );
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
-            requestdates.not( this ).datepicker("option", option, date);
-        }
-    });
-// ]]>
-</script>
 [% INCLUDE 'intranet-bottom.inc' %]

@@ -537,11 +537,8 @@ sub tool {
         my $blackout_end_date = $cgi->param('blackout-end-date');
         my @rooms = $cgi->multi_param('current-room-blackout');
 
-        my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_start_date;
-        my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_end_date;
-
-        $start_date = $start_date . ' 00:00:00';
-        $end_date = $end_date . ' 23:59:59';
+        my $start_date = $blackout_start_date . ' 00:00:00';
+        my $end_date = $blackout_end_date . ' 23:59:59';
 
         my $current_user = C4::Context->userenv->{'number'};
 
@@ -580,10 +577,10 @@ sub tool {
         my $end_time = $cgi->param('blackout-end-time');
         my @rooms = $cgi->multi_param('current-room-blackout');
 
-        $blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
+        #$blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
 
-        my $start = $blackout_date . " $start_time";
-        my $end = $blackout_date . " $end_time";
+        my $start = "$blackout_date" . " $start_time";
+        my $end = "$blackout_date" . " $end_time";
 
         my $current_user = C4::Context->userenv->{'number'};
 
@@ -1210,7 +1207,7 @@ sub getAllBlackedoutBookings {
     my $sth = '';
 
     my $query = "
-        SELECT bk.bookingid, r.roomnumber, DATE_FORMAT(bk.start, \"%m/%d/%Y %h:%i %p\") AS start, DATE_FORMAT(bk.end, \"%m/%d/%Y %h:%i %p\") AS end
+        SELECT bk.bookingid, r.roomnumber, DATE_FORMAT(bk.start, \"%d.%m.%Y %H:%i\") AS start, DATE_FORMAT(bk.end, \"%d.%m.%Y %H:%i\") AS end
         FROM $bookings_table bk, $rooms_table r
         WHERE bk.roomid = r.roomid
         AND bk.blackedout = 1
