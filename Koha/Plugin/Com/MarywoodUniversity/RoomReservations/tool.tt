@@ -34,8 +34,7 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">[% 'Home' | gettext%]</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' %] &rsaquo; [% 'Tool' %]</div>
-
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">[% 'Home' | gettext%]</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' | gettext %] &rsaquo; [% 'Tool' | gettext %]</div>
 <div id="doc3">
 
 	<!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
@@ -119,6 +118,12 @@
         }
     </script>
     <!-- TODO: add JS validation to check only one action item is selected - if (count > 1) -->
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
     <form name="manageBookingsForm" method="post" action="#" onsubmit="return validateBookingAction()">
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
@@ -208,6 +213,12 @@
             }
         }
     </script>
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
     <form name="manageBlackoutsForm" action="#" method="post" onsubmit="return validateManageBlackouts()">
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
