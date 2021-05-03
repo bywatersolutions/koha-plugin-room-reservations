@@ -34,6 +34,7 @@ use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 use POSIX 'strftime';
 use POSIX 'floor';
+use DateTime;
 
 use CGI qw ( -utf8 );
 
@@ -97,6 +98,41 @@ if ( !defined($op) ) {
     }
 
     my $calendarBookings = getConfirmedCalendarBookingsByMonthAndYear($mon, $yr);
+    
+    my $dt = DateTime->new(
+		year       => $yr,
+		month      => $mon,
+		day        => 1,
+	);
+	my $dt_start = DateTime->new(
+		year       => $yr,
+		month      => $mon,
+		day        => 1,
+	);
+	my $dt_end = DateTime->new(
+		year       => $yr,
+		month      => $mon,
+		day        => 1,
+	);
+    my @bookingDays;
+    for my $month_day (@month_days) {
+		my @dayBookings;
+		if ($month_day ne '') {
+			$dt->set( day => $month_day );
+			for my $booking (@$calendarBookings) {
+				$dt_start->set( day => $booking->{'monthdate_start'} );
+				$dt_start->set( month => $booking->{'month_start'} );
+				$dt_start->set( year => $booking->{'year_start'} );
+				$dt_end->set( day => $booking->{'monthdate_end'} );
+				$dt_end->set( month => $booking->{'month_end'} );
+				$dt_end->set( year => $booking->{'year_end'} );
+				if (DateTime->compare($dt, $dt_start) >= 0 && DateTime->compare($dt, $dt_end) <= 0){
+					push(@dayBookings, $booking);
+				}
+			}
+		} 
+		push(@bookingDays, \@dayBookings);
+	}
 
     my $month = sprintf("%02s", $mon);
 
@@ -126,6 +162,7 @@ if ( !defined($op) ) {
     $template->param(
         current_month_cal => \@month_days,
         calendar_bookings => $calendarBookings,
+        booking_days      => \@bookingDays,
         active_month      => $months[$mon - 1],
         active_year       => $yr + 0,
         month_is_active   => 1,
@@ -515,15 +552,30 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
 
     ## Returns hashref of the fields:
     ## roomnumber, monthdate, bookedtime
+    #~ my $query =
+    #~ 'SELECT
+        #~ r.roomnumber,
+        #~ DATE_FORMAT(b.start, "%e") AS monthdate,
+        #~ CONCAT(DATE_FORMAT(b.start, "%H:%i"), " - ", DATE_FORMAT(b.end, "%H:%i")) AS bookedtime
+        #~ FROM ' . "$rooms_table AS r, $bookings_table AS b " .
+        #~ 'WHERE r.roomid = b.roomid
+        #~ AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" .
+        #~ 'ORDER BY b.roomid ASC, start ASC';
     my $query =
     'SELECT
         r.roomnumber,
-        DATE_FORMAT(b.start, "%e") AS monthdate,
+        DATE_FORMAT(b.start, "%Y") AS year_start,
+        DATE_FORMAT(b.start, "%c") AS month_start,
+        DATE_FORMAT(b.start, "%e") AS monthdate_start,
+        DATE_FORMAT(b.start, "%Y") AS year_end,
+        DATE_FORMAT(b.end, "%c") AS month_end,
+        DATE_FORMAT(b.end, "%e") AS monthdate_end,
         CONCAT(DATE_FORMAT(b.start, "%H:%i"), " - ", DATE_FORMAT(b.end, "%H:%i")) AS bookedtime
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
         'WHERE r.roomid = b.roomid
-        AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" .
-        'ORDER BY b.roomid ASC, start ASC';
+        AND ' . "$month" . ' BETWEEN DATE_FORMAT(b.start, "%c") AND DATE_FORMAT(b.end, "%c")
+        AND ' . "$year" . ' BETWEEN DATE_FORMAT(b.start, "%Y") AND DATE_FORMAT(b.end, "%Y")
+        ORDER BY b.roomid ASC, start ASC';
 
     $sth = $dbh->prepare($query);
     $sth->execute();
