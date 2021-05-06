@@ -61,6 +61,7 @@
         			[% 'Select an action:' | gettext %]
         			<select name="tool_actions_selection">
         				<option value=""></option>
+        				<option value="action-manage-openings">[% 'Manage opening hours' | gettext %]</option>
                         <option value="action-manage-blackouts">[% 'Manage blackouts' | gettext %]</option>
         				<option value="action-manage-reservations">[% 'Manage reservations' | gettext %]</option>
         			</select><br />
@@ -91,6 +92,173 @@
         </div>
     </form>
     [% END # op == 'action-selected' %]
+    
+    [% IF op == 'manage-openings' %]
+
+	
+    <script type="text/javascript">
+        function validateOpeningAction() {
+
+        }
+    </script>
+    
+    <script type="text/javascript">
+        function validateOpeningHours() {
+            var start = document.forms["OpeningHoursForm"]["opening-from"].value;
+            var end   = document.forms["OpeningHoursForm"]["opening-to"].value;
+
+            
+            var weekdays = document.querySelectorAll('input[name="weekdays"]:checked');
+            if (weekdays.length == 0) {
+				alert("[% 'Please select at least one weekday.' | gettext %]");
+				return false;
+			};
+            
+			if (end <= start || start == 0 || end == 0) {
+				alert("[% 'Please select valid start and end time.' | gettext %]");
+				return false;
+			}
+        }
+    </script>
+
+    
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
+    <div>
+    <form name="manageOpeningHoursForm" method="post" action="#" onsubmit="return validateOpeningAction()">
+    	<input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+	    <input type="hidden" name="op" value="manage-openings" />
+        <br />
+        [% IF deleted == 0 %]
+        <div class="dialog alert audio-alert-warning">
+            <p class="problem">[% 'There was a problem deleting the selected opening hours. Please try again' | gettext %]</p>
+        </div>
+        [% ELSIF deleted == 1 %]
+        <div class="dialog alert audio-alert-warning">
+            <p class="problem">[% 'Selected opening hours deleted successfully' | gettext %]</p>
+        </div>
+        <br />
+        [% END # IF deleted %]
+        
+        <fieldset class="fieldset-auto-width">
+            <legend>[% 'Delete opening hours' | gettext %]</legend>
+
+			<table>
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>[% 'Day' | gettext %]</th>
+						<th>[% 'Start' | gettext %]</th>
+						<th>[% 'End' | gettext %]</th>
+					</tr>
+				</thead>
+				<tbody>
+					[% IF opening_hours %]
+						[% FOREACH opening_hour IN opening_hours %]
+						<tr style="text-align: center;">
+							<td style="margin: 0;"><input type="radio" name="manage-openings-id" value="[% opening_hour.openid %]"></td>
+							<td>[% opening_hour.day | gettext %]</td>
+							<td>[% opening_hour.start %]</td>
+							<td>[% opening_hour.end %]</td>
+						</tr>
+						[% END %]
+						<tr>
+							<td colspan="4">
+								<select name="manage-openings-action">
+									<option value="">[% 'Actions' | gettext %]</option>
+									<option value="delete">[% 'Delete' | gettext %]</option>
+								</select>
+								&nbsp;<input type="submit" name="submit-opening-hours-del" value="[% 'Submit' | gettext %]" />
+							</td>
+						</tr>
+					[% ELSE %]
+						<tr>
+							<td colspan="4">
+								[% 'No opening hours configured.' | gettext %]
+							</td>
+						</tr>
+					[% END %]
+				</tbody>
+			</table>
+		</fieldset>
+    </form>
+    </div>
+    <div>
+    <form action="#" name="OpeningHoursForm" method="post" onsubmit="return validateOpeningHours();">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="manage-openings" />
+        <fieldset class="fieldset-auto-width">
+            <legend>[% 'Add opening hours' | gettext %]</legend>
+            <table>
+				<tr>
+                    <td>
+                        <b>[% 'Select opening days' | gettext %]</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+							<input type="checkbox" name="weekdays" id="mon" value="1"/>
+							<label for="mon">[% 'Monday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="tue" value="2" />
+							<label for="tue">[% 'Tuesday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="wed" value="3" />
+							<label for="wed">[% 'Wednesday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="thu" value="4" />
+							<label for="thu">[% 'Thursday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="fri" value="5" />
+							<label for="fri">[% 'Friday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="sat" value="6" />
+							<label for="sat">[% 'Saturday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="sun" value="7" />
+							<label for="sun">[% 'Sunday' | gettext %]</label>
+						</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>[% 'Select opening hours' | gettext %]</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+						<div>
+							<label for="from">[% 'From' | gettext %]</label>
+							<input type="time" name="opening-from" id="from" />
+							<label for="to">[% 'To' | gettext %]</label>
+							<input type="time" name="opening-to" id="to" />
+						</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" name="submit-opening-hours" value="[% 'Add' | gettext %]" />
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+    </div>
+    
+    [% END # op == 'manage-openings' %]
 
     [% IF op == 'manage-reservations' %]
     <script type="text/javascript">

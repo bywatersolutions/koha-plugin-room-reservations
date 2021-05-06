@@ -33,7 +33,9 @@ our $VERSION = "{VERSION}";
 our $rooms_table = 'booking_rooms';
 our $rooms_index = 'bookingrooms_idx';
 our $bookings_table = 'bookings';
-our $bookings_index = 'bookingbookings_idx';
+our $bookings_index = 'booking_idx';
+our $openinghours_table = 'booking_opening_hours';
+our $openinghours_index = 'bookingopeninghours_idx';
 our $equipment_table = 'booking_equipment';
 our $equipment_index = 'bookingequipment_idx';
 our $roomequipment_table = 'booking_room_equipment';
@@ -94,7 +96,7 @@ sub install() {
     my $original_version = $self->retrieve_data('plugin_version'); # is this a new install or an upgrade?
 
     my @installer_statements = (
-        qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
+        qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table, $openinghours_table},
         qq{CREATE TABLE $rooms_table (
               `roomid` INT NOT NULL AUTO_INCREMENT,
               `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
@@ -114,6 +116,14 @@ sub install() {
               CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
         qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
+        q{CREATE TABLE $openinghours_table (
+              `openid` INT NOT NULL AUTO_INCREMENT,
+              `day` TINYINT,
+              `start` DATETIME NOT NULL, -- start date/time of opening hours
+              `end` DATETIME NOT NULL, -- end date/time of opening hours
+              PRIMARY KEY (openid),
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+        qq{CREATE INDEX $openinghours_index ON $openinghours_table(openid);},
         qq{CREATE TABLE $equipment_table (
               `equipmentid` INT NOT NULL AUTO_INCREMENT,
               `equipmentname` VARCHAR(20) NOT NULL,
@@ -463,6 +473,8 @@ sub tool {
     my $manage_blackouts_submit = $cgi->param('manage-blackouts-submit') || q{}; # delete existing blackout
     my $submit_full_blackout = $cgi->param('submit-full-blackout') || q{}; # add full day blackout(s)
     my $submit_partial_blackout = $cgi->param('submit-partial-blackout') || q{}; # add partial-day blackout
+    my $submit_opening_hours = $cgi->param('submit-opening-hours') || q{}; # add partial-day blackout
+    my $submit_opening_hours_del = $cgi->param('submit-opening-hours-del') || q{}; # add partial-day blackout
 
     if ( $op eq 'action-selected' &&  $tool_action eq 'action-manage-reservations') {
 
@@ -483,6 +495,50 @@ sub tool {
             op => 'manage-blackouts',
             blackouts => $blackouts,
             current_rooms => $rooms,
+        );
+    }
+    elsif ( $op eq 'action-selected' && $tool_action eq 'action-manage-openings' ) {
+
+        my $openingHours = getAllOpeningHours(1);
+        
+        $template->param(
+			deleted => -1,
+            op => 'manage-openings',
+            opening_hours => $openingHours,
+        );
+    }
+    elsif ( $op eq 'manage-openings' && $submit_opening_hours_del ne '' ) {
+		
+		my $selected = $cgi->param('manage-openings-action');
+        my $selectedId = $cgi->param('manage-openings-id');
+        my $deleted = -1;
+
+        if ( $selected eq 'delete' ) {
+            $deleted = deleteOpeningHoursById($selectedId);
+        }
+
+        my $openingHours = getAllOpeningHours(1);
+
+        $template->param(
+			deleted => $deleted,
+            op => 'manage-openings',
+            opening_hours => $openingHours,
+        );
+    }
+    elsif ( $op eq 'manage-openings' &&  $submit_opening_hours ne '' ) {
+		
+		my $starttime = $cgi->param('opening-from');
+		my $endtime = $cgi->param('opening-to');
+		
+		my @days = $cgi->param('weekdays');
+		
+		addOpeningHours(\@days, $starttime, $endtime);
+		
+		my $openingHours = getAllOpeningHours(1);
+		
+        $template->param(
+            op => $op,
+            opening_hours => $openingHours,
         );
     }
     elsif ( $op eq 'manage-reservations' ) {
@@ -1071,6 +1127,49 @@ sub getCurrentTimestamp {
     return $timestamp;
 }
 
+sub getAllOpeningHours {
+	
+	my $convertWeekdays = 0;
+	$convertWeekdays = shift;
+	
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        SELECT openid,day,start,end
+        FROM $openinghours_table
+        ORDER BY day ASC, start ASC;";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allOpeningHours;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+		if ($convertWeekdays == 1) {
+			if ($row->{day} == 1){
+				$row->{day} = "Monday";
+			} elsif ($row->{day} == 2){
+				$row->{day} = "Tuesday";
+			} elsif ($row->{day} == 3){
+				$row->{day} = "Wednesday";
+			} elsif ($row->{day} == 4){
+				$row->{day} = "Thursday";
+			} elsif ($row->{day} == 5){
+				$row->{day} = "Friday";
+			} elsif ($row->{day} == 6){
+				$row->{day} = "Saturday";
+			} elsif ($row->{day} == 7){
+				$row->{day} = "Sunday";
+			} 
+		}
+        push ( @allOpeningHours, $row );
+    }
+
+    return \@allOpeningHours;
+}
+
 sub getAllBookings {
 
     my $dbh = C4::Context->dbh;
@@ -1236,6 +1335,30 @@ sub addBlackoutBooking {
     $dbh->do("
         INSERT INTO $bookings_table (borrowernumber, roomid, start, end, blackedout)
         VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ', 1);');
+}
+
+sub deleteOpeningHoursById {
+
+    my ( $openId ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        DELETE FROM booking_opening_hours WHERE openid = $openId;
+    ";
+
+    $sth = $dbh->prepare($query);
+
+    my $count = $sth->execute();
+
+    if ($count == 0) { # no row(s) affected
+        return 0;
+    }
+    else { # sucessfully deleted row(s)
+        return 1;
+    }
 }
 
 sub deleteBookingById {
@@ -1862,6 +1985,23 @@ sub preBookingAvailabilityCheck {
     else { # no conflict found
         return 1;
     }
+}
+
+sub addOpeningHours {
+
+    my ( $days, $start, $end ) = @_;
+
+    my $dbh = C4::Context->dbh;
+    
+    my $day_cnt = 0;
+    foreach my $day (@$days) {
+		if ($day) {
+			$dbh->do("
+				INSERT INTO $openinghours_table (day, start, end)
+				VALUES ($day, '$start', '$end');");
+		}
+		$day_cnt++;
+	}
 }
 
 sub addBooking {
