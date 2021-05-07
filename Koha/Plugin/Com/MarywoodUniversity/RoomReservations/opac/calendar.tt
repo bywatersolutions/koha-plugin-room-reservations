@@ -147,7 +147,7 @@
                 var startTime = document.forms["availabilitySearchForm"]["availability-search-start-time"].value;
                 var endDate = document.forms["availabilitySearchForm"]["availability-search-end-date"].value;
                 var endTime = document.forms["availabilitySearchForm"]["availability-search-end-time"].value;
-                var maxCapacity = document.forms["availabilitySearchForm"]["availability-search-room-capacity"].value;
+                var room = document.forms["availabilitySearchForm"]["availability-search-room"].value;
                 // populate an equipment array to iterate for validation
                 var equipments = document.getElementsByName("availability-search-selected-equipment");
 
@@ -199,10 +199,10 @@
                     alert("[% 'Selected time range exceeds maximum time allowed of' | gettext %] " + timeString + "!");
                     return false;
                 }
-                else if (startTimestamp >= endTimestamp) {
-                    alert("[% 'Please select a valid time range!' | gettext %]");
-                    return false;
-                }
+                //~ else if (startTimestamp >= endTimestamp) {
+                    //~ alert("[% 'Please select a valid time range!' | gettext %]");
+                    //~ return false;
+                //~ }
 
                 if ( startDate == "" ) {
                     alert("[% 'Start date is required.' | gettext %]");
@@ -224,8 +224,8 @@
                     return false;
                 }
 
-                if ( maxCapacity == "" ) {
-                    alert("[% 'Room capacity is required.' | gettext %]");
+                if ( room == "" ) {
+                    alert("[% 'Room is required.' | gettext %]");
                     return false;
                 }
             }
@@ -239,9 +239,10 @@
             <div class="row-fluid">
                 <div class="span12">
 
-                <form name="availabilitySearchForm" method="post" action="#" onsubmit="return (validateAvailabilitySearch() && checkExistingBookings())">
+                <form name="availabilitySearchForm" method="post" action="#" onsubmit="return validateAvailabilitySearch()">
                     <input type="hidden" name="max_days" id="max_days" value="[% max_days %]" />
                     <input type="hidden" name="max_time" id="max_time" value="[% max_time %]" />
+                    <input type="hidden" name="op" value="availability-search" />
                     <table align="center">
                         <thead>
                             <tr>
@@ -249,8 +250,23 @@
                             </tr>
                         </thead>
                         <tbody>
+						  <tr><td>
+							[% IF room_checked == 0 %]
+								<div class="alert alert-success" style="margin-bottom: 0px; margin-top: 10px; position:relative;">
+								  <button type="button" class="close" data-dismiss="alert" style="position:absolute; right: 4px;">&times;</button>
+								  <b>[% 'Room is not available at the selected time.' | gettext %]</b>
+								</div>
+							[% END %]
+						  </tr></td>
                           <tr>
                             <td>
+								<h3>[% 'Start time' | gettext %]</h3>
+								<input type="date" name="availability-search-start-date" id="availability-search-start-date"> 
+								<input type="time" name="availability-search-start-time" id="availability-search-start-time">
+								<h3>[% 'End time' | gettext %]</h3>
+								<input type="date" name="availability-search-end-date" id="availability-search-end-date"> 
+								<input type="time" name="availability-search-end-time" id="availability-search-end-time"> 
+<!--
                             <input class ="datefield" name="availability-search-start-date" id="availability-search-start-date" size="10" placeholder="[% 'Start date' | gettext %]" />
                             <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
 
@@ -360,17 +376,18 @@
                               <option value="23:00:00">[% '11:00 PM' | gettext %]</option>
                               <option value="23:30:00">[% '11:30 PM' | gettext %]</option>
                             </select><br />
+-->
                             </td>
                           </tr>
                           <tr>
                               <td>
                                   <div class="headcount-selection">
-                                        <h3>[% 'Maximum Room Capacity' | gettext %]</h3>
-                                        <select name="availability-search-room-capacity">
+                                        <h3>[% 'Select Room' | gettext %]</h3>
+                                        <select name="availability-search-room">
                                             <option value=""></option>
-                                            [% FOREACH capacity IN all_room_capacities %]
-                                            <option value="[% capacity.maxcapacity %]">[% capacity.maxcapacity %] [% 'people' | gettext %] </option>
-                                            [% END # FOREACH capacity IN all_room_capacities %]
+                                            [% FOREACH room IN rooms %]
+												<option value="[% room.roomid %]">[% room.roomnumber %] (max. [% room.maxcapacity %] people)</option>
+                                            [% END %]
                                         </select>
                                   </div>
                               </td>
@@ -401,8 +418,7 @@
                           <tr>
                               <td>
                                 <br />
-                                <input type="hidden" name="op" value="availability-search-results" />
-                                <input type="submit" value="[% 'Check Room Availability' | gettext %]">
+                                <input type="submit" name="submit-check-room-availability" value="[% 'Check Room Availability' | gettext %]">
                               </td>
                           </tr>
                         </tbody>

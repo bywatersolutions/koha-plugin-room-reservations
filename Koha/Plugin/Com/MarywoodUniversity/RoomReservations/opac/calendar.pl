@@ -52,6 +52,7 @@ my $template_name = $pluginDir . '/calendar.tt';
 my $template2_name = $pluginDir . '/calendar-sendconfirmation.tt';
 
 my $rooms_table = 'booking_rooms';
+my $opening_hours_table = 'booking_opening_hours';
 my $bookings_table = 'bookings';
 my $equipment_table = 'booking_equipment';
 my $roomequipment_table = 'booking_room_equipment';
@@ -158,24 +159,24 @@ if ( !defined($op) ) {
             patron_category => $category,
         );
     }
-
-    $template->param(
-        current_month_cal => \@month_days,
-        calendar_bookings => $calendarBookings,
-        booking_days      => \@bookingDays,
-        active_month      => $months[$mon - 1],
-        active_year       => $yr + 0,
-        month_is_active   => 1,
-        plugin_dir        => $pluginDir,
-        op                => $op,
-        selected_mon_cnt  => $selected_mon_cnt,
-    );
+    
+	$template->param(
+		current_month_cal => \@month_days,
+		calendar_bookings => $calendarBookings,
+		booking_days      => \@bookingDays,
+		active_month      => $months[$mon - 1],
+		active_year       => $yr + 0,
+		month_is_active   => 1,
+		plugin_dir        => $pluginDir,
+		op                => $op,
+		selected_mon_cnt  => $selected_mon_cnt,
+	);
 }
 elsif ( $op eq 'availability-search' ) {
 
     my $equipment = loadAllEquipment();
-
-    my $capacities = loadAllMaxCapacities();
+    
+    my $rooms = getAllRooms();
 
     my $max_num_days = getFutureDays() || '0';
 
@@ -188,14 +189,80 @@ elsif ( $op eq 'availability-search' ) {
     if ( $max_time eq '0' ) {
         $max_time = '';
     }
+	
+	my $submitCheckRoomAvailability = $cgi->param('submit-check-room-availability') || q{};
+    
+    if ($submitCheckRoomAvailability ne '') {
+		
+		my $start_date = $cgi->param('availability-search-start-date');
+		my $start_time = $cgi->param('availability-search-start-time');
 
-    $template->param(
-        op => $op,
-        available_room_equipment => $equipment,
-        all_room_capacities => $capacities,
-        max_days => $max_num_days,
-        max_time => $max_time,
-    );
+		my $end_date = $cgi->param('availability-search-end-date');
+		my $end_time = $cgi->param('availability-search-end-time');
+		
+		my $start_datetime = dt_from_string(sprintf("%s %s", $start_date, $start_time));
+		my $end_datetime   = dt_from_string(sprintf("%s %s", $end_date, $end_time));
+		
+		my $room_id = $cgi->param('availability-search-room');
+		
+		my $roomIsAvailable = checkRoomAvailability($room_id, $start_datetime, $end_datetime);
+        
+        if ($roomIsAvailable != 0) {  # --> go to confirmation page
+			my $displayed_start = output_pref({ dt => $start_datetime, }); 
+			my $displayed_end = output_pref({ dt => $end_datetime, }); 
+
+			my $displayed_event_time = "$displayed_start - $displayed_end";
+
+			my $user_fn = C4::Context->userenv->{'firstname'} || q{};
+			my $user_ln = C4::Context->userenv->{'surname'} || q{};
+			my $user_bn = C4::Context->userenv->{'number'};
+
+			my $user = "$user_fn $user_ln";
+			my $email = C4::Context->userenv->{'emailaddress'};
+
+			my $selectedRoomNumber = getRoomNumberById($room_id);
+
+			my $count_limit = getDailyReservationLimit();
+
+			my $current_user_daily_limit = getUserDailyResLimit($user_bn, $start_date);
+
+			$template->param(
+				op                  => 'room-selection-confirmation',
+				current_user        => $user,
+				current_user_fn     => $user_fn,
+				current_user_ln     => $user_ln,
+				current_user_email  => $email,
+				selected_room_id    => $room_id,
+				selected_room_no    => $selectedRoomNumber,
+				displayed_time      => $displayed_event_time,
+				selected_start_time => $start_datetime,
+				selected_end_time   => $end_datetime,
+				displayed_start     => $displayed_start,
+				displayed_end       => $displayed_end,
+				count_limit         => $count_limit,
+				user_daily_limit    => $current_user_daily_limit,
+			);
+		} else {  # --> room is not available: print warning
+			$template->param(
+				op => $op,
+				room_checked => 0,
+				rooms => $rooms,
+				available_room_equipment => $equipment,
+				max_days => $max_num_days,
+				max_time => $max_time,
+			);
+		}
+	} else {   # --> submit button not pressed, yet
+		$template->param(
+			op => $op,
+			room_checked => -1,
+			rooms => $rooms,
+			available_room_equipment => $equipment,
+			max_days => $max_num_days,
+			max_time => $max_time,
+		);
+	}
+    
 }
 elsif ( $op eq 'availability-search-results' ) {
 
@@ -205,7 +272,7 @@ elsif ( $op eq 'availability-search-results' ) {
     my $end_date = $cgi->param('availability-search-end-date');
     my $end_time = $cgi->param('availability-search-end-time');
 
-    my $room_capacity = $cgi->param('availability-search-room-capacity');
+    my $room_id = $cgi->param('availability-search-room');
 
     my @equipment = $cgi->param('availability-search-selected-equipment') || ();
 
@@ -230,16 +297,18 @@ elsif ( $op eq 'availability-search-results' ) {
 
     my $displayed_event_start = output_pref({ dt => $event_start, }); # dateformat => 'us', timeformat => '12hr' });
     my $displayed_event_end = output_pref({ dt => $event_end, }); #dateformat => 'us', timeformat => '12hr' });
+    
+    my $roomIsAvailable = checkRoomAvailability($room_id, $availability_format_start, $availability_format_end);
 
-    my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
+    #my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
 
     # boolean -- returns 1 (one) if true or 0 (zero) if false
-    my $roomsAreAvailable = areAnyRoomsAvailable($availableRooms);
+    #my $roomsAreAvailable = areAnyRoomsAvailable($availableRooms);
 
     $template->param(
         op => $op,
-        available_rooms => $availableRooms,
-        are_rooms_available => $roomsAreAvailable,
+        #available_rooms => $availableRooms,
+        #are_rooms_available => $roomsAreAvailable,
         displayed_start => $displayed_event_start,
         displayed_end => $displayed_event_end,
         event_start_time => $event_start,
@@ -657,6 +726,94 @@ sub getRoomNumberById {
     return \@roomNumberFromId;
 }
 
+sub checkOpeningHours {
+	my ( $datetime ) = @_;
+	my $result = 0;
+	
+	## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+    
+    my $weekday = $datetime->day_of_week;
+
+    my $query = "
+        SELECT start, end
+            FROM $opening_hours_table
+            WHERE day = $weekday;";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+    
+    my @allOpeningsOnWeekday;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allOpeningsOnWeekday, $row );
+    }
+    
+    foreach my $openingHour (@allOpeningsOnWeekday) {
+		
+		my @times = split /:/, $openingHour->{start};
+		my $dt_start = DateTime->new(
+			year      => $datetime->year,
+			month     => $datetime->month,
+			day       => $datetime->day,
+			hour      => $times[0],
+			minute    => $times[1],
+		);
+		
+		@times = split /:/, $openingHour->{end};
+		my $dt_end = DateTime->new(
+			year      => $datetime->year,
+			month     => $datetime->month,
+			day       => $datetime->day,
+			hour      => $times[0],
+			minute    => $times[1],
+		);
+		
+		if (DateTime->compare($datetime, $dt_start) >= 0 && DateTime->compare($datetime, $dt_end) <= 0) {
+			$result = 1;
+			last;
+		}
+	}
+	
+	return $result;
+}
+
+sub checkRoomAvailability {
+
+    my ( $room_id, $start, $end ) = @_;
+    
+    # check if start and end time are in opening hours
+    if (checkOpeningHours($start) == 0 || checkOpeningHours($end) == 0) {
+		return 0;
+	}    
+
+    ## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT roomid
+            FROM $bookings_table
+            WHERE
+            \'$end\' > start AND \'$start\' < end;
+            ";
+            
+    
+    $sth = $dbh->prepare($query);
+    my $count = $sth->execute();
+
+    if ($count != 0) {
+		return 0;
+	} 
+	
+	return 1;
+}
+
 sub getAvailableRooms {
 
     my ( $start, $end, $capacity, $equipment ) = @_;
@@ -763,6 +920,31 @@ sub loadAllEquipment {
     }
 
     return \@allAvailableEquipmentNames;
+}
+
+sub getAllRooms {
+
+    ## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT *
+        FROM $rooms_table;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allRooms;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @allRooms, $row );
+    }
+
+    return \@allRooms;
 }
 
 sub getCurrentTimestamp {

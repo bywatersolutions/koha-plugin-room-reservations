@@ -633,7 +633,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>[% 'Room Number:' | gettext %] <input type="text" name="add-room-roomnumber" /></td>
+                        <td>[% 'Room Name:' | gettext %] <input type="text" name="add-room-roomnumber" /></td>
                     </tr>
                     <tr>
                         <td>[% 'Max Capacity:' | gettext %] <input type="text" name="add-room-maxcapacity" size="4" maxlength="4" /></td>
@@ -755,7 +755,7 @@
                 var maxcapacity = document.forms["editRoomDetails"]["edit-rooms-room-maxcapacity"].value;
 
                 if ( roomname == "" ) {
-                    alert("[% 'Room Number cannot be blank.' | gettext %]");
+                    alert("[% 'Room Name cannot be blank.' | gettext %]");
                     return false;
                 }
 
@@ -797,7 +797,7 @@
                     [% FOREACH room IN room_details %]
                     <input type="hidden" name="room-details-updated-roomid" value="[% room.roomid %]" />
                     <tr>
-                        <td><strong>[% 'Room Number:' | gettext %] </strong><input type="text" name="edit-rooms-room-roomnumber" value="[% room.roomnumber %]" /></td>
+                        <td><strong>[% 'Room Name:' | gettext %] </strong><input type="text" name="edit-rooms-room-roomnumber" value="[% room.roomnumber %]" /></td>
                     </tr>
                     <tr>
                         <td><strong>[% 'Max Capacity:' | gettext %] </strong><input type="text" name="edit-rooms-room-maxcapacity" size="4" maxlength="4" value="[% room.maxcapacity %]" /></td>
@@ -863,7 +863,7 @@
                     [% FOREACH room IN room_details %]
                     <input type="hidden" name="room-equipment-updated-roomid" value="[% room.roomid %]" />
                     <tr>
-                        <td><strong>[% 'Room Number:' | gettext %] </strong>[% room.roomnumber %]</td>
+                        <td><strong>[% 'Room Name:' | gettext %] </strong>[% room.roomnumber %]</td>
                     </tr>
                     <tr>
                         <td>
