@@ -160,6 +160,8 @@ if ( !defined($op) ) {
         );
     }
     
+    my $rooms = getAllRoomsWithEquipment();
+    
 	$template->param(
 		current_month_cal => \@month_days,
 		calendar_bookings => $calendarBookings,
@@ -170,13 +172,14 @@ if ( !defined($op) ) {
 		plugin_dir        => $pluginDir,
 		op                => $op,
 		selected_mon_cnt  => $selected_mon_cnt,
+		rooms			  => $rooms,
 	);
 }
 elsif ( $op eq 'availability-search' ) {
 
     my $equipment = loadAllEquipment();
     
-    my $rooms = getAllRooms();
+    my $rooms = getAllRoomsWithEquipment();
 
     my $max_num_days = getFutureDays() || '0';
 
@@ -191,6 +194,8 @@ elsif ( $op eq 'availability-search' ) {
     }
 	
 	my $submitCheckRoomAvailability = $cgi->param('submit-check-room-availability') || q{};
+	
+	my $openingHours = getAllOpeningHours(1);
     
     if ($submitCheckRoomAvailability ne '') {
 		
@@ -260,6 +265,7 @@ elsif ( $op eq 'availability-search' ) {
 			available_room_equipment => $equipment,
 			max_days => $max_num_days,
 			max_time => $max_time,
+			opening_hours => $openingHours,
 		);
 	}
     
@@ -947,11 +953,96 @@ sub getAllRooms {
     return \@allRooms;
 }
 
+sub getAllRoomsWithEquipment {
+
+    ## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+    my $sth2 = '';
+
+    my $query = "
+        SELECT *
+        FROM $rooms_table;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allRooms;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+		my $roomid = $row->{roomid};
+		$query = "
+			SELECT equipmentname 
+			FROM $equipment_table AS e 
+			LEFT JOIN $roomequipment_table as re ON e.equipmentid = re.equipmentid 
+			LEFT JOIN $rooms_table AS r ON re.roomid = r.roomid
+			WHERE r.roomid = $roomid;
+		";
+		$sth2 = $dbh->prepare($query);
+		$sth2->execute();
+		my @equipment;
+		while ( my $row2 = $sth2->fetchrow_hashref() ) {
+			push ( @equipment, $row2 );
+		}
+		#push ( @equipment, 'Tennisball' );
+		$row->{equipment} = \@equipment;
+        push ( @allRooms, $row );
+    }
+
+    return \@allRooms;
+}
+
 sub getCurrentTimestamp {
 
     my $timestamp = strftime('%m/%d/%Y %I:%M:%S %p', localtime);
 
     return $timestamp;
+}
+
+sub getAllOpeningHours {
+	
+	my $convertWeekdays = 0;
+	$convertWeekdays = shift;
+	
+    my $dbh = C4::Context->dbh;
+
+    my $sth = '';
+
+    my $query = "
+        SELECT openid,day, DATE_FORMAT(start, '%H:%i') as start, DATE_FORMAT(end, '%H:%i') as end
+        FROM $opening_hours_table
+        ORDER BY day ASC, start ASC;";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @allOpeningHours;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+		if ($convertWeekdays == 1) {
+			if ($row->{day} == 1){
+				$row->{day} = "Monday";
+			} elsif ($row->{day} == 2){
+				$row->{day} = "Tuesday";
+			} elsif ($row->{day} == 3){
+				$row->{day} = "Wednesday";
+			} elsif ($row->{day} == 4){
+				$row->{day} = "Thursday";
+			} elsif ($row->{day} == 5){
+				$row->{day} = "Friday";
+			} elsif ($row->{day} == 6){
+				$row->{day} = "Saturday";
+			} elsif ($row->{day} == 7){
+				$row->{day} = "Sunday";
+			} 
+		}
+        push ( @allOpeningHours, $row );
+    }
+
+    return \@allOpeningHours;
 }
 
 output_html_with_http_headers $cgi, $cookie, $template->output;

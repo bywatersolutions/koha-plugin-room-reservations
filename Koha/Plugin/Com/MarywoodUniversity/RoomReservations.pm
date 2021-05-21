@@ -101,6 +101,7 @@ sub install() {
               `roomid` INT NOT NULL AUTO_INCREMENT,
               `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
               `maxcapacity` INT NOT NULL, -- maximum number of people allowed in the room
+              `description` TEXT, -- room description to display in OPAC
             PRIMARY KEY (roomid)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
         qq{CREATE INDEX $rooms_index ON $rooms_table(roomid);},
@@ -801,6 +802,15 @@ sub configure {
                 op => $op,
             );
         }
+        elsif ( $selected eq 'action-select-edit-equipment' ) {
+
+            $action = 'edit-equipment-selection';
+
+            $template->param(
+                action => $action,
+                op => $op,
+            );
+        }
         elsif ( $selected eq 'action-select-delete-equipment' ) {
 
             $action = 'delete-equipment';
@@ -1000,10 +1010,11 @@ sub configure {
         if ($addedRoom eq '1') {
             my $roomnumber = $cgi->param('add-room-roomnumber');
             my $maxcapacity = $cgi->param('add-room-maxcapacity');
+            my $description = $cgi->param('add-room-description');
             my @selectedEquipment = $cgi->param('selected-equipment');
 
             ## pass @selectedEquipment by reference
-            addRoom($roomnumber, $maxcapacity, \@selectedEquipment);
+            addRoom($roomnumber, $maxcapacity, $description, \@selectedEquipment);
         }
 
         my $availableEquipment = getAllRoomEquipmentNamesAndIds();
@@ -1033,8 +1044,9 @@ sub configure {
             my $roomIdToUpdate = $cgi->param('room-details-updated-roomid');
             my $updatedRoomNumber = $cgi->param('edit-rooms-room-roomnumber');
             my $updatedMaxCapacity = $cgi->param('edit-rooms-room-maxcapacity');
+            my $updatedDescription = $cgi->param('edit-rooms-room-description');
 
-            updateRoomDetails($roomIdToUpdate, $updatedRoomNumber, $updatedMaxCapacity);
+            updateRoomDetails($roomIdToUpdate, $updatedRoomNumber, $updatedDescription, $updatedMaxCapacity);
         }
 
         if ( $roomEquipmentUpdated eq '1' ) {
@@ -1171,6 +1183,49 @@ sub configure {
             available_equipment => $availableEquipment,
         );
     }
+    elsif ( $op eq 'edit-equipment-selection' ) {
+
+        my $availableEquipment = getAllRoomEquipmentNamesAndIds();
+
+        $template->param(
+            op => $op,
+            available_equipment => $availableEquipment,
+        );
+    }
+    elsif ( $op eq 'edit-equipment' ) {
+		
+		my $edit = $cgi->param('edit') || q{};
+
+        if ( $edit eq '1') {
+			my $editedEquipmentId = $cgi->param('edit-equipment-id'); 
+            my $editedEquipmentName = $cgi->param('edit-equipment-text-field');
+
+            ## Convert to lowercase to enforce uniformity
+            $editedEquipmentName = lc($editedEquipmentName);
+
+            ## Enclose in single quotes for DB string compatibility
+            $editedEquipmentName = "'" . $editedEquipmentName . "'";
+
+            updateEquipment($editedEquipmentId, $editedEquipmentName);
+            
+            my $availableEquipment = getAllRoomEquipmentNamesAndIds();
+
+			$template->param(
+				op => 'edit-equipment-selection',
+				available_equipment => $availableEquipment,
+			);
+        }
+        else {
+			my $equipmentIdToEdit = $cgi->param('edit-equipment-radio-button');
+			my $equipmentToEdit = getEquipmentById($equipmentIdToEdit);
+			
+			$template->param(
+				op => $op,
+				equipment_to_edit => $equipmentToEdit,
+			);
+		}
+    }
+    
 
     print $cgi->header(-type => 'text/html',-charset => 'utf-8');
     print $template->output();
@@ -1193,7 +1248,7 @@ sub getAllOpeningHours {
     my $sth = '';
 
     my $query = "
-        SELECT openid,day,start,end
+        SELECT openid,day, DATE_FORMAT(start, '%H:%i') as start, DATE_FORMAT(end, '%H:%i') as end
         FROM $openinghours_table
         ORDER BY day ASC, start ASC;";
 
@@ -1457,16 +1512,17 @@ sub areAnyRoomsAvailableToDelete {
 
 sub updateRoomDetails {
 
-    my ( $roomid, $roomnumber, $maxcapacity ) = @_;
+    my ( $roomid, $roomnumber, $description, $maxcapacity) = @_;
 
     $roomnumber = "'" . $roomnumber . "'";
+    $description = "'" . $description . "'";
 
     ## load access to database
     my $dbh = C4::Context->dbh;
 
     my $query = "
         UPDATE $rooms_table
-        SET roomnumber = $roomnumber, maxcapacity = $maxcapacity
+        SET roomnumber = $roomnumber, maxcapacity = $maxcapacity, description = $description
         WHERE roomid = $roomid;";
 
     $dbh->do($query);
@@ -1571,15 +1627,16 @@ sub loadRoomEquipmentNamesToEditByRoomId {
 
 sub addRoom {
 
-    my ($roomnumber, $maxcapacity, $equipment) = @_;
+    my ($roomnumber, $maxcapacity, $description, $equipment) = @_;
 
     ## make $roomnumber SQL-friendly by surrounding with single quotes
     $roomnumber = "'" . $roomnumber . "'";
+    $description = "'" . $description . "'";
 
     my $dbh = C4::Context->dbh;
 
     ## first insert roomnumber and maxcapacity into $rooms_table
-    $dbh->do("INSERT INTO $rooms_table (roomnumber, maxcapacity) VALUES ($roomnumber, $maxcapacity);");
+    $dbh->do("INSERT INTO $rooms_table (roomnumber, maxcapacity, description) VALUES ($roomnumber, $maxcapacity, $description);");
 
     foreach my $piece (@$equipment) {
 
@@ -1605,6 +1662,15 @@ sub addEquipment {
     my $dbh = C4::Context->dbh;
 
     $dbh->do("INSERT INTO $equipment_table (equipmentname) VALUES ($equipmentname);");
+}
+
+sub updateEquipment {
+
+    my ( $equipmentid, $equipmentname ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    $dbh->do("UPDATE $equipment_table SET equipmentname = $equipmentname WHERE equipmentid = $equipmentid;");
 }
 
 sub deleteEquipment {
@@ -1837,7 +1903,7 @@ sub getRoomDetailsById {
 
     ## Note: GROUP BY is used to prevent duplication of rows in next step
     my $query = "
-        SELECT r.roomnumber, r.maxcapacity, e.equipmentname
+        SELECT r.roomnumber, r.maxcapacity, r.description, e.equipmentname
         FROM $rooms_table AS r, $equipment_table AS e, $roomequipment_table AS re
         WHERE r.roomid = re.roomid
         AND   e.equipmentid = re.equipmentid
@@ -1855,6 +1921,34 @@ sub getRoomDetailsById {
     }
 
     return \@selectedRoomDetails;
+}
+
+sub getEquipmentById {
+
+    my ( $selectedEquipmentId ) = @_;
+
+    ## load access to database
+    my $dbh = C4::Context->dbh;
+
+    ## database statement handler
+    my $sth = '';
+
+    my $query = "
+        SELECT equipmentid,equipmentname
+        FROM $equipment_table
+        WHERE equipmentid = $selectedEquipmentId;
+    ";
+
+    $sth = $dbh->prepare($query);
+    $sth->execute();
+
+    my @selectedEquipment;
+
+    while ( my $row = $sth->fetchrow_hashref() ) {
+        push ( @selectedEquipment, $row );
+    }
+
+    return \@selectedEquipment;
 }
 
 sub getRoomEquipmentById {
