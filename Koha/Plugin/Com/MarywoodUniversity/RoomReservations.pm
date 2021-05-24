@@ -26,7 +26,7 @@ Locale::Messages->select_package('gettext_pp');
 use Locale::Messages qw(:locale_h :libintl_h);
 use POSIX qw(setlocale);
 
-our $VERSION = "1.1.19";
+our $VERSION = "{VERSION}";
 
 ## Table names and associated MySQL indexes
 #
@@ -57,7 +57,7 @@ our $metadata = {
     author          => 'Lee Jamison',
     description     => getTranslation('This plugin provides a room reservation solution on both intranet and OPAC interfaces.'),
     date_authored   => '2017-05-08',
-    date_updated    => '2021-03-23',
+    date_updated    => '1900-01-01',
     minimum_version => '3.22',
     maximum_version => undef,
     version         => $VERSION,
