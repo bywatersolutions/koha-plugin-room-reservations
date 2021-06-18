@@ -508,7 +508,8 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
     my $query =
     'SELECT
         r.roomnumber,
-        DATE_FORMAT(b.start, "%e") AS monthdate,
+        DATE_FORMAT(b.start, "%Y-%m-%d") AS monthdate,
+        DATE_FORMAT(b.end, "%Y-%m-%d") AS enddate,
         CONCAT(DATE_FORMAT(b.start, "%h:%i %p"), " - ", DATE_FORMAT(b.end, "%h:%i %p")) AS bookedtime
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
         'WHERE r.roomid = b.roomid
