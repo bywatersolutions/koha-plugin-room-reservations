@@ -512,13 +512,12 @@ sub getConfirmedCalendarBookingsByMonthAndYear {
         DATE_FORMAT(b.end, "%Y-%m-%d") AS enddate,
         CONCAT(DATE_FORMAT(b.start, "%h:%i %p"), " - ", DATE_FORMAT(b.end, "%h:%i %p")) AS bookedtime
         FROM ' . "$rooms_table AS r, $bookings_table AS b " .
-        'WHERE r.roomid = b.roomid
-        AND start BETWEEN \'' . "$year-$month-01 00:00:00' AND '" . "$year-$month-31 23:59:59'" .
-        'ORDER BY b.roomid ASC, start ASC';
+        'WHERE r.roomid = b.roomid 
+        ORDER BY b.roomid ASC, start ASC';
 
     $sth = $dbh->prepare($query);
     $sth->execute();
-
+    warn 'LUCASTEST' . Data::Dumper::Dumper( $query );
     my @calendarBookings;
 
     while ( my $row = $sth->fetchrow_hashref() ) {

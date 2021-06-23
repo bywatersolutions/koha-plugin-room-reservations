@@ -11,28 +11,6 @@
         .avail-room {
             text-align: center;
         }
-        .calendar-table {
-            table-layout: auto;
-            border-collapse: collapse;
-        }
-        #study-room-calendar td {
-            vertical-align: top;
-            text-align: left;
-            min-width:100px;
-        }
-        /* used for <div> in calendar <td> */
-        .min-height {
-            min-height: 50px;
-            text-align: center;
-        }
-        button {
-            background:none!important;
-            color:#0000EE;
-            border:none;
-            padding:0!important;
-            font: inherit;
-            cursor: pointer;
-        }
     </style>
 </head>
 [% BLOCK cssinclude %][% END %]
@@ -517,20 +495,21 @@
 <script type="text/javascript">
 	[% IF op == 'undef' %]
 			[% FOREACH booking IN calendar_bookings %]
-			console.log("[% booking.enddate %]")
 			[% END %]
 				document.addEventListener('DOMContentLoaded', function() {
 					var calendarEl = document.getElementById('calender');
 					var calendar = new FullCalendar.Calendar(calendarEl, {
-			themeSystem: 'bootstrap',
 						initialView: 'dayGridMonth',
+                        themeSystem: 'bootstrap',
+                        eventDisplay: 'list-item',
 						events: [
 			[% FOREACH booking IN calendar_bookings %]
-							{
-								title: '[% booking.roomnumber %] ([% booking.bookedtime %])',
-								start: '[% booking.monthdate %]',
-				end: '[% booking.enddate %]',
-							},
+                    {
+                        title: '[% booking.roomnumber %] ([% booking.bookedtime %])',
+                        start: '[% booking.monthdate %]',
+                        end: '[% booking.enddate %]',
+                    },
+
 			[% END %]
 						]
 					});
