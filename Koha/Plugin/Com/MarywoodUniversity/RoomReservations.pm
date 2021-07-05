@@ -1288,7 +1288,7 @@ sub getAllBookings {
     my $sth = '';
 
     my $query = "
-        SELECT bk.bookingid, r.roomnumber, b.firstname, b.surname, DATE_FORMAT(bk.start, \"%d.%m.%Y %H:%i\") AS start, DATE_FORMAT(bk.end, \"%d.%m.%Y %H:%i\") AS end
+        SELECT bk.bookingid, r.roomnumber, b.borrowernumber, b.firstname, b.surname, DATE_FORMAT(bk.start, \"%d.%m.%Y %H:%i\") AS start, DATE_FORMAT(bk.end, \"%d.%m.%Y %H:%i\") AS end
         FROM borrowers b, $bookings_table bk, $rooms_table r
         WHERE b.borrowernumber = bk.borrowernumber
         AND bk.roomid = r.roomid

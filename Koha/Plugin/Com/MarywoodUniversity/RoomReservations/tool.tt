@@ -39,6 +39,7 @@
 
 	<!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
     <h3>[% 'Koha: Room Reservations Plugin: Tool' | gettext %]</h3>
+    
     [% IF op == '' %]
     <script type="text/javascript">
         function validateAction() {
@@ -309,7 +310,10 @@
         [% END # IF deleted %]
         [% IF bookings %]
         <h4>[% 'Manage reservations' | gettext %]</h4>
-
+        <br />
+        <a href="[% OPACBaseURL %]/booking" target="_blank">[% 'Go to OPAC-Calendar view' | gettext %]</a>
+        <br />
+        <br />
         <table>
             <thead>
                 <tr>
@@ -325,7 +329,7 @@
             	<tr style="text-align: center;">
             		<td style="margin: 0;"><input type="radio" name="manage-bookings-id" value="[% booking.bookingid %]"></td>
             		<td>[% booking.roomnumber %]</td>
-            		<td>[% booking.firstname %] [% booking.surname %]</td>
+            		<td><a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% booking.borrowernumber %]">[% booking.firstname %] [% booking.surname %]</a></td>
             		<td>[% booking.start %]</td>
             		<td>[% booking.end %]</td>
             	</tr>
