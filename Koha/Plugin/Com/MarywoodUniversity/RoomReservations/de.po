@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-05-21 15:08+0200\n"
+"PO-Revision-Date: 2021-07-06 10:13+0200\n"
 "Last-Translator: root <root@56ee6f0bd7d1>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -148,195 +148,195 @@ msgstr "Startdatum"
 msgid "Time"
 msgstr "Zeit"
 
-#: bookas.tt:150 bookas.tt:205 tool.tt:635 tool.tt:690
+#: bookas.tt:150 bookas.tt:205 tool.tt:639 tool.tt:694
 msgid "12:00 AM"
 msgstr "00:00 Uhr"
 
-#: bookas.tt:151 bookas.tt:206 tool.tt:636 tool.tt:691
+#: bookas.tt:151 bookas.tt:206 tool.tt:640 tool.tt:695
 msgid "12:30 AM"
 msgstr "00:30 Uhr"
 
-#: bookas.tt:152 bookas.tt:207 tool.tt:637 tool.tt:692
+#: bookas.tt:152 bookas.tt:207 tool.tt:641 tool.tt:696
 msgid "1:00 AM"
 msgstr "01:00 Uhr"
 
-#: bookas.tt:153 bookas.tt:208 tool.tt:638 tool.tt:693
+#: bookas.tt:153 bookas.tt:208 tool.tt:642 tool.tt:697
 msgid "1:30 AM"
 msgstr "01:30 Uhr"
 
-#: bookas.tt:154 bookas.tt:209 tool.tt:639 tool.tt:694
+#: bookas.tt:154 bookas.tt:209 tool.tt:643 tool.tt:698
 msgid "2:00 AM"
 msgstr "02:00 Uhr"
 
-#: bookas.tt:155 bookas.tt:210 tool.tt:640 tool.tt:695
+#: bookas.tt:155 bookas.tt:210 tool.tt:644 tool.tt:699
 msgid "2:30 AM"
 msgstr "02:30 Uhr"
 
-#: bookas.tt:156 bookas.tt:211 tool.tt:641 tool.tt:696
+#: bookas.tt:156 bookas.tt:211 tool.tt:645 tool.tt:700
 msgid "3:00 AM"
 msgstr "03:00 Uhr"
 
-#: bookas.tt:157 bookas.tt:212 tool.tt:642 tool.tt:697
+#: bookas.tt:157 bookas.tt:212 tool.tt:646 tool.tt:701
 msgid "3:30 AM"
 msgstr "03:30 Uhr"
 
-#: bookas.tt:158 bookas.tt:213 tool.tt:643 tool.tt:698
+#: bookas.tt:158 bookas.tt:213 tool.tt:647 tool.tt:702
 msgid "4:00 AM"
 msgstr "04:00 Uhr"
 
-#: bookas.tt:159 bookas.tt:214 tool.tt:644 tool.tt:699
+#: bookas.tt:159 bookas.tt:214 tool.tt:648 tool.tt:703
 msgid "4:30 AM"
 msgstr "04:30 Uhr"
 
-#: bookas.tt:160 bookas.tt:215 tool.tt:645 tool.tt:700
+#: bookas.tt:160 bookas.tt:215 tool.tt:649 tool.tt:704
 msgid "5:00 AM"
 msgstr "05:00 Uhr"
 
-#: bookas.tt:161 bookas.tt:216 tool.tt:646 tool.tt:701
+#: bookas.tt:161 bookas.tt:216 tool.tt:650 tool.tt:705
 msgid "5:30 AM"
 msgstr "05:30 Uhr"
 
-#: bookas.tt:162 bookas.tt:217 tool.tt:647 tool.tt:702
+#: bookas.tt:162 bookas.tt:217 tool.tt:651 tool.tt:706
 msgid "6:00 AM"
 msgstr "06:00 Uhr"
 
-#: bookas.tt:163 bookas.tt:218 tool.tt:648 tool.tt:703
+#: bookas.tt:163 bookas.tt:218 tool.tt:652 tool.tt:707
 msgid "6:30 AM"
 msgstr "06:30 Uhr"
 
-#: bookas.tt:164 bookas.tt:219 tool.tt:649 tool.tt:704
+#: bookas.tt:164 bookas.tt:219 tool.tt:653 tool.tt:708
 msgid "7:00 AM"
 msgstr "07:00 Uhr"
 
-#: bookas.tt:165 bookas.tt:220 tool.tt:650 tool.tt:705
+#: bookas.tt:165 bookas.tt:220 tool.tt:654 tool.tt:709
 msgid "7:30 AM"
 msgstr "07:30 Uhr"
 
-#: bookas.tt:166 bookas.tt:221 tool.tt:651 tool.tt:706
+#: bookas.tt:166 bookas.tt:221 tool.tt:655 tool.tt:710
 msgid "8:00 AM"
 msgstr "08:00 Uhr"
 
-#: bookas.tt:167 bookas.tt:222 tool.tt:652 tool.tt:707
+#: bookas.tt:167 bookas.tt:222 tool.tt:656 tool.tt:711
 msgid "8:30 AM"
 msgstr "08:30 Uhr"
 
-#: bookas.tt:168 bookas.tt:223 tool.tt:653 tool.tt:708
+#: bookas.tt:168 bookas.tt:223 tool.tt:657 tool.tt:712
 msgid "9:00 AM"
 msgstr "09:00 Uhr"
 
-#: bookas.tt:169 bookas.tt:224 tool.tt:654 tool.tt:709
+#: bookas.tt:169 bookas.tt:224 tool.tt:658 tool.tt:713
 msgid "9:30 AM"
 msgstr "09:30 Uhr"
 
-#: bookas.tt:170 bookas.tt:225 tool.tt:655 tool.tt:710
+#: bookas.tt:170 bookas.tt:225 tool.tt:659 tool.tt:714
 msgid "10:00 AM"
 msgstr "10:00 Uhr"
 
-#: bookas.tt:171 bookas.tt:226 tool.tt:656 tool.tt:711
+#: bookas.tt:171 bookas.tt:226 tool.tt:660 tool.tt:715
 msgid "10:30 AM"
 msgstr "10:30 Uhr"
 
-#: bookas.tt:172 bookas.tt:227 tool.tt:657 tool.tt:712
+#: bookas.tt:172 bookas.tt:227 tool.tt:661 tool.tt:716
 msgid "11:00 AM"
 msgstr "11:00 Uhr"
 
-#: bookas.tt:173 bookas.tt:228 tool.tt:658 tool.tt:713
+#: bookas.tt:173 bookas.tt:228 tool.tt:662 tool.tt:717
 msgid "11:30 AM"
 msgstr "11:30 Uhr"
 
-#: bookas.tt:174 bookas.tt:229 tool.tt:659 tool.tt:714
+#: bookas.tt:174 bookas.tt:229 tool.tt:663 tool.tt:718
 msgid "12:00 PM"
 msgstr "12:00 Uhr"
 
-#: bookas.tt:175 bookas.tt:230 tool.tt:660 tool.tt:715
+#: bookas.tt:175 bookas.tt:230 tool.tt:664 tool.tt:719
 msgid "12:30 PM"
 msgstr "12:30 Uhr"
 
-#: bookas.tt:176 bookas.tt:231 tool.tt:661 tool.tt:716
+#: bookas.tt:176 bookas.tt:231 tool.tt:665 tool.tt:720
 msgid "1:00 PM"
 msgstr "13:00 Uhr"
 
-#: bookas.tt:177 bookas.tt:232 tool.tt:662 tool.tt:717
+#: bookas.tt:177 bookas.tt:232 tool.tt:666 tool.tt:721
 msgid "1:30 PM"
 msgstr "13:30 Uhr"
 
-#: bookas.tt:178 bookas.tt:233 tool.tt:663 tool.tt:718
+#: bookas.tt:178 bookas.tt:233 tool.tt:667 tool.tt:722
 msgid "2:00 PM"
 msgstr "14:00 Uhr"
 
-#: bookas.tt:179 bookas.tt:234 tool.tt:664 tool.tt:719
+#: bookas.tt:179 bookas.tt:234 tool.tt:668 tool.tt:723
 msgid "2:30 PM"
 msgstr "14:30 Uhr"
 
-#: bookas.tt:180 bookas.tt:235 tool.tt:665 tool.tt:720
+#: bookas.tt:180 bookas.tt:235 tool.tt:669 tool.tt:724
 msgid "3:00 PM"
 msgstr "15:00 Uhr"
 
-#: bookas.tt:181 bookas.tt:236 tool.tt:666 tool.tt:721
+#: bookas.tt:181 bookas.tt:236 tool.tt:670 tool.tt:725
 msgid "3:30 PM"
 msgstr "15:30 Uhr"
 
-#: bookas.tt:182 bookas.tt:237 tool.tt:667 tool.tt:722
+#: bookas.tt:182 bookas.tt:237 tool.tt:671 tool.tt:726
 msgid "4:00 PM"
 msgstr "16:00 Uhr"
 
-#: bookas.tt:183 bookas.tt:238 tool.tt:668 tool.tt:723
+#: bookas.tt:183 bookas.tt:238 tool.tt:672 tool.tt:727
 msgid "4:30 PM"
 msgstr "16:30 Uhr"
 
-#: bookas.tt:184 bookas.tt:239 tool.tt:669 tool.tt:724
+#: bookas.tt:184 bookas.tt:239 tool.tt:673 tool.tt:728
 msgid "5:00 PM"
 msgstr "17:00 Uhr"
 
-#: bookas.tt:185 bookas.tt:240 tool.tt:670 tool.tt:725
+#: bookas.tt:185 bookas.tt:240 tool.tt:674 tool.tt:729
 msgid "5:30 PM"
 msgstr "17:30 Uhr"
 
-#: bookas.tt:186 bookas.tt:241 tool.tt:671 tool.tt:726
+#: bookas.tt:186 bookas.tt:241 tool.tt:675 tool.tt:730
 msgid "6:00 PM"
 msgstr "18:00 Uhr"
 
-#: bookas.tt:187 bookas.tt:242 tool.tt:672 tool.tt:727
+#: bookas.tt:187 bookas.tt:242 tool.tt:676 tool.tt:731
 msgid "6:30 PM"
 msgstr "18:30 Uhr"
 
-#: bookas.tt:188 bookas.tt:243 tool.tt:673 tool.tt:728
+#: bookas.tt:188 bookas.tt:243 tool.tt:677 tool.tt:732
 msgid "7:00 PM"
 msgstr "19:00 Uhr"
 
-#: bookas.tt:189 bookas.tt:244 tool.tt:674 tool.tt:729
+#: bookas.tt:189 bookas.tt:244 tool.tt:678 tool.tt:733
 msgid "7:30 PM"
 msgstr "19:30 Uhr"
 
-#: bookas.tt:190 bookas.tt:245 tool.tt:675 tool.tt:730
+#: bookas.tt:190 bookas.tt:245 tool.tt:679 tool.tt:734
 msgid "8:00 PM"
 msgstr "20:00 Uhr"
 
-#: bookas.tt:191 bookas.tt:246 tool.tt:676 tool.tt:731
+#: bookas.tt:191 bookas.tt:246 tool.tt:680 tool.tt:735
 msgid "8:30 PM"
 msgstr "20:30 Uhr"
 
-#: bookas.tt:192 bookas.tt:247 tool.tt:677 tool.tt:732
+#: bookas.tt:192 bookas.tt:247 tool.tt:681 tool.tt:736
 msgid "9:00 PM"
 msgstr "21:00 Uhr"
 
-#: bookas.tt:193 bookas.tt:248 tool.tt:678 tool.tt:733
+#: bookas.tt:193 bookas.tt:248 tool.tt:682 tool.tt:737
 msgid "9:30 PM"
 msgstr "21:30 Uhr"
 
-#: bookas.tt:194 bookas.tt:249 tool.tt:679 tool.tt:734
+#: bookas.tt:194 bookas.tt:249 tool.tt:683 tool.tt:738
 msgid "10:00 PM"
 msgstr "22:00 Uhr"
 
-#: bookas.tt:195 bookas.tt:250 tool.tt:680 tool.tt:735
+#: bookas.tt:195 bookas.tt:250 tool.tt:684 tool.tt:739
 msgid "10:30 PM"
 msgstr "22:30 Uhr"
 
-#: bookas.tt:196 bookas.tt:251 tool.tt:681 tool.tt:736
+#: bookas.tt:196 bookas.tt:251 tool.tt:685 tool.tt:740
 msgid "11:00 PM"
 msgstr "23:00 Uhr"
 
-#: bookas.tt:197 bookas.tt:252 tool.tt:682 tool.tt:737
+#: bookas.tt:197 bookas.tt:252 tool.tt:686 tool.tt:741
 msgid "11:30 PM"
 msgstr "23:30 Uhr"
 
@@ -467,12 +467,12 @@ msgstr "Bitte wählen Sie einen Raum aus"
 msgid "Configuration"
 msgstr "Konfiguration"
 
-#: configure.tt:90 configure.tt:724 tool.tt:59 tool.tt:173 tool.tt:336
-#: tool.tt:419
+#: configure.tt:90 configure.tt:724 tool.tt:60 tool.tt:174 tool.tt:340
+#: tool.tt:423
 msgid "Actions"
 msgstr "Aktionen"
 
-#: configure.tt:92 tool.tt:61
+#: configure.tt:92 tool.tt:62
 msgid "Select an action:"
 msgstr "Eine Aktion wählen:"
 
@@ -520,11 +520,11 @@ msgstr "Tägliche Reservierungen pro Benutzer begrenzen"
 msgid "Restrict patron categories"
 msgstr "Auf Benutzerkategorie(n) einschränken"
 
-#: configure.tt:107 tool.tt:68
+#: configure.tt:107 tool.tt:69
 msgid "Continue"
 msgstr "Weiter"
 
-#: configure.tt:128 tool.tt:89
+#: configure.tt:128 tool.tt:90
 msgid "Processing..."
 msgstr "Arbeite..."
 
@@ -535,12 +535,12 @@ msgstr "Einen Raum um Details anzuzeigen oder eine andere Aktion wählen."
 #: configure.tt:159 configure.tt:205 configure.tt:253 configure.tt:316
 #: configure.tt:410 configure.tt:493 configure.tt:606 configure.tt:695
 #: configure.tt:780 configure.tt:849 configure.tt:936 configure.tt:990
-#: configure.tt:1062 configure.tt:1110 configure.tt:1173 tool.tt:129
-#: tool.tt:293 tool.tt:388
+#: configure.tt:1062 configure.tt:1110 configure.tt:1173 tool.tt:130
+#: tool.tt:294 tool.tt:392
 msgid "Select another action"
 msgstr "Eine andere Aktion wählen"
 
-#: configure.tt:171 tool.tt:317 tool.tt:402
+#: configure.tt:171 tool.tt:321 tool.tt:406
 msgid "Room"
 msgstr "Raum"
 
@@ -752,7 +752,7 @@ msgstr "Sind Sie sicher, dass Sie den gewählten Raum löschen wollen?"
 msgid "Only rooms not linked to a booking are listed below"
 msgstr "Es werden nur Räume ohne Buchung(en) angezeigt"
 
-#: configure.tt:964 configure.tt:1207 tool.tt:174 tool.tt:337 tool.tt:420
+#: configure.tt:964 configure.tt:1207 tool.tt:175 tool.tt:341 tool.tt:424
 msgid "Delete"
 msgstr "Löschen"
 
@@ -772,8 +772,8 @@ msgstr "Aktuelles Equipment"
 msgid "Add Equipment"
 msgstr "Equipment hinzufügen"
 
-#: configure.tt:1031 tool.tt:253 tool.tt:575 tool.tt:581 tool.tt:765
-#: tool.tt:771
+#: configure.tt:1031 tool.tt:254 tool.tt:579 tool.tt:585 tool.tt:769
+#: tool.tt:775
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -797,184 +797,188 @@ msgstr "Es werden nur Räume ohne Buchung(en) angezeigt"
 msgid "Koha: Room Reservations Plugin: Tool"
 msgstr "Plugin für Raumreservierungen: Werkzeug"
 
-#: tool.tt:48
+#: tool.tt:49
 msgid "Please select an action to continue."
 msgstr "Zum Fortsetzen eine Bearbeitungsfunktion auswählen."
 
-#: tool.tt:64
+#: tool.tt:65
 msgid "Manage opening hours"
 msgstr "Öffnungszeiten bearbeiten"
 
-#: tool.tt:65
+#: tool.tt:66
 msgid "Manage blackouts"
 msgstr "Sperrzeiten verwalten"
 
-#: tool.tt:66 tool.tt:311
+#: tool.tt:67 tool.tt:312
 msgid "Manage reservations"
 msgstr "Reservierungen verwalten"
 
-#: tool.tt:113
+#: tool.tt:114
 msgid "Please select at least one weekday."
 msgstr "Bitte mind. einen Wochentag auswählen."
 
-#: tool.tt:118
+#: tool.tt:119
 msgid "Please select valid start and end time."
 msgstr "Bitte eine gültige Start- und Endzeit eingeben!"
 
-#: tool.tt:139
+#: tool.tt:140
 msgid ""
 "There was a problem deleting the selected opening hours. Please try again"
 msgstr ""
 "Es gab ein Problem beim löschen der ausgewählten Öffnungszeiten. Bitte "
 "versuchen Sie es erneut"
 
-#: tool.tt:143
+#: tool.tt:144
 msgid "Selected opening hours deleted successfully"
 msgstr "Die ausgewählten Öffnungszeiten wurde erfolgreich gelöscht"
 
-#: tool.tt:149
+#: tool.tt:150
 msgid "Delete opening hours"
 msgstr "Lösche Öffnungszeiten"
 
-#: tool.tt:155
+#: tool.tt:156
 msgid "Day"
 msgstr "Tag"
 
-#: tool.tt:156 tool.tt:319
+#: tool.tt:157 tool.tt:323
 msgid "Start"
 msgstr "Start"
 
-#: tool.tt:157 tool.tt:320
+#: tool.tt:158 tool.tt:324
 msgid "End"
 msgstr "Ende"
 
-#: tool.tt:176 tool.tt:339 tool.tt:422
+#: tool.tt:177 tool.tt:343 tool.tt:426
 msgid "Submit"
 msgstr "Bestätigen"
 
-#: tool.tt:182
+#: tool.tt:183
 msgid "No opening hours configured."
 msgstr "Keine Öffnungszeiten konfiguriert."
 
-#: tool.tt:197
+#: tool.tt:198
 msgid "Add opening hours"
 msgstr "Öffnungszeiten hinzufügen"
 
-#: tool.tt:201
+#: tool.tt:202
 msgid "Select opening days"
 msgstr "Tage auswählen"
 
-#: tool.tt:208
+#: tool.tt:209
 msgid "Monday"
 msgstr "Montag"
 
-#: tool.tt:212
+#: tool.tt:213
 msgid "Tuesday"
 msgstr "Dienstag"
 
-#: tool.tt:216
+#: tool.tt:217
 msgid "Wednesday"
 msgstr "Mittwoch"
 
-#: tool.tt:220
+#: tool.tt:221
 msgid "Thursday"
 msgstr "Donnerstag"
 
-#: tool.tt:224
+#: tool.tt:225
 msgid "Friday"
 msgstr "Freitag"
 
-#: tool.tt:228
+#: tool.tt:229
 msgid "Saturday"
 msgstr "Samstag"
 
-#: tool.tt:232
+#: tool.tt:233
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: tool.tt:238
+#: tool.tt:239
 msgid "Select opening hours"
 msgstr "Zeiten wählen"
 
-#: tool.tt:244 tool.tt:634
+#: tool.tt:245 tool.tt:638
 msgid "From"
 msgstr "Von"
 
-#: tool.tt:246 tool.tt:689
+#: tool.tt:247 tool.tt:693
 msgid "To"
 msgstr "Bis"
 
-#: tool.tt:302
+#: tool.tt:303
 msgid "There was a problem deleting the selected booking. Please try again"
 msgstr ""
 "Es gab ein Problem beim löschen der ausgewählten Buchung. Bitte versuchen "
 "Sie es erneut"
 
-#: tool.tt:306
+#: tool.tt:307
 msgid "Selected booking deleted successfully"
 msgstr "Die ausgewählte Buchung wurde erfolgreich gelöscht"
 
-#: tool.tt:318
+#: tool.tt:314
+msgid "Go to OPAC-Calendar view"
+msgstr "Zur OPAC-Kalenderansicht wechseln."
+
+#: tool.tt:322
 msgid "Patron"
 msgstr "Benutzer"
 
-#: tool.tt:345
+#: tool.tt:349
 msgid "No bookings found!"
 msgstr "Keine Buchungen gefunden!"
 
-#: tool.tt:379
+#: tool.tt:383
 msgid "Please select an action."
 msgstr "Bitte eine Aktion auswählen."
 
-#: tool.tt:396
+#: tool.tt:400
 msgid "Manage Blackouts"
 msgstr "Sperrzeiten verwalten"
 
-#: tool.tt:403
+#: tool.tt:407
 msgid "Blackout start"
 msgstr "Sperrzeit Beginn"
 
-#: tool.tt:404
+#: tool.tt:408
 msgid "Blackout end"
 msgstr "Sperrzeit Ende"
 
-#: tool.tt:430
+#: tool.tt:434
 msgid "No upcoming blackouts scheduled!"
 msgstr "Keine kommenden Sperrzeiten terminiert!"
 
-#: tool.tt:438 tool.tt:536 tool.tt:624
+#: tool.tt:442 tool.tt:540 tool.tt:628
 msgid "Add a blackout"
 msgstr "Eine Sperrzeit hinzufügen"
 
-#: tool.tt:441
+#: tool.tt:445
 msgid "How long is the blackout?"
 msgstr "Wie lang dauert die Sperrzeit?"
 
-#: tool.tt:447
+#: tool.tt:451
 msgid "Full day(s)"
 msgstr "Voll(e) Tag(e)"
 
-#: tool.tt:448
+#: tool.tt:452
 msgid "A few hours"
 msgstr "Einige Stunden"
 
-#: tool.tt:525 tool.tt:613
+#: tool.tt:529 tool.tt:617
 msgid "Please select one or more rooms."
 msgstr "Bitte wählen Sie einen oder mehrere Räume aus."
 
-#: tool.tt:550 tool.tt:742
+#: tool.tt:554 tool.tt:746
 msgid "All day"
 msgstr "Voll(e) Tag(e)"
 
-#: tool.tt:556 tool.tt:748
+#: tool.tt:560 tool.tt:752
 msgid "Select room(s) to blackout"
 msgstr "Raum/Räume auswählen um Sperrzeiten hinzuzufügen"
 
-#: tool.tt:561 tool.tt:753
+#: tool.tt:565 tool.tt:757
 msgid "All rooms"
 msgstr "Alle Räume"
 
-#: tool.tt:601
+#: tool.tt:605
 msgid "Please select a valid start and end time!"
 msgstr "Bitte eine gültige Start- und Endzeit eingeben!"
 
@@ -1079,6 +1083,14 @@ msgstr "Einen Raum buchen"
 msgid "Avalability Search"
 msgstr "Verfügbarkeitssuche"
 
+#: opac/calendar.tt:324
+msgid "max."
+msgstr "Max."
+
+#: opac/calendar.tt:324
+msgid "people"
+msgstr "Personen"
+
 #: opac/calendar.tt:360
 msgid "Opening hours"
 msgstr "Öffnungszeiten"
@@ -1105,9 +1117,6 @@ msgstr "Zurück zum Kalender"
 
 #~ msgid "Maximum Room Capacity"
 #~ msgstr "Maximale Raumkapazität"
-
-#~ msgid "people"
-#~ msgstr "Personen"
 
 #~ msgid "Room Reservations Plugin"
 #~ msgstr "Raumreservierungsplugin"
