@@ -362,7 +362,7 @@
 					<div class="span12">
 					[% FOR hour IN opening_hours %]
 						<div class="row-fluid">
-						<div class="span3">[% hour.day %]</div>
+						<div class="span3">[% hour.day | gettext %]</div>
 						<div class="span9 right-align-col">[% hour.start %] - [% hour.end %]</div>
 						</div>
 					[% END %]

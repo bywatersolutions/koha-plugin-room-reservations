@@ -632,12 +632,16 @@ msgstr ""
 msgid "Add limit"
 msgstr ""
 
-#: configure.tt:523 configure.tt:528
-msgid "Restricted categories:"
+#: configure.tt:523
+msgid "Non-Restricted categories:"
 msgstr ""
 
 #: configure.tt:524
 msgid "No restrictions"
+msgstr ""
+
+#: configure.tt:528
+msgid "Restricted categories:"
 msgstr ""
 
 #: configure.tt:537

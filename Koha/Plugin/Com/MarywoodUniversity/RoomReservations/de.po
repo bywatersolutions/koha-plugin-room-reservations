@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-07-06 10:13+0200\n"
+"PO-Revision-Date: 2021-08-03 11:29+0200\n"
 "Last-Translator: root <root@56ee6f0bd7d1>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -640,13 +640,17 @@ msgstr "Kein Limit"
 msgid "Add limit"
 msgstr "Limit hinzufügen"
 
-#: configure.tt:523 configure.tt:528
-msgid "Restricted categories:"
-msgstr "Kategorien ohne Berechtigung:"
+#: configure.tt:523
+msgid "Non-Restricted categories:"
+msgstr "Kategorien mit Berechtigung:"
 
 #: configure.tt:524
 msgid "No restrictions"
 msgstr "Alle sind berechtigt"
+
+#: configure.tt:528
+msgid "Restricted categories:"
+msgstr "Kategorien ohne Berechtigung:"
 
 #: configure.tt:537
 msgid "Restrict categories:"

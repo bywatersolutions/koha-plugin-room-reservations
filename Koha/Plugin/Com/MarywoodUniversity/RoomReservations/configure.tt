@@ -520,7 +520,7 @@
                 <tbody>
                     [% IF restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">[% 'Restricted categories:' | gettext %]</td>
+                        <td style="text-align: right;">[% 'Non-Restricted categories:' | gettext %]</td>
                         <td>[% 'No restrictions' | gettext %]</td>
                     </tr>
                     [% ELSE %]
