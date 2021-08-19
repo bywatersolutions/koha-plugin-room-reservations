@@ -20,7 +20,7 @@ use Koha::Email;
 use Koha::Patrons;
 use Encode;
 
-use Locale::Messages;;
+use Locale::Messages;
 Locale::Messages->select_package('gettext_pp');
 
 use Locale::Messages qw(:locale_h :libintl_h);
@@ -30,18 +30,18 @@ our $VERSION = "{VERSION}";
 
 ## Table names and associated MySQL indexes
 #
-our $rooms_table = 'booking_rooms';
-our $rooms_index = 'bookingrooms_idx';
-our $bookings_table = 'bookings';
-our $bookings_index = 'bookingbookings_idx';
-our $equipment_table = 'booking_equipment';
-our $equipment_index = 'bookingequipment_idx';
+our $rooms_table         = 'booking_rooms';
+our $rooms_index         = 'bookingrooms_idx';
+our $bookings_table      = 'bookings';
+our $bookings_index      = 'bookingbookings_idx';
+our $equipment_table     = 'booking_equipment';
+our $equipment_index     = 'bookingequipment_idx';
 our $roomequipment_table = 'booking_room_equipment';
 our $roomequipment_index = 'bookingroomequipment_idx';
 
 # set locale settings for gettext
 my $self = new('Koha::Plugin::Com::MarywoodUniversity::RoomReservations');
-my $cgi = $self->{'cgi'};
+my $cgi  = $self->{'cgi'};
 
 my $locale = C4::Languages::getlanguage($cgi);
 $locale = substr( $locale, 0, 2 );
@@ -49,13 +49,15 @@ $ENV{'LANGUAGE'} = $locale;
 setlocale Locale::Messages::LC_ALL(), '';
 textdomain "com.marywooduniversity.roomreservations";
 
-my $locale_path = abs_path( $self->mbf_path( 'translations' ) );
+my $locale_path = abs_path( $self->mbf_path('translations') );
 bindtextdomain "com.marywooduniversity.roomreservations" => $locale_path;
 
 our $metadata = {
-    name            => getTranslation('Room Reservations Plugin'),
-    author          => 'Lee Jamison',
-    description     => getTranslation('This plugin provides a room reservation solution on both intranet and OPAC interfaces.'),
+    name        => getTranslation('Room Reservations Plugin'),
+    author      => 'Lee Jamison',
+    description => getTranslation(
+'This plugin provides a room reservation solution on both intranet and OPAC interfaces.'
+    ),
     date_authored   => '2017-05-08',
     date_updated    => '1900-01-01',
     minimum_version => '3.22',
@@ -63,7 +65,8 @@ our $metadata = {
     version         => $VERSION,
 };
 
-our $valid; # used to check if booking still valid prior to insertion of new booking
+our $valid
+  ;    # used to check if booking still valid prior to insertion of new booking
 
 sub new {
     my ( $class, $args ) = @_;
@@ -91,10 +94,11 @@ sub new {
 sub install() {
     my ( $self, $args ) = @_;
 
-    my $original_version = $self->retrieve_data('plugin_version'); # is this a new install or an upgrade?
+    my $original_version = $self->retrieve_data('plugin_version')
+      ;    # is this a new install or an upgrade?
 
     my @installer_statements = (
-        qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
+qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
         qq{CREATE TABLE $rooms_table (
               `roomid` INT NOT NULL AUTO_INCREMENT,
               `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
@@ -113,7 +117,7 @@ sub install() {
               CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
               CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-        qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
+qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
         qq{CREATE TABLE $equipment_table (
               `equipmentid` INT NOT NULL AUTO_INCREMENT,
               `equipmentname` VARCHAR(20) NOT NULL,
@@ -127,25 +131,26 @@ sub install() {
               CONSTRAINT roomequipment_iafk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
               CONSTRAINT roomequipment_ibfk FOREIGN KEY (equipmentid) REFERENCES $equipment_table(equipmentid)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-        qq{CREATE INDEX $roomequipment_index ON $roomequipment_table(roomid, equipmentid);},
+qq{CREATE INDEX $roomequipment_index ON $roomequipment_table(roomid, equipmentid);},
         qq{INSERT INTO $equipment_table (equipmentname) VALUES ('none');},
     );
 
-    if (!defined($original_version)) { # clean install
+    if ( !defined($original_version) ) {    # clean install
 
         # Add required IntranetUserJS entry to place
-    # reservations for a patron from circulation.pl
-    my $IntranetUserJS = C4::Context->preference('IntranetUserJS');
+        # reservations for a patron from circulation.pl
+        my $IntranetUserJS = C4::Context->preference('IntranetUserJS');
 
-    $IntranetUserJS =~ s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
+        $IntranetUserJS =~
+s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
 
-    $IntranetUserJS .= q[/* JS for Koha RoomReservation Plugin
+        $IntranetUserJS .= q[/* JS for Koha RoomReservation Plugin
 This JS was added automatically by installing the RoomReservation plugin
 Please do not modify */
 
 $(document).ready(function() {
 var buttonText = "];
-$IntranetUserJS .= getTranslation('Reserve room as patron').q[";
+        $IntranetUserJS .= getTranslation('Reserve room as patron') . q[";
 var data = $("div.patroninfo h5").html();
 
     if (typeof borrowernumber !== 'undefined') {
@@ -168,13 +173,15 @@ var data = $("div.patroninfo h5").html();
             $sth->execute or die C4::Context->dbh->errstr;
         }
     }
-    else { # upgrade
-        if ($original_version eq '1.1.15') {
+    else {    # upgrade
+        if ( $original_version eq '1.1.15' ) {
+
             # do nothing..no database changes
         }
     }
 
-    $self->store_data({ plugin_version => $VERSION }); # used when upgrading to newer version
+    $self->store_data( { plugin_version => $VERSION } )
+      ;       # used when upgrading to newer version
 
     return 1;
 }
@@ -209,22 +216,22 @@ sub bookas {
 
     my ( $self, $args ) = @_;
 
-    my $cgi = $self->{'cgi'};
-    my $template = $self->get_template({ file => 'bookas.tt' });
+    my $cgi      = $self->{'cgi'};
+    my $template = $self->get_template( { file => 'bookas.tt' } );
     $template->param(
         language => C4::Languages::getlanguage($cgi) || 'en',
-        mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+        mbf_path => abs_path( $self->mbf_path('translations') ),
     );
 
     my $op = $cgi->param('op') || q{};
 
     my $borrowernumber = $cgi->param('borrowernumber');
 
-    my $member = Koha::Patrons->find( $borrowernumber );
+    my $member = Koha::Patrons->find($borrowernumber);
 
     my $member_firstname = $member->firstname;
-    my $member_surname = $member->surname;
-    my $member_email = $member->email;
+    my $member_surname   = $member->surname;
+    my $member_email     = $member->email;
 
     my $submitButton = $cgi->param('confirmationSubmit') || q{};
 
@@ -248,7 +255,7 @@ sub bookas {
 
         $template->param(
             available_room_equipment => $equipment,
-            all_room_capacities => $capacities,
+            all_room_capacities      => $capacities,
         );
     }
     elsif ( $op eq 'availability-search-results' ) {
@@ -260,50 +267,58 @@ sub bookas {
 
         my $room_capacity = $cgi->param('availability-search-room-capacity');
 
-        my @equipment = $cgi->param('availability-search-selected-equipment') || ();
+        my @equipment =
+          $cgi->param('availability-search-selected-equipment') || ();
 
-        my $event_start = sprintf("%s %s", $start_date, $start_time);
-        my $event_end   = sprintf("%s %s", $end_date, $end_time);
+        my $event_start = sprintf( "%s %s", $start_date, $start_time );
+        my $event_end   = sprintf( "%s %s", $end_date,   $end_time );
 
         # converts '/' to '-'
-        (my $availability_format_start_date = $start_date) =~ s/\//\-/g;
-        (my $availability_format_end_date = $end_date) =~ s/\//\-/g;
+        ( my $availability_format_start_date = $start_date ) =~ s/\//\-/g;
+        ( my $availability_format_end_date   = $end_date )   =~ s/\//\-/g;
 
         # re-arranges from MM-DD-YYYY to YYYY-MM-DD
-        ($availability_format_start_date = $availability_format_start_date) =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$1-$2/;
-        ($availability_format_end_date = $availability_format_end_date) =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$1-$2/;
+        ( $availability_format_start_date = $availability_format_start_date )
+          =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$1-$2/;
+        ( $availability_format_end_date = $availability_format_end_date ) =~
+          s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$1-$2/;
 
-        # used exclusively for getAvailableRooms -- BUG excluding T from the DATETIME start/end field returns wrong results?
-        my $availability_format_start = sprintf("%sT%s", $availability_format_start_date, $start_time);
-        my $availability_format_end   = sprintf("%sT%s", $availability_format_end_date, $end_time);
+# used exclusively for getAvailableRooms -- BUG excluding T from the DATETIME start/end field returns wrong results?
+        my $availability_format_start =
+          sprintf( "%sT%s", $availability_format_start_date, $start_time );
+        my $availability_format_end =
+          sprintf( "%sT%s", $availability_format_end_date, $end_time );
 
         # generates a DateTime object from a string
         $event_start = dt_from_string($event_start);
-        $event_end = dt_from_string($event_end);
+        $event_end   = dt_from_string($event_end);
 
-        my $displayed_event_start = output_pref({ dt => $event_start, dateformat => 'us', timeformat => '12hr' });
-        my $displayed_event_end = output_pref({ dt => $event_end, dateformat => 'us', timeformat => '12hr' });
+        my $displayed_event_start = output_pref(
+            { dt => $event_start, dateformat => 'us', timeformat => '12hr' } );
+        my $displayed_event_end = output_pref(
+            { dt => $event_end, dateformat => 'us', timeformat => '12hr' } );
 
-        my $availableRooms = getAvailableRooms($availability_format_start, $availability_format_end, $room_capacity, \@equipment);
+        my $availableRooms = getAvailableRooms( $availability_format_start,
+            $availability_format_end, $room_capacity, \@equipment );
 
         # boolean -- returns 1 (one) if true or 0 (zero) if false
         my $roomsAreAvailable = areAnyRoomsAvailable($availableRooms);
 
         $template->param(
-            available_rooms => $availableRooms,
+            available_rooms     => $availableRooms,
             are_rooms_available => $roomsAreAvailable,
-            displayed_start => $displayed_event_start,
-            displayed_end => $displayed_event_end,
-            event_start_time => $event_start,
-            event_end_time => $event_end,
+            displayed_start     => $displayed_event_start,
+            displayed_end       => $displayed_event_end,
+            event_start_time    => $event_start,
+            event_end_time      => $event_end,
         );
     }
     elsif ( $op eq 'room-selection-confirmation' ) {
-        my $selected_id = $cgi->param('selected-room-id');
+        my $selected_id     = $cgi->param('selected-room-id');
         my $displayed_start = $cgi->param('displayed-start');
-        my $displayed_end = $cgi->param('displayed-end');
-        my $event_start = $cgi->param('event-start-time');
-        my $event_end = $cgi->param('event-end-time');
+        my $displayed_end   = $cgi->param('displayed-end');
+        my $event_start     = $cgi->param('event-start-time');
+        my $event_end       = $cgi->param('event-end-time');
 
         my $displayed_event_time = "$displayed_start - $displayed_end";
 
@@ -325,97 +340,101 @@ sub bookas {
         );
     }
     elsif ( $op eq 'reservation-confirmed' ) {
-        my $roomid = $cgi->param('confirmed-room-id');
-        my $start   = $cgi->param('confirmed-start');
-        my $end     = $cgi->param('confirmed-end');
+        my $roomid   = $cgi->param('confirmed-room-id');
+        my $start    = $cgi->param('confirmed-start');
+        my $end      = $cgi->param('confirmed-end');
         my $sendCopy = $cgi->param('send-confirmation-copy');
-        #my $submitButton = $cgi->param('confirmationSubmit');
-        my $user = $cgi->param('confirmed-user');
-        my $roomnumber = $cgi->param('confirmed-roomnumber');
-        my $displayed_start = $cgi->param('confirmed-displayed-start');
-        my $displayed_end = $cgi->param('confirmed-displayed-end');
-        my $patronEmail = $cgi->param('confirmed-email');
 
-        $valid = preBookingAvailabilityCheck($roomid, $start, $end);
+        #my $submitButton = $cgi->param('confirmationSubmit');
+        my $user            = $cgi->param('confirmed-user');
+        my $roomnumber      = $cgi->param('confirmed-roomnumber');
+        my $displayed_start = $cgi->param('confirmed-displayed-start');
+        my $displayed_end   = $cgi->param('confirmed-displayed-end');
+        my $patronEmail     = $cgi->param('confirmed-email');
+
+        $valid = preBookingAvailabilityCheck( $roomid, $start, $end );
 
         if ($valid) {
-            addBooking($borrowernumber, $roomid, $start, $end);
+            addBooking( $borrowernumber, $roomid, $start, $end );
         }
         else {
-            $template->param(
-                invalid_booking => 1,
+            $template->param( invalid_booking => 1, );
+        }
+
+        if ( $sendCopy eq '1' && $valid ) {
+
+            my $email      = Koha::Email->new();
+            my $user_email = C4::Context->preference('KohaAdminEmailAddress');
+
+            # KohaAdmin address is the default - no need to set
+            my %mail = $email->create_message_headers(
+                {
+                    to => $patronEmail,
+                }
             );
-        }
+            $mail{'X-Abuse-Report'} =
+              C4::Context->preference('KohaAdminEmailAddress');
 
-    if ( $sendCopy eq '1' && $valid ) {
+            # Since we are already logged in, no need to check credentials again
+            # when loading a second template.
+            my $template2 =
+              $self->get_template( { file => 'calendar-sendconfirmation.tt' } );
+            $template->param(
+                language => C4::Languages::getlanguage($cgi) || 'en',
+                mbf_path => abs_path( $self->mbf_path('translations') ),
+            );
 
-        my $email = Koha::Email->new();
-        my $user_email = C4::Context->preference('KohaAdminEmailAddress');
+            my $timestamp = getCurrentTimestamp();
 
-        # KohaAdmin address is the default - no need to set
-        my %mail = $email->create_message_headers({
-            to => $patronEmail,
-        });
-        $mail{'X-Abuse-Report'} = C4::Context->preference('KohaAdminEmailAddress');
+            $template2->param(
+                user                => $user,
+                room                => $roomnumber,
+                from                => $displayed_start,
+                to                  => $displayed_end,
+                confirmed_timestamp => $timestamp,
+            );
 
-        # Since we are already logged in, no need to check credentials again
-        # when loading a second template.
-        my $template2 = $self->get_template({ file => 'calendar-sendconfirmation.tt' });
-        $template->param(
-            language => C4::Languages::getlanguage($cgi) || 'en',
-            mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
-        );
+            # Getting template result
+            my $template_res = $template2->output();
+            my $body;
 
-        my $timestamp = getCurrentTimestamp();
+            # Analysing information and getting mail properties
 
-        $template2->param(
-            user => $user,
-            room => $roomnumber,
-            from => $displayed_start,
-            to   => $displayed_end,
-            confirmed_timestamp => $timestamp,
-        );
+            if ( $template_res =~ /<SUBJECT>(.*)<END_SUBJECT>/s ) {
+                $mail{subject} = $1;
+                $mail{subject} =~ s|\n?(.*)\n?|$1|;
+                $mail{subject} = Encode::encode( "UTF-8", $mail{subject} );
+            }
+            else { $mail{'subject'} = "no subject"; }
 
-        # Getting template result
-        my $template_res = $template2->output();
-        my $body;
+            my $email_header = "";
 
-        # Analysing information and getting mail properties
+            if ( $template_res =~ /<HEADER>(.*)<END_HEADER>/s ) {
+                $email_header = $1;
+                $email_header =~ s|\n?(.*)\n?|$1|;
+                $email_header =
+                  encode_qp( Encode::encode( "UTF-8", $email_header ) );
+            }
 
-        if ($template_res =~ /<SUBJECT>(.*)<END_SUBJECT>/s) {
-            $mail{subject} = $1;
-            $mail{subject} =~ s|\n?(.*)\n?|$1|;
-            $mail{subject} = Encode::encode("UTF-8", $mail{subject});
-        }
-        else { $mail{'subject'} = "no subject"; }
+            my $email_file = "bookingconfirmation.txt";
+            if ( $template_res =~ /<FILENAME>(.*)<END_FILENAME>/s ) {
+                $email_file = $1;
+                $email_file =~ s|\n?(.*)\n?|$1|;
+            }
 
-        my $email_header = "";
+            if ( $template_res =~ /<MESSAGE>(.*)<END_MESSAGE>/s ) {
+                $body = $1;
+                $body =~ s|\n?(.*)\n?|$1|;
+                $body = encode_qp( Encode::encode( "UTF-8", $body ) );
+            }
 
-        if ( $template_res =~ /<HEADER>(.*)<END_HEADER>/s ) {
-            $email_header = $1;
-            $email_header =~ s|\n?(.*)\n?|$1|;
-            $email_header = encode_qp(Encode::encode("UTF-8", $email_header));
-        }
+            $mail{body} = $body;
 
-        my $email_file = "bookingconfirmation.txt";
-        if ( $template_res =~ /<FILENAME>(.*)<END_FILENAME>/s ) {
-            $email_file = $1;
-            $email_file =~ s|\n?(.*)\n?|$1|;
-        }
+            my $boundary = "====" . time() . "====";
 
-        if ( $template_res =~ /<MESSAGE>(.*)<END_MESSAGE>/s ) {
-            $body = $1;
-            $body =~ s|\n?(.*)\n?|$1|;
-            $body = encode_qp(Encode::encode("UTF-8", $body));
-        }
-
-        $mail{body} = $body;
-
-        my $boundary = "====" . time() . "====";
-
-        $mail{'content-type'} = "multipart/mixed; boundary=\"$boundary\"";
-        $boundary = '--' . $boundary;
-        $mail{body} = <<END_OF_BODY;
+            $mail{'content-type'} = "multipart/mixed; boundary=\"$boundary\"";
+            $boundary             = '--' . $boundary;
+            $mail{body}           = <<END_OF_BODY;
 $boundary
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -425,63 +444,72 @@ $body
 $boundary--
 END_OF_BODY
 
-        # Sending mail (if not empty basket)
-        if (sendmail %mail) {
-            # do something if it works....
-            $template->param(
-                SENT      => "1",
-                patron_email => $patronEmail,
-            );
+            # Sending mail (if not empty basket)
+            if ( sendmail %mail ) {
+
+                # do something if it works....
+                $template->param(
+                    SENT         => "1",
+                    patron_email => $patronEmail,
+                );
+            }
+            else {
+                # do something if it doesnt work....
+                carp "Error sending mail: an error has occurred";
+                carp "Error sending mail: $Mail::Sendmail::error"
+                  if $Mail::Sendmail::error;
+                $template->param( error => 1 );
+            }
         }
-        else {
-            # do something if it doesnt work....
-            carp "Error sending mail: an error has occurred";
-            carp "Error sending mail: $Mail::Sendmail::error" if $Mail::Sendmail::error;
-            $template->param( error => 1 );
-        }
-    }
     }
 
-    print $cgi->header(-type => 'text/html',-charset => 'utf-8');
+    print $cgi->header( -type => 'text/html', -charset => 'utf-8' );
     print $template->output();
 }
 
 sub tool {
     my ( $self, $args ) = @_;
 
-    my $cgi = $self->{'cgi'};
-    my $template = $self->get_template({ file => 'tool.tt' });
+    my $cgi      = $self->{'cgi'};
+    my $template = $self->get_template( { file => 'tool.tt' } );
     $template->param(
         language => C4::Languages::getlanguage($cgi) || 'en',
-        mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+        mbf_path => abs_path( $self->mbf_path('translations') ),
     );
 
-    my $op = $cgi->param('op') || q{};
+    my $op          = $cgi->param('op') || q{};
     my $tool_action = $cgi->param('tool_actions_selection');
 
     # used for manage blackouts
-    my $manage_blackouts_submit = $cgi->param('manage-blackouts-submit') || q{}; # delete existing blackout
-    my $submit_full_blackout = $cgi->param('submit-full-blackout') || q{}; # add full day blackout(s)
-    my $submit_partial_blackout = $cgi->param('submit-partial-blackout') || q{}; # add partial-day blackout
+    my $manage_blackouts_submit =
+      $cgi->param('manage-blackouts-submit') || q{};  # delete existing blackout
+    my $submit_full_blackout =
+      $cgi->param('submit-full-blackout') || q{};     # add full day blackout(s)
+    my $submit_partial_blackout =
+      $cgi->param('submit-partial-blackout') || q{};  # add partial-day blackout
 
-    if ( $op eq 'action-selected' &&  $tool_action eq 'action-manage-reservations') {
+    if (   $op eq 'action-selected'
+        && $tool_action eq 'action-manage-reservations' )
+    {
 
         my $bookings = getAllBookings();
 
         $template->param(
-            op => 'manage-reservations',
+            op       => 'manage-reservations',
             bookings => $bookings,
         );
     }
-    elsif ( $op eq 'action-selected' && $tool_action eq 'action-manage-blackouts' ) {
+    elsif ($op eq 'action-selected'
+        && $tool_action eq 'action-manage-blackouts' )
+    {
 
         my $blackouts = getAllBlackedoutBookings();
 
         my $rooms = getCurrentRoomNumbers();
 
         $template->param(
-            op => 'manage-blackouts',
-            blackouts => $blackouts,
+            op            => 'manage-blackouts',
+            blackouts     => $blackouts,
             current_rooms => $rooms,
         );
     }
@@ -496,7 +524,7 @@ sub tool {
 
             my $bookings = getAllBookings();
 
-            if ($deleted == 0) {
+            if ( $deleted == 0 ) {
                 $template->param(
                     deleted  => 1,
                     bookings => $bookings,
@@ -510,11 +538,9 @@ sub tool {
             }
         }
 
-        $template->param(
-            op => $op,
-        );
+        $template->param( op => $op, );
     }
-    elsif ( $op eq 'manage-blackouts' &&  $manage_blackouts_submit ne '' ) {
+    elsif ( $op eq 'manage-blackouts' && $manage_blackouts_submit ne '' ) {
 
         # TODO - delete the selected blackout
 
@@ -523,100 +549,107 @@ sub tool {
         deleteBookingById($bookingid);
 
         my $blackouts = getAllBlackedoutBookings();
-        my $rooms = getCurrentRoomNumbers();
+        my $rooms     = getCurrentRoomNumbers();
 
         $template->param(
-            op => $op,
-            blackouts => $blackouts,
+            op            => $op,
+            blackouts     => $blackouts,
             current_rooms => $rooms,
         );
     }
     elsif ( $op eq 'manage-blackouts' && $submit_full_blackout ne '' ) {
 
         my $blackout_start_date = $cgi->param('blackout-start-date');
-        my $blackout_end_date = $cgi->param('blackout-end-date');
-        my @rooms = $cgi->multi_param('current-room-blackout');
+        my $blackout_end_date   = $cgi->param('blackout-end-date');
+        my @rooms               = $cgi->multi_param('current-room-blackout');
 
-        my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_start_date;
-        my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_end_date;
+        my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:,
+          $blackout_start_date;
+        my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:,
+          $blackout_end_date;
 
         $start_date = $start_date . ' 00:00:00';
-        $end_date = $end_date . ' 23:59:59';
+        $end_date   = $end_date . ' 23:59:59';
 
         my $current_user = C4::Context->userenv->{'number'};
 
         if ( $rooms[0] eq '0' ) {
 
-            my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
+            my $room_ids = getAllRoomIds();    # IDs of all rooms in rooms table
 
             my @room_IDs = @$room_ids;
 
-            for my $item ( @room_IDs ) {
+            for my $item (@room_IDs) {
                 for my $key ( keys %$item ) {
-                    addBlackoutBooking($current_user, $item->{ $key }, $start_date, $end_date);
+                    addBlackoutBooking(
+                        $current_user, $item->{$key},
+                        $start_date,   $end_date
+                    );
                 }
             }
         }
         else {
 
-            for (my $i = 0; $i < scalar(@rooms); $i++) {
-                addBlackoutBooking($current_user, $rooms[$i], $start_date, $end_date);
+            for ( my $i = 0 ; $i < scalar(@rooms) ; $i++ ) {
+                addBlackoutBooking( $current_user, $rooms[$i], $start_date,
+                    $end_date );
             }
         }
 
-        my $blackouts = getAllBlackedoutBookings();
+        my $blackouts     = getAllBlackedoutBookings();
         my $current_rooms = getCurrentRoomNumbers();
 
         $template->param(
-            op => $op,
-            blackouts => $blackouts,
+            op            => $op,
+            blackouts     => $blackouts,
             current_rooms => $current_rooms,
         );
     }
     elsif ( $op eq 'manage-blackouts' && $submit_partial_blackout ne '' ) {
 
         my $blackout_date = $cgi->param('blackout-date');
-        my $start_time = $cgi->param('blackout-start-time');
-        my $end_time = $cgi->param('blackout-end-time');
-        my @rooms = $cgi->multi_param('current-room-blackout');
+        my $start_time    = $cgi->param('blackout-start-time');
+        my $end_time      = $cgi->param('blackout-end-time');
+        my @rooms         = $cgi->multi_param('current-room-blackout');
 
         $blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
 
         my $start = $blackout_date . " $start_time";
-        my $end = $blackout_date . " $end_time";
+        my $end   = $blackout_date . " $end_time";
 
         my $current_user = C4::Context->userenv->{'number'};
 
         if ( $rooms[0] eq '0' ) {
 
-            my $room_ids = getAllRoomIds(); # IDs of all rooms in rooms table
+            my $room_ids = getAllRoomIds();    # IDs of all rooms in rooms table
 
             my @room_IDs = @$room_ids;
 
-            for my $item ( @room_IDs ) {
+            for my $item (@room_IDs) {
                 for my $key ( keys %$item ) {
-                    addBlackoutBooking($current_user, $item->{ $key }, $start, $end);
+                    addBlackoutBooking( $current_user, $item->{$key}, $start,
+                        $end );
                 }
             }
         }
         else {
 
-            for (my $i = 0; $i < scalar(@rooms); $i++) {
-                addBlackoutBooking($current_user, $rooms[$i], $start, $end);
+            for ( my $i = 0 ; $i < scalar(@rooms) ; $i++ ) {
+                addBlackoutBooking( $current_user, $rooms[$i], $start, $end );
             }
         }
 
-        my $blackouts = getAllBlackedoutBookings();
+        my $blackouts     = getAllBlackedoutBookings();
         my $current_rooms = getCurrentRoomNumbers();
 
         $template->param(
-            op => $op,
-            blackouts => $blackouts,
+            op            => $op,
+            blackouts     => $blackouts,
             current_rooms => $current_rooms,
         );
     }
 
-    print $cgi->header(-type => 'text/html',-charset => 'utf-8');
+    print $cgi->header( -type => 'text/html', -charset => 'utf-8' );
     print $template->output();
 }
 
@@ -625,16 +658,15 @@ sub configure {
 
     my $cgi = $self->{'cgi'};
 
-    my $template = $self->get_template({ file => 'configure.tt' });
+    my $template = $self->get_template( { file => 'configure.tt' } );
     $template->param(
         language => C4::Languages::getlanguage($cgi) || 'en',
-        mbf_path => abs_path( $self->mbf_path( 'translations' ) ),
+        mbf_path => abs_path( $self->mbf_path('translations') ),
     );
 
     my $op = $cgi->param('op') || q{};
 
-    if ( $op eq '' ) { # Displays currently configured rooms
-
+    if ( $op eq '' ) {    # Displays currently configured rooms
 
         $template->param(
 
@@ -652,17 +684,16 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-select-add' ) {
-
 
             $action = 'add-rooms';
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-select-edit' ) {
@@ -671,7 +702,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-select-delete' ) {
@@ -680,7 +711,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-select-add-equipment' ) {
@@ -689,7 +720,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-select-delete-equipment' ) {
@@ -698,7 +729,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-max-future-date' ) {
@@ -707,7 +738,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-max-time' ) {
@@ -716,7 +747,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-restrict-categories' ) {
@@ -725,7 +756,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
         elsif ( $selected eq 'action-restrict-daily-reservations-per-patron' ) {
@@ -734,7 +765,7 @@ sub configure {
 
             $template->param(
                 action => $action,
-                op => $op,
+                op     => $op,
             );
         }
     }
@@ -742,11 +773,11 @@ sub configure {
 
         my $limit = $cgi->param('limit-submitted') || q{};
 
-        if ($limit eq '1') {
+        if ( $limit eq '1' ) {
 
             my $limit_count = $cgi->param('reservations-limit-field');
 
-            $self->store_data({ count_limit => $limit_count });
+            $self->store_data( { count_limit => $limit_count } );
         }
 
         my $current_limit = $self->retrieve_data('count_limit');
@@ -756,7 +787,7 @@ sub configure {
         }
 
         $template->param(
-            op => $op,
+            op          => $op,
             count_limit => $current_limit,
         );
     }
@@ -770,10 +801,12 @@ sub configure {
 
         if ( $submitted eq '1' ) {
 
-            my @restricted_categories_to_clear = $cgi->multi_param('currently-restricted-category');
+            my @restricted_categories_to_clear =
+              $cgi->multi_param('currently-restricted-category');
 
-            if (scalar(@restricted_categories_to_clear) > 0) {
-                clearPatronCategoryRestriction(\@restricted_categories_to_clear);
+            if ( scalar(@restricted_categories_to_clear) > 0 ) {
+                clearPatronCategoryRestriction(
+                    \@restricted_categories_to_clear );
             }
             else {
                 clearPatronCategoryRestriction(undef);
@@ -788,13 +821,12 @@ sub configure {
                 $cat_hash{qq(rcat_$category)} = $category;
 
                 while ( my ( $key, $value ) = each %cat_hash ) {
-                    $self->store_data({ $key => $value });
+                    $self->store_data( { $key => $value } );
                 }
             }
 
-
             # store restricted message
-            $self->store_data({ restricted_message => $rest_message});
+            $self->store_data( { restricted_message => $rest_message } );
         }
 
         my $restricted = getRestrictedPatronCategories();
@@ -806,10 +838,10 @@ sub configure {
         my $restricted_message = $self->retrieve_data('restricted_message');
 
         $template->param(
-            op => $op,
+            op                    => $op,
             restricted_categories => $restricted,
-            categories => $categories,
-            restrict_message => $restricted_message,
+            categories            => $categories,
+            restrict_message      => $restricted_message,
         );
     }
     elsif ( $op eq 'max-time' ) {
@@ -818,12 +850,12 @@ sub configure {
 
         if ( $submitted eq '1' ) {
 
-            my $max_time_hours = $cgi->param('max-time-hours-field');
+            my $max_time_hours   = $cgi->param('max-time-hours-field');
             my $max_time_minutes = $cgi->param('max-time-minutes-field');
 
-            my $max_time = ($max_time_hours * 60) + $max_time_minutes;
+            my $max_time = ( $max_time_hours * 60 ) + $max_time_minutes;
 
-            $self->store_data({ max_time => $max_time });
+            $self->store_data( { max_time => $max_time } );
         }
 
         my $max_num_time = $self->retrieve_data('max_time');
@@ -833,7 +865,7 @@ sub configure {
         }
 
         $template->param(
-            op => $op,
+            op       => $op,
             max_time => $max_num_time,
 
         );
@@ -846,7 +878,7 @@ sub configure {
 
             my $max_days = $cgi->param('max-days-field');
 
-            $self->store_data({ max_future_days => $max_days });
+            $self->store_data( { max_future_days => $max_days } );
         }
 
         my $max_num_days = $self->retrieve_data('max_future_days');
@@ -856,7 +888,7 @@ sub configure {
         }
 
         $template->param(
-            op => $op,
+            op           => $op,
             max_num_days => $max_num_days,
 
         );
@@ -879,8 +911,8 @@ sub configure {
         my $roomEquipment = getRoomEquipmentById($roomIdToDisplay);
 
         $template->param(
-            op => $op,
-            selected_room_details => $roomDetails,
+            op                      => $op,
+            selected_room_details   => $roomDetails,
             selected_room_equipment => $roomEquipment,
         );
     }
@@ -888,57 +920,56 @@ sub configure {
 
         my $addedRoom = $cgi->param('added-room') || q{};
 
-        if ($addedRoom eq '1') {
-            my $roomnumber = $cgi->param('add-room-roomnumber');
-            my $maxcapacity = $cgi->param('add-room-maxcapacity');
+        if ( $addedRoom eq '1' ) {
+            my $roomnumber        = $cgi->param('add-room-roomnumber');
+            my $maxcapacity       = $cgi->param('add-room-maxcapacity');
             my @selectedEquipment = $cgi->param('selected-equipment');
 
             ## pass @selectedEquipment by reference
-            addRoom($roomnumber, $maxcapacity, \@selectedEquipment);
+            addRoom( $roomnumber, $maxcapacity, \@selectedEquipment );
         }
 
         my $availableEquipment = getAllRoomEquipmentNamesAndIds();
-        my $roomNumbers = getCurrentRoomNumbers();
+        my $roomNumbers        = getCurrentRoomNumbers();
 
         $template->param(
-            op => $op,
+            op                  => $op,
             available_equipment => $availableEquipment,
-            all_room_numbers => $roomNumbers,
+            all_room_numbers    => $roomNumbers,
         );
     }
     elsif ( $op eq 'edit-rooms' ) {
 
-        my $editing = $cgi->param('editing') || q{};
-        my $roomDetailsUpdated = $cgi->param('room-details-updated') || q{};
+        my $editing              = $cgi->param('editing')                || q{};
+        my $roomDetailsUpdated   = $cgi->param('room-details-updated')   || q{};
         my $roomEquipmentUpdated = $cgi->param('room-equipment-updated') || q{};
 
-        if ($editing eq '1') {
+        if ( $editing eq '1' ) {
             my $selectedRoomId = $cgi->param('current-rooms-edit');
 
-            $template->param(
-                selected_room_id => $selectedRoomId,
-            );
+            $template->param( selected_room_id => $selectedRoomId, );
         }
 
         if ( $roomDetailsUpdated eq '1' ) {
-            my $roomIdToUpdate = $cgi->param('room-details-updated-roomid');
-            my $updatedRoomNumber = $cgi->param('edit-rooms-room-roomnumber');
+            my $roomIdToUpdate     = $cgi->param('room-details-updated-roomid');
+            my $updatedRoomNumber  = $cgi->param('edit-rooms-room-roomnumber');
             my $updatedMaxCapacity = $cgi->param('edit-rooms-room-maxcapacity');
 
-            updateRoomDetails($roomIdToUpdate, $updatedRoomNumber, $updatedMaxCapacity);
+            updateRoomDetails( $roomIdToUpdate, $updatedRoomNumber,
+                $updatedMaxCapacity );
         }
 
         if ( $roomEquipmentUpdated eq '1' ) {
-            my $equipmentRoomId = $cgi->param('room-equipment-updated-roomid');
+            my $equipmentRoomId  = $cgi->param('room-equipment-updated-roomid');
             my @equipmentIdArray = $cgi->param('edit-rooms-current-equipment');
 
-            updateRoomEquipment($equipmentRoomId, \@equipmentIdArray);
+            updateRoomEquipment( $equipmentRoomId, \@equipmentIdArray );
         }
 
         my $roomNumbers = getAllRoomNumbers();
 
         $template->param(
-            op => $op,
+            op            => $op,
             current_rooms => $roomNumbers,
         );
     }
@@ -961,8 +992,8 @@ sub configure {
         }
 
         $template->param(
-            op => $op,
-            edit_action => $editAction,
+            op               => $op,
+            edit_action      => $editAction,
             selected_room_id => $selectedRoomId,
         );
     }
@@ -973,7 +1004,7 @@ sub configure {
         my $roomDetails = loadRoomDetailsToEditByRoomId($selectedRoomId);
 
         $template->param(
-            op => $op,
+            op           => $op,
             room_details => $roomDetails,
         );
     }
@@ -986,8 +1017,8 @@ sub configure {
         my $allAvailableEquipment = loadAllEquipment();
 
         $template->param(
-            op => $op,
-            room_details => $roomDetails,
+            op                      => $op,
+            room_details            => $roomDetails,
             all_available_equipment => $allAvailableEquipment,
         );
     }
@@ -1003,22 +1034,19 @@ sub configure {
 
         my $availableRooms = getAllRoomNumbersAndIdsAvailableToDelete();
 
-        my $areThereRoomsToDelete = areAnyRoomsAvailableToDelete($availableRooms);
+        my $areThereRoomsToDelete =
+          areAnyRoomsAvailableToDelete($availableRooms);
 
-        if ($areThereRoomsToDelete == 1) {
-            $template->param(
-                rooms_available_to_delete => 1,
-            );
+        if ( $areThereRoomsToDelete == 1 ) {
+            $template->param( rooms_available_to_delete => 1, );
         }
         else {
-            $template->param(
-                rooms_available_to_delete => 0,
-            );
+            $template->param( rooms_available_to_delete => 0, );
         }
 
         $template->param(
-            op => $op,
-            available_rooms => $availableRooms,
+            op                        => $op,
+            available_rooms           => $availableRooms,
             rooms_available_to_delete => 1,
         );
     }
@@ -1026,7 +1054,7 @@ sub configure {
 
         my $insert = $cgi->param('insert') || q{};
 
-        if ( $insert eq '1') {
+        if ( $insert eq '1' ) {
             my $addedEquipment = $cgi->param('add-equipment-text-field');
 
             ## Convert to lowercase to enforce uniformity
@@ -1041,7 +1069,7 @@ sub configure {
         my $availableEquipment = getAllRoomEquipmentNames();
 
         $template->param(
-            op => $op,
+            op                  => $op,
             available_equipment => $availableEquipment,
         );
     }
@@ -1050,26 +1078,28 @@ sub configure {
         my $delete = $cgi->param('delete') || q{};
 
         if ( $delete eq '1' ) {
-            my $equipmentIdToDelete = $cgi->param('delete-equipment-radio-button');
+            my $equipmentIdToDelete =
+              $cgi->param('delete-equipment-radio-button');
 
             deleteEquipment($equipmentIdToDelete);
         }
 
-        my $availableEquipment = getAllRoomEquipmentNamesAndIdsAvailableToDelete();
+        my $availableEquipment =
+          getAllRoomEquipmentNamesAndIdsAvailableToDelete();
 
         $template->param(
-            op => $op,
+            op                  => $op,
             available_equipment => $availableEquipment,
         );
     }
 
-    print $cgi->header(-type => 'text/html',-charset => 'utf-8');
+    print $cgi->header( -type => 'text/html', -charset => 'utf-8' );
     print $template->output();
 }
 
 sub getCurrentTimestamp {
 
-    my $timestamp = strftime('%m/%d/%Y %I:%M:%S %p', localtime);
+    my $timestamp = strftime( '%m/%d/%Y %I:%M:%S %p', localtime );
 
     return $timestamp;
 }
@@ -1094,7 +1124,7 @@ sub getAllBookings {
     my @allBookings;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allBookings, $row );
+        push( @allBookings, $row );
     }
 
     return \@allBookings;
@@ -1120,7 +1150,7 @@ sub getRestrictedPatronCategories {
     my @categories;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @categories, $row );
+        push( @categories, $row );
     }
 
     return \@categories;
@@ -1132,7 +1162,7 @@ sub clearPatronCategoryRestriction {
 
     my $delete_query;
 
-    if ($restricted_category == undef) {
+    if ( $restricted_category == undef ) {
         my $dbh = C4::Context->dbh;
 
         $delete_query = "
@@ -1154,7 +1184,7 @@ sub clearPatronCategoryRestriction {
             WHERE plugin_class = 'Koha::Plugin::Com::MarywoodUniversity::RoomReservations'
             AND plugin_key LIKE 'rcat_%'";
 
-        if ($counter == 0) {
+        if ( $counter == 0 ) {
             $delete_query .= ";";
         }
         else {
@@ -1162,7 +1192,7 @@ sub clearPatronCategoryRestriction {
 
             for my $code (@restricted) {
 
-                if ($counter > 0 && $counter != 1) {
+                if ( $counter > 0 && $counter != 1 ) {
                     $delete_query .= "'$code', ";
                 }
                 else {
@@ -1197,7 +1227,7 @@ sub getPatronCategories {
     my @categories;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @categories, $row );
+        push( @categories, $row );
     }
 
     return \@categories;
@@ -1224,7 +1254,7 @@ sub getAllBlackedoutBookings {
     my @allBlackedoutBookings;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allBlackedoutBookings, $row );
+        push( @allBlackedoutBookings, $row );
     }
 
     return \@allBlackedoutBookings;
@@ -1236,14 +1266,17 @@ sub addBlackoutBooking {
 
     my $dbh = C4::Context->dbh;
 
-    $dbh->do("
+    $dbh->do( "
         INSERT INTO $bookings_table (borrowernumber, roomid, start, end, blackedout)
-        VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ', 1);');
+        VALUES ($borrowernumber, $roomid, " . "'"
+          . $start . "'" . "," . "'"
+          . $end . "'"
+          . ', 1);' );
 }
 
 sub deleteBookingById {
 
-    my ( $bookingId ) = @_;
+    my ($bookingId) = @_;
 
     my $dbh = C4::Context->dbh;
 
@@ -1257,19 +1290,20 @@ sub deleteBookingById {
 
     my $count = $sth->execute();
 
-    if ($count == 0) { # no row(s) affected
+    if ( $count == 0 ) {    # no row(s) affected
         return 0;
     }
-    else { # sucessfully deleted row(s)
+    else {                  # sucessfully deleted row(s)
         return 1;
     }
 }
 
 sub areAnyRoomsAvailableToDelete {
 
-    my ( $rooms ) = @_;
+    my ($rooms) = @_;
 
     if ( @$rooms > 0 ) {
+
         # return true
         return 1;
     }
@@ -1306,13 +1340,15 @@ sub updateRoomEquipment {
 
     foreach my $piece (@$equipment) {
 
-        $dbh->do("INSERT INTO $roomequipment_table (roomid, equipmentid) VALUES ($roomid, $piece);");
+        $dbh->do(
+"INSERT INTO $roomequipment_table (roomid, equipmentid) VALUES ($roomid, $piece);"
+        );
     }
 }
 
 sub loadRoomDetailsToEditByRoomId {
 
-    my ( $roomid ) = @_;
+    my ($roomid) = @_;
 
     ## load access to database
     my $dbh = C4::Context->dbh;
@@ -1332,7 +1368,7 @@ sub loadRoomDetailsToEditByRoomId {
     my @roomDetails;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @roomDetails, $row );
+        push( @roomDetails, $row );
     }
 
     return \@roomDetails;
@@ -1357,7 +1393,7 @@ sub loadAllEquipment {
     my @allAvailableEquipmentNames;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allAvailableEquipmentNames, $row );
+        push( @allAvailableEquipmentNames, $row );
     }
 
     return \@allAvailableEquipmentNames;
@@ -1366,7 +1402,7 @@ sub loadAllEquipment {
 ## DO NOT USE - causes strange TT software errors
 sub loadRoomEquipmentNamesToEditByRoomId {
 
-    my ( $roomid ) = @_;
+    my ($roomid) = @_;
 
     ## load access to database
     my $dbh = C4::Context->dbh;
@@ -1387,7 +1423,7 @@ sub loadRoomEquipmentNamesToEditByRoomId {
     my @equipmentNames;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @equipmentNames, $row );
+        push( @equipmentNames, $row );
     }
 
     return \@equipmentNames;
@@ -1395,7 +1431,7 @@ sub loadRoomEquipmentNamesToEditByRoomId {
 
 sub addRoom {
 
-    my ($roomnumber, $maxcapacity, $equipment) = @_;
+    my ( $roomnumber, $maxcapacity, $equipment ) = @_;
 
     ## make $roomnumber SQL-friendly by surrounding with single quotes
     $roomnumber = "'" . $roomnumber . "'";
@@ -1403,11 +1439,15 @@ sub addRoom {
     my $dbh = C4::Context->dbh;
 
     ## first insert roomnumber and maxcapacity into $rooms_table
-    $dbh->do("INSERT INTO $rooms_table (roomnumber, maxcapacity) VALUES ($roomnumber, $maxcapacity);");
+    $dbh->do(
+"INSERT INTO $rooms_table (roomnumber, maxcapacity) VALUES ($roomnumber, $maxcapacity);"
+    );
 
     foreach my $piece (@$equipment) {
 
-        $dbh->do("INSERT INTO $roomequipment_table (roomid, equipmentid) VALUES ((SELECT roomid FROM $rooms_table WHERE roomnumber = $roomnumber), $piece);");
+        $dbh->do(
+"INSERT INTO $roomequipment_table (roomid, equipmentid) VALUES ((SELECT roomid FROM $rooms_table WHERE roomnumber = $roomnumber), $piece);"
+        );
     }
 }
 
@@ -1424,16 +1464,18 @@ sub deleteRoom {
 
 sub addEquipment {
 
-    my ( $equipmentname ) = @_;
+    my ($equipmentname) = @_;
 
     my $dbh = C4::Context->dbh;
 
-    $dbh->do("INSERT INTO $equipment_table (equipmentname) VALUES ($equipmentname);");
+    $dbh->do(
+        "INSERT INTO $equipment_table (equipmentname) VALUES ($equipmentname);"
+    );
 }
 
 sub deleteEquipment {
 
-    my ( $equipmentId ) = @_;
+    my ($equipmentId) = @_;
 
     my $dbh = C4::Context->dbh;
 
@@ -1483,7 +1525,7 @@ sub getAllRoomIds {
     my @allRoomIds;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allRoomIds, $row );
+        push( @allRoomIds, $row );
     }
 
     return \@allRoomIds;
@@ -1509,7 +1551,7 @@ sub getCurrentRoomNumbers {
     my @allRoomNumbers;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allRoomNumbers, $row );
+        push( @allRoomNumbers, $row );
     }
 
     return \@allRoomNumbers;
@@ -1535,7 +1577,7 @@ sub getAllRoomEquipmentNames {
     my @allEquipmentNames;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allEquipmentNames, $row );
+        push( @allEquipmentNames, $row );
     }
 
     return \@allEquipmentNames;
@@ -1561,7 +1603,7 @@ sub getAllRoomEquipmentNamesAndIds {
     my @allEquipmentNamesAndIds;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allEquipmentNamesAndIds, $row );
+        push( @allEquipmentNamesAndIds, $row );
     }
 
     return \@allEquipmentNamesAndIds;
@@ -1589,7 +1631,7 @@ sub getAllRoomEquipmentNamesAndIdsAvailableToDelete {
     my @allEquipmentNamesAndIds;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allEquipmentNamesAndIds, $row );
+        push( @allEquipmentNamesAndIds, $row );
     }
 
     return \@allEquipmentNamesAndIds;
@@ -1617,7 +1659,7 @@ sub getAllRoomNumbersAndIdsAvailableToDelete {
     my @allRoomNumbersAndIds;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allRoomNumbersAndIds, $row );
+        push( @allRoomNumbersAndIds, $row );
     }
 
     return \@allRoomNumbersAndIds;
@@ -1625,7 +1667,7 @@ sub getAllRoomNumbersAndIdsAvailableToDelete {
 
 sub getRoomDetailsById {
 
-    my ( $selectedRoomId ) = @_;
+    my ($selectedRoomId) = @_;
 
     ## load access to database
     my $dbh = C4::Context->dbh;
@@ -1649,7 +1691,7 @@ sub getRoomDetailsById {
     my @selectedRoomDetails;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @selectedRoomDetails, $row );
+        push( @selectedRoomDetails, $row );
     }
 
     return \@selectedRoomDetails;
@@ -1657,7 +1699,7 @@ sub getRoomDetailsById {
 
 sub getRoomEquipmentById {
 
-    my ( $selectedRoomId ) = @_;
+    my ($selectedRoomId) = @_;
 
     ## load access to database
     my $dbh = C4::Context->dbh;
@@ -1678,7 +1720,7 @@ sub getRoomEquipmentById {
     my @selectedRoomEquipment;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @selectedRoomEquipment, $row );
+        push( @selectedRoomEquipment, $row );
     }
 
     return \@selectedRoomEquipment;
@@ -1707,7 +1749,7 @@ sub getAllRoomNumbers {
     my @allRooms;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allRooms, $row );
+        push( @allRooms, $row );
     }
 
     return \@allRooms;
@@ -1732,7 +1774,7 @@ sub loadAllMaxCapacities {
     my @allMaxCapacities;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allMaxCapacities, $row );
+        push( @allMaxCapacities, $row );
     }
 
     return \@allMaxCapacities;
@@ -1758,31 +1800,31 @@ sub getAvailableRooms {
             WHERE
             \'$end\' > start AND \'$start\' < end)";
 
-        # if dereferenced array ref has zero elements (length evaluated in scalar context)
-        if ( @$equipment > 0 ) {
+# if dereferenced array ref has zero elements (length evaluated in scalar context)
+    if ( @$equipment > 0 ) {
 
-            # counts number of elements
-            my $totalElements = scalar @{ $equipment };
+        # counts number of elements
+        my $totalElements = scalar @{$equipment};
 
-            $query .= " AND roomid IN (SELECT roomid
+        $query .= " AND roomid IN (SELECT roomid
                                         FROM $roomequipment_table
                                         WHERE";
 
-            foreach my $piece (@$equipment) {
+        foreach my $piece (@$equipment) {
 
-                if ( --$totalElements == 0 ) {
+            if ( --$totalElements == 0 ) {
 
-                    $query .= " equipmentid = $piece)";
-                }
-                else {
-                    $query .= " equipmentid = $piece AND";
-                }
-
-                $totalElements--;
+                $query .= " equipmentid = $piece)";
             }
-        }
+            else {
+                $query .= " equipmentid = $piece AND";
+            }
 
-        $query .= ' GROUP BY roomnumber;';
+            $totalElements--;
+        }
+    }
+
+    $query .= ' GROUP BY roomnumber;';
 
     $sth = $dbh->prepare($query);
     $sth->execute();
@@ -1790,7 +1832,7 @@ sub getAvailableRooms {
     my @allAvailableRooms;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @allAvailableRooms, $row );
+        push( @allAvailableRooms, $row );
     }
 
     return \@allAvailableRooms;
@@ -1798,9 +1840,10 @@ sub getAvailableRooms {
 
 sub areAnyRoomsAvailable {
 
-    my ( $rooms ) = @_;
+    my ($rooms) = @_;
 
     if ( @$rooms > 0 ) {
+
         # return true
         return 1;
     }
@@ -1812,7 +1855,7 @@ sub areAnyRoomsAvailable {
 
 sub getRoomNumberById {
 
-    my ( $roomid ) = @_;
+    my ($roomid) = @_;
 
     # load access to database
     my $dbh = C4::Context->dbh;
@@ -1832,7 +1875,7 @@ sub getRoomNumberById {
     my @roomNumberFromId;
 
     while ( my $row = $sth->fetchrow_hashref() ) {
-        push ( @roomNumberFromId, $row );
+        push( @roomNumberFromId, $row );
     }
 
     return \@roomNumberFromId;
@@ -1859,10 +1902,10 @@ sub preBookingAvailabilityCheck {
 
     my ($count) = $sth->fetchrow_array();
 
-    if ($count > 0) { # a conflicting booking was found
+    if ( $count > 0 ) {    # a conflicting booking was found
         return 0;
     }
-    else { # no conflict found
+    else {                 # no conflict found
         return 1;
     }
 }
@@ -1873,14 +1916,17 @@ sub addBooking {
 
     my $dbh = C4::Context->dbh;
 
-    $dbh->do("
+    $dbh->do( "
         INSERT INTO $bookings_table (borrowernumber, roomid, start, end)
-        VALUES ($borrowernumber, $roomid, " . "'" . $start . "'" . "," . "'" . $end . "'" . ');');
+        VALUES ($borrowernumber, $roomid, " . "'"
+          . $start . "'" . "," . "'"
+          . $end . "'"
+          . ');' );
 }
 
 sub getTranslation {
-  my ( $string ) = @_;
-  return Encode::decode('UTF-8', gettext($string));
+    my ($string) = @_;
+    return Encode::decode( 'UTF-8', gettext($string) );
 }
 
 1;
