@@ -521,12 +521,12 @@
 					[% restricted_categorycodes = [] %]
                     [% IF restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">[% 'Non-Restricted categories:' | gettext %]</td>
+                        <td style="text-align: right;">[% 'Restricted categories:' | gettext %]</td>
                         <td>[% 'No restrictions' | gettext %]</td>
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">[% 'Non-Restricted categories:' | gettext %]</td>
+                        <td style="text-align: right;">[% 'Restricted categories:' | gettext %]</td>
                         <td>
                         [% FOREACH cat IN restricted_categories %]
                             <input type="checkbox" name="currently-restricted-category" value="[% cat.categorycode %]" checked="true" /> [% cat.description %]<br />
@@ -536,7 +536,7 @@
                     </tr>
                     [% END # restricted_categories == '' %]
                     <tr>
-                        <td style="text-align: right;">[% 'Restrict categories:' | gettext %]</td>
+                        <td style="text-align: right;">[% 'Non-Restricted categories:' | gettext %]</td>
                         <td>
                             [% IF categories.size %]
                             [% FOREACH category IN categories %]
