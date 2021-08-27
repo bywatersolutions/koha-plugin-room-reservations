@@ -291,7 +291,7 @@
 					[% END %]
 				</div>
                 <div class="span4">
-					<h2>[% 'Book a r oom' | gettext %]</h2>
+					<h2>[% 'Book a room' | gettext %]</h2>
 					<div class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<div id="antolin-topicselect" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 					<a href="#avsearch" class="link-collection-collapse-toggle"><legend class="entrypage-legend">[% 'Avalability Search' | gettext %]</legend></a>
