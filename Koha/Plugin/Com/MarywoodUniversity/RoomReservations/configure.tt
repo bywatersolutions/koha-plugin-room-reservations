@@ -518,6 +518,7 @@
                     </tr>
                 </thead>
                 <tbody>
+					[% restricted_categorycodes = [] %]
                     [% IF restricted_categories == '' %]
                     <tr>
                         <td style="text-align: right;">[% 'Non-Restricted categories:' | gettext %]</td>
@@ -525,10 +526,11 @@
                     </tr>
                     [% ELSE %]
                     <tr>
-                        <td style="text-align: right;">[% 'Restricted categories:' | gettext %]</td>
+                        <td style="text-align: right;">[% 'Non-Restricted categories:' | gettext %]</td>
                         <td>
                         [% FOREACH cat IN restricted_categories %]
                             <input type="checkbox" name="currently-restricted-category" value="[% cat.categorycode %]" checked="true" /> [% cat.description %]<br />
+                            [% restricted_categorycodes.push(cat.categorycode) %]
                         [% END # FOREACH cat IN restricted_categories %]
                         </td>
                     </tr>
@@ -538,7 +540,9 @@
                         <td>
                             [% IF categories.size %]
                             [% FOREACH category IN categories %]
-                            <input type="checkbox" name="patron-category" value="[% category.categorycode %]" /> [% category.description %]<br />
+								[% UNLESS restricted_categorycodes.grep(category.categorycode).size() %]
+								<input type="checkbox" name="patron-category" value="[% category.categorycode %]" /> [% category.description %]<br />
+								[% END %]
                             [% END # FOREACH category IN categories %]
                             [% ELSE %]
                             <p>[% 'INVALID!' | gettext %]</p>
