@@ -1339,7 +1339,7 @@ sub clearPatronCategoryRestriction {
 
     my $delete_query;
 
-    if ($restricted_category == undef) {
+    unless (defined $restricted_category) {
         my $dbh = C4::Context->dbh;
 
         $delete_query = "
