@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-03 11:29+0200\n"
+"PO-Revision-Date: 2021-08-27 15:22+0200\n"
 "Last-Translator: root <root@56ee6f0bd7d1>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -71,7 +71,7 @@ msgid "Koha: Room Reservations Plugin: Reserve as patron"
 msgstr "Plugin für Raumreservierungen: Reserviere als Benutzer"
 
 #: bookas.tt:19 configure.tt:76 tool.tt:37 opac/calendar.tt:64
-#: opac/calendar.tt:260 opac/calendar.tt:404 opac/calendar.tt:474
+#: opac/calendar.tt:262 opac/calendar.tt:406 opac/calendar.tt:476
 msgid "Home"
 msgstr "Start"
 
@@ -91,52 +91,52 @@ msgstr "Werkzeug"
 msgid "Reserve as"
 msgstr "Reserviere als"
 
-#: bookas.tt:80 configure.tt:388 opac/calendar.tt:222
+#: bookas.tt:80 configure.tt:388 opac/calendar.tt:224
 msgid "hours"
 msgstr "Stunden"
 
-#: bookas.tt:83 opac/calendar.tt:225
+#: bookas.tt:83 opac/calendar.tt:227
 msgid "Selected time range exceeds maximum time allowed of"
 msgstr ""
 "Die ausgewählte Zeitspanne überschreitet die maximal erlaubte Zeitspanne von"
 
-#: bookas.tt:87 opac/calendar.tt:229
+#: bookas.tt:87 opac/calendar.tt:231
 msgid "Please select a valid time range!"
 msgstr "Bitte eine gültige Zeitspanne auswählen!"
 
-#: bookas.tt:92 opac/calendar.tt:234
+#: bookas.tt:92 opac/calendar.tt:236
 msgid "Start date is required."
 msgstr "Startdatum ist erforderlich."
 
-#: bookas.tt:97 opac/calendar.tt:239
+#: bookas.tt:97 opac/calendar.tt:241
 msgid "Start time is required."
 msgstr "Startzeit ist erforderlich."
 
-#: bookas.tt:102 opac/calendar.tt:244
+#: bookas.tt:102 opac/calendar.tt:246
 msgid "End date is required."
 msgstr "Enddatum ist erforderlich."
 
-#: bookas.tt:107 opac/calendar.tt:249
+#: bookas.tt:107 opac/calendar.tt:251
 msgid "End time is required."
 msgstr "Endzeit ist erforderlich."
 
-#: bookas.tt:112 opac/calendar.tt:254
+#: bookas.tt:112 opac/calendar.tt:256
 msgid "Room is required."
 msgstr "Raum ist erforderlich."
 
-#: bookas.tt:124 opac/calendar.tt:262
+#: bookas.tt:124 opac/calendar.tt:264
 msgid "Availability Search"
 msgstr "Verfügbarkeitssuche"
 
-#: bookas.tt:132 opac/calendar.tt:308
+#: bookas.tt:132
 msgid "Room is not available at the selected time."
 msgstr "Raum ist zum ausgewählten Zeitpunkt nicht verfügbar."
 
-#: bookas.tt:138 opac/calendar.tt:312
+#: bookas.tt:138 opac/calendar.tt:314
 msgid "Start time"
 msgstr "Startzeit"
 
-#: bookas.tt:141 opac/calendar.tt:315
+#: bookas.tt:141 opac/calendar.tt:317
 msgid "End time"
 msgstr "Endzeit"
 
@@ -344,90 +344,90 @@ msgstr "23:30 Uhr"
 msgid "End date"
 msgstr "Enddatum"
 
-#: bookas.tt:260 bookas.tt:363 opac/calendar.tt:320 opac/calendar.tt:443
+#: bookas.tt:260 bookas.tt:363 opac/calendar.tt:322 opac/calendar.tt:445
 msgid "Select Room"
 msgstr "Raum auswählen"
 
-#: bookas.tt:273 opac/calendar.tt:329
+#: bookas.tt:273 opac/calendar.tt:331
 msgid "Room Equipment"
 msgstr "Raumequipment"
 
-#: bookas.tt:278 configure.tt:237 configure.tt:658 configure.tt:885
-#: configure.tt:1004 configure.tt:1084 configure.tt:1129 configure.tt:1196
-#: opac/calendar.tt:84 opac/calendar.tt:282 opac/calendar.tt:334
+#: bookas.tt:278 configure.tt:237 configure.tt:662 configure.tt:889
+#: configure.tt:1008 configure.tt:1088 configure.tt:1133 configure.tt:1200
+#: opac/calendar.tt:84 opac/calendar.tt:284 opac/calendar.tt:336
 msgid "none"
 msgstr "keins"
 
-#: bookas.tt:296 opac/calendar.tt:349
+#: bookas.tt:296 opac/calendar.tt:351
 msgid "Check Room Availability"
 msgstr "Überprüfe Raumverfügbarkeit"
 
-#: bookas.tt:323 opac/calendar.tt:397
+#: bookas.tt:323 opac/calendar.tt:399
 msgid "Select a room to continue."
 msgstr "Einen Raum um fortzufahren."
 
-#: bookas.tt:337 opac/calendar.tt:70 opac/calendar.tt:268 opac/calendar.tt:417
+#: bookas.tt:337 opac/calendar.tt:70 opac/calendar.tt:270 opac/calendar.tt:419
 msgid "Available Rooms"
 msgstr "Verfügbare Räume"
 
-#: bookas.tt:340 opac/calendar.tt:420
+#: bookas.tt:340 opac/calendar.tt:422
 msgid "Select"
 msgstr "Auswählen"
 
-#: bookas.tt:341 opac/calendar.tt:421
+#: bookas.tt:341 opac/calendar.tt:423
 msgid "Room #"
 msgstr "Raum Nr."
 
-#: bookas.tt:342 opac/calendar.tt:422
+#: bookas.tt:342 opac/calendar.tt:424
 msgid "Max Capacity"
 msgstr "Max. Kapazität"
 
-#: bookas.tt:368 opac/calendar.tt:448
+#: bookas.tt:368 opac/calendar.tt:450
 msgid "No rooms match your criteria!"
 msgstr "Kein Raum passt zu den Kriterien!"
 
-#: bookas.tt:372 opac/calendar.tt:452
+#: bookas.tt:372 opac/calendar.tt:454
 msgid "Click here to try another search"
 msgstr "Klicke hier, um eine andere Suche zu probieren"
 
-#: bookas.tt:381 opac/calendar.tt:484
+#: bookas.tt:381 opac/calendar.tt:486
 msgid "Confirmation"
 msgstr "Bestätigung"
 
-#: bookas.tt:382 configure.tt:222 configure.tt:1028 configure.tt:1131
-#: opac/calendar-sendconfirmation.tt:24 opac/calendar.tt:486
+#: bookas.tt:382 configure.tt:222 configure.tt:1032 configure.tt:1135
+#: opac/calendar-sendconfirmation.tt:24 opac/calendar.tt:488
 msgid "Name:"
 msgstr "Name:"
 
-#: bookas.tt:386 opac/calendar.tt:495
+#: bookas.tt:386 opac/calendar.tt:497
 msgid "Email:"
 msgstr "E-Mail:"
 
-#: bookas.tt:389 opac/calendar-sendconfirmation.tt:26 opac/calendar.tt:501
+#: bookas.tt:389 opac/calendar-sendconfirmation.tt:26 opac/calendar.tt:503
 msgid "Room:"
 msgstr "Raum:"
 
-#: bookas.tt:392 opac/calendar.tt:507
+#: bookas.tt:392 opac/calendar.tt:509
 msgid "Time:"
 msgstr "Zeit:"
 
-#: bookas.tt:403 opac/calendar.tt:476 opac/calendar.tt:524
+#: bookas.tt:403 opac/calendar.tt:478 opac/calendar.tt:526
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: bookas.tt:403 opac/calendar.tt:525
+#: bookas.tt:403 opac/calendar.tt:527
 msgid "Start over"
 msgstr "Abbrechen"
 
-#: bookas.tt:413 opac/calendar.tt:536
+#: bookas.tt:413 opac/calendar.tt:538
 msgid "Sorry!"
 msgstr "Entschuldigung!"
 
-#: bookas.tt:415 opac/calendar.tt:538
+#: bookas.tt:415 opac/calendar.tt:540
 msgid "It appears there was a problem completing your reservation"
 msgstr "Es scheint, es gab ein Problem mit Ihrer Reservierung"
 
-#: bookas.tt:417 opac/calendar.tt:540
+#: bookas.tt:417 opac/calendar.tt:542
 msgid ""
 "This is most likely due to someone else placing a reservation for a "
 "conflicting time slot."
@@ -435,15 +435,15 @@ msgstr ""
 "Dies liegt höchstwahrscheinlich daran, dass jemand anderes eine Reservierung "
 "für ein überschneidendes Zeitfenster vorgenommen hat."
 
-#: bookas.tt:424 opac/calendar.tt:545
+#: bookas.tt:424 opac/calendar.tt:547
 msgid "Click here to search again"
 msgstr "Klicke hier, um noch einmal zu suchen"
 
-#: bookas.tt:427 opac/calendar.tt:548
+#: bookas.tt:427 opac/calendar.tt:550
 msgid "Congratulations! Your reservation is confirmed!"
 msgstr "Gratulation! Ihre Reservierung ist bestätigt!"
 
-#: bookas.tt:430 opac/calendar.tt:551
+#: bookas.tt:430 opac/calendar.tt:553
 msgid "An email confirmation has been sent to"
 msgstr "Eine E-Mail Bestätigung wurde versendet an"
 
@@ -467,7 +467,7 @@ msgstr "Bitte wählen Sie einen Raum aus"
 msgid "Configuration"
 msgstr "Konfiguration"
 
-#: configure.tt:90 configure.tt:724 tool.tt:60 tool.tt:174 tool.tt:340
+#: configure.tt:90 configure.tt:728 tool.tt:60 tool.tt:174 tool.tt:340
 #: tool.tt:423
 msgid "Actions"
 msgstr "Aktionen"
@@ -533,9 +533,9 @@ msgid "Select a room to display its details or select another action."
 msgstr "Einen Raum um Details anzuzeigen oder eine andere Aktion wählen."
 
 #: configure.tt:159 configure.tt:205 configure.tt:253 configure.tt:316
-#: configure.tt:410 configure.tt:493 configure.tt:606 configure.tt:695
-#: configure.tt:780 configure.tt:849 configure.tt:936 configure.tt:990
-#: configure.tt:1062 configure.tt:1110 configure.tt:1173 tool.tt:130
+#: configure.tt:410 configure.tt:493 configure.tt:610 configure.tt:699
+#: configure.tt:784 configure.tt:853 configure.tt:940 configure.tt:994
+#: configure.tt:1066 configure.tt:1114 configure.tt:1177 tool.tt:130
 #: tool.tt:294 tool.tt:392
 msgid "Select another action"
 msgstr "Eine andere Aktion wählen"
@@ -556,11 +556,11 @@ msgstr "Einen anderen Raum zum bearbeiten wählen"
 msgid "Room capacity:"
 msgstr "Raumkapazität:"
 
-#: configure.tt:228 configure.tt:647 configure.tt:814
+#: configure.tt:228 configure.tt:651 configure.tt:818
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: configure.tt:232 configure.tt:650 configure.tt:881
+#: configure.tt:232 configure.tt:654 configure.tt:885
 msgid "Equipment:"
 msgstr "Equipment:"
 
@@ -640,160 +640,156 @@ msgstr "Kein Limit"
 msgid "Add limit"
 msgstr "Limit hinzufügen"
 
-#: configure.tt:523
-msgid "Non-Restricted categories:"
-msgstr "Kategorien mit Berechtigung:"
-
-#: configure.tt:524
-msgid "No restrictions"
-msgstr "Alle sind berechtigt"
-
-#: configure.tt:528
+#: configure.tt:524 configure.tt:529
 msgid "Restricted categories:"
 msgstr "Kategorien ohne Berechtigung:"
 
-#: configure.tt:537
-msgid "Restrict categories:"
-msgstr "Kategorien ohne Berechtigung:"
+#: configure.tt:525
+msgid "No restrictions"
+msgstr "Alle sind berechtigt"
 
-#: configure.tt:544
+#: configure.tt:539
+msgid "Non-Restricted categories:"
+msgstr "Kategorien mit Berechtigung:"
+
+#: configure.tt:548
 msgid "INVALID!"
 msgstr "Ungültig!"
 
-#: configure.tt:550
+#: configure.tt:554
 msgid "Text entered here will be displayed to restricted patrons on the OPAC"
 msgstr ""
 "Der hier eingegebene Text wird für Besucher ohne Berechtigung im OPAC "
 "angezeigt"
 
-#: configure.tt:563 configure.tt:896
+#: configure.tt:567 configure.tt:900
 msgid "Update"
 msgstr "Übernehmen"
 
-#: configure.tt:580
+#: configure.tt:584
 msgid "Please enter a roomname"
 msgstr "Bitte einen Raumnamen eingeben"
 
-#: configure.tt:585
+#: configure.tt:589
 msgid "Please enter a max capacity for the room"
 msgstr "Bitte die max. Kapazität des Raumes eingeben"
 
-#: configure.tt:597
+#: configure.tt:601
 msgid "Select room equipment. If no equipment then check `none`"
 msgstr "Raumequipment auswählen. Gibt es kein Equipment dann \"keins\" wählen"
 
-#: configure.tt:614 configure.tt:708 configure.tt:950
+#: configure.tt:618 configure.tt:712 configure.tt:954
 msgid "Current Rooms"
 msgstr "Aktuelle Räume"
 
-#: configure.tt:636 configure.tt:672
+#: configure.tt:640 configure.tt:676
 msgid "Add Room"
 msgstr "Raum hinzufügen"
 
-#: configure.tt:641 configure.tt:808 configure.tt:877
+#: configure.tt:645 configure.tt:812 configure.tt:881
 msgid "Room Name:"
 msgstr "Raumname:"
 
-#: configure.tt:644 configure.tt:811
+#: configure.tt:648 configure.tt:815
 msgid "Max Capacity:"
 msgstr "Max. Kapazität:"
 
-#: configure.tt:685
+#: configure.tt:689
 msgid "Please select an edit action."
 msgstr "Eine Bearbeitungsfunktion auswählen."
 
-#: configure.tt:725
+#: configure.tt:729
 msgid "Edit Room"
 msgstr "Raum bearbeiten"
 
-#: configure.tt:726 configure.tt:1122
+#: configure.tt:730 configure.tt:1126
 msgid "Edit Equipment"
 msgstr "Equipment bearbeiten"
 
-#: configure.tt:728 configure.tt:1095 configure.tt:1135
+#: configure.tt:732 configure.tt:1099 configure.tt:1139
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: configure.tt:752
+#: configure.tt:756
 msgid "Please wait..."
 msgstr "Bitte warten..."
 
-#: configure.tt:766
+#: configure.tt:770
 msgid "Room Name cannot be blank."
 msgstr "Raumname darf nicht leer sein."
 
-#: configure.tt:771
+#: configure.tt:775
 msgid "Max Capacity cannot be blank."
 msgstr "Max. Kapazität darf nicht leer sein."
 
-#: configure.tt:789 configure.tt:858
+#: configure.tt:793 configure.tt:862
 msgid "Select another room to edit"
 msgstr "Einen anderen Raum zum bearbeiten auswählen"
 
-#: configure.tt:801
+#: configure.tt:805
 msgid "Edit Room Details"
 msgstr "Raumdetails bearbeiten"
 
-#: configure.tt:840
+#: configure.tt:844
 msgid "Room equipment cannot be empty. If no equipment then check `none`"
 msgstr ""
 "Raumequipment darf nicht leer sein. Gibt es kein Equipment, dann \"keins\" "
 "auswählen"
 
-#: configure.tt:870
+#: configure.tt:874
 msgid "Edit Room Equipment"
 msgstr "Raumequipment bearbeiten"
 
-#: configure.tt:916
+#: configure.tt:920
 msgid "Select a room to delete."
 msgstr "Einen Raum zum löschen auswählen."
 
-#: configure.tt:921
+#: configure.tt:925
 msgid "Are you sure you want to delete the selected room?"
 msgstr "Sind Sie sicher, dass Sie den gewählten Raum löschen wollen?"
 
-#: configure.tt:929
+#: configure.tt:933
 msgid "Only rooms not linked to a booking are listed below"
 msgstr "Es werden nur Räume ohne Buchung(en) angezeigt"
 
-#: configure.tt:964 configure.tt:1207 tool.tt:175 tool.tt:341 tool.tt:424
+#: configure.tt:968 configure.tt:1211 tool.tt:175 tool.tt:341 tool.tt:424
 msgid "Delete"
 msgstr "Löschen"
 
-#: configure.tt:970
+#: configure.tt:974
 msgid "No rooms available to delete!"
 msgstr "Keine Räume verfügbar zum Löschen!"
 
-#: configure.tt:981
+#: configure.tt:985
 msgid "Equipment name cannot be blank."
 msgstr "Equipment Name darf nicht leer sein."
 
-#: configure.tt:997 configure.tt:1077 configure.tt:1189
+#: configure.tt:1001 configure.tt:1081 configure.tt:1193
 msgid "Current Equipment"
 msgstr "Aktuelles Equipment"
 
-#: configure.tt:1023
+#: configure.tt:1027
 msgid "Add Equipment"
 msgstr "Equipment hinzufügen"
 
-#: configure.tt:1031 tool.tt:254 tool.tt:579 tool.tt:585 tool.tt:769
+#: configure.tt:1035 tool.tt:254 tool.tt:579 tool.tt:585 tool.tt:769
 #: tool.tt:775
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: configure.tt:1051
+#: configure.tt:1055
 msgid "Select equipment to edit."
 msgstr "Equipment zum bearbeiten auswählen."
 
-#: configure.tt:1155
+#: configure.tt:1159
 msgid "Select equipment to delete."
 msgstr "Equipment zum Löschen auswählen."
 
-#: configure.tt:1160
+#: configure.tt:1164
 msgid "Are you sure you want to delete the selected equipment?"
 msgstr "Sind Sie sicher, dass Sie das gewählte Equipment löschen wollen?"
 
-#: configure.tt:1177
+#: configure.tt:1181
 msgid "Only equipment not currently associated with a room is listed below"
 msgstr "Es werden nur Räume ohne Buchung(en) angezeigt"
 
@@ -1026,20 +1022,20 @@ msgstr "Katalog"
 msgid "Booking"
 msgstr "Buchung"
 
-#: opac/calendar.tt:65 opac/calendar.tt:261 opac/calendar.tt:405
-#: opac/calendar.tt:475
+#: opac/calendar.tt:65 opac/calendar.tt:263 opac/calendar.tt:407
+#: opac/calendar.tt:477
 msgid "Study Room Calendar"
 msgstr "Raumkalender"
 
-#: opac/calendar.tt:78 opac/calendar.tt:276
+#: opac/calendar.tt:78 opac/calendar.tt:278
 msgid "Max. Capacity"
 msgstr "Max. Kapazität"
 
-#: opac/calendar.tt:79 opac/calendar.tt:277
+#: opac/calendar.tt:79 opac/calendar.tt:279
 msgid "Description"
 msgstr "Beschreibung"
 
-#: opac/calendar.tt:80 opac/calendar.tt:278
+#: opac/calendar.tt:80 opac/calendar.tt:280
 msgid "Equipment"
 msgstr "Equipment"
 
@@ -1079,31 +1075,38 @@ msgstr "Sa"
 msgid "Book a Room"
 msgstr "Einen Raum buchen"
 
-#: opac/calendar.tt:294
-msgid "Book a r oom"
+#: opac/calendar.tt:296
+msgid "Book a room"
 msgstr "Einen Raum buchen"
 
-#: opac/calendar.tt:297
+#: opac/calendar.tt:299
 msgid "Avalability Search"
 msgstr "Verfügbarkeitssuche"
 
-#: opac/calendar.tt:324
+#: opac/calendar.tt:310
+msgid ""
+"Room is not available at the selected time. Please note the opening hours."
+msgstr ""
+"Raum ist zum ausgewählten Zeitpunkt nicht verfügbar. Bitte beachten Sie die "
+"Öffnungszeiten."
+
+#: opac/calendar.tt:326
 msgid "max."
 msgstr "Max."
 
-#: opac/calendar.tt:324
+#: opac/calendar.tt:326
 msgid "people"
 msgstr "Personen"
 
-#: opac/calendar.tt:360
+#: opac/calendar.tt:362
 msgid "Opening hours"
 msgstr "Öffnungszeiten"
 
-#: opac/calendar.tt:406
+#: opac/calendar.tt:408
 msgid "Availability Search Results"
 msgstr "Ergebnisse der Verfügbarkeitssuche"
 
-#: opac/calendar.tt:468
+#: opac/calendar.tt:470
 msgid ""
 "Unable to continue!\\nYou have reached the limit of daily reservations per "
 "user for today!"
@@ -1111,13 +1114,16 @@ msgstr ""
 "Sie können nicht fortfahren! Sie haben das Limit der täglichen "
 "Reservierungen pro Benutzer für heute erreicht!"
 
-#: opac/calendar.tt:520
+#: opac/calendar.tt:522
 msgid "Send me a copy of my confirmation"
 msgstr "Senden Sie mir eine Kopie meiner Bestätigung"
 
-#: opac/calendar.tt:555
+#: opac/calendar.tt:557
 msgid "Back to calendar"
 msgstr "Zurück zum Kalender"
+
+#~ msgid "Restrict categories:"
+#~ msgstr "Kategorien ohne Berechtigung:"
 
 #~ msgid "Maximum Room Capacity"
 #~ msgstr "Maximale Raumkapazität"

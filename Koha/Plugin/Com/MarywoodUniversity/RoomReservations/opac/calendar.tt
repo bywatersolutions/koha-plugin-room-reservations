@@ -178,7 +178,7 @@
                 var equipments = document.getElementsByName("availability-search-selected-equipment");
 
                 var max_time = $('#max_time').val();
-
+                
                 var maxTimeToMilliSeconds;
 
                 // convert milliseconds to hours, minutes, seconds
@@ -213,6 +213,8 @@
                 var endToMilliseconds = Date.parse(endTimestamp);
 
                 var timeDifferenceInMilliseconds = endToMilliseconds - startToMilliseconds;
+                
+                alert(timeDifferenceInMilliseconds + ", " + maxTimeToMilliSeconds);
 
                 if (timeDifferenceInMilliseconds > maxTimeToMilliSeconds && maxTimeToMilliSeconds > 0) {
 
@@ -305,7 +307,7 @@
 							[% IF room_checked == 0 %]
 								<div class="alert alert-success" style="margin-bottom: 0px; margin-top: 10px; position:relative;">
 								  <button type="button" class="close" data-dismiss="alert" style="position:absolute; right: 4px;">&times;</button>
-								  <b>[% 'Room is not available at the selected time.' | gettext %]</b>
+								  <b>[% 'Room is not available at the selected time. Please note the opening hours.' | gettext %]</b>
 								</div>
 							[% END %]
 							
