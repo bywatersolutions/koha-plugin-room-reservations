@@ -117,7 +117,7 @@ sub install() {
               CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
         qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
-        q{CREATE TABLE $openinghours_table (
+        qq{CREATE TABLE $openinghours_table (
               `openid` INT NOT NULL AUTO_INCREMENT,
               `day` TINYINT,
               `start` DATETIME NOT NULL, -- start date/time of opening hours
