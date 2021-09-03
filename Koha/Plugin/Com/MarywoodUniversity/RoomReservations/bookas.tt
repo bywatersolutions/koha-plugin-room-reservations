@@ -267,7 +267,7 @@
                                   </div>
                               </td>
                           </tr>
-                          <tr>
+                         <!-- <tr>
                             <td>
                               <div class="room-features-selection">
                                 <h3>[% 'Room Equipment' | gettext %]</h3>
@@ -277,19 +277,19 @@
                                   [% IF equipmentname == 'none' %]
                                       [% equipmentname = gtx.gettext('none') %]
                                   [% END %]
-                                <!-- the modulo wraps the list around to the next row with 4 pieces of equipment to a row -->
+                                <!-- the modulo wraps the list around to the next row with 4 pieces of equipment to a row ->
                                 [% IF count mod 4 == 0 %]
                                 <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipmentname %]<br />
                                 [% ELSE %]
                                 <input type="checkbox" name="availability-search-selected-equipment" value="[% equipment.equipmentid %]" /> [% equipmentname %]
                                 [% END # IF count %]
-                                [% count = count + 1 %] <!-- equal to count++ to advance the loop -->
+                                [% count = count + 1 %] <!-- equal to count++ to advance the loop ->
                                 <input type="hidden" name="availability-search-selected-equipment-name" value="[% equipmentname %]" />
 
                                 [% END # FOREACH equipment IN available_room_equipment %]
                               </div>
                             </td>
-                          </tr>
+                          </tr> -->
                           <tr>
                               <td>
                                 <br />
@@ -379,17 +379,29 @@
             <input type="hidden" name="borrowernumber" value="[% borrowernumber %]" />
             <fieldset style="float:left;">
                 <legend>[% 'Confirmation' | gettext %]</legend>
-                <p>[% 'Name:' | gettext %] <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
+                <p style="display:table-row;">
+					<label style="display:table-cell;" for="username">[% 'Name:' | gettext %]&nbsp;</label> 
+					<input type="text" id="username" name="username" size="36" value="[% current_user %]" readonly="true" />
+				</p>
                 <input type="hidden" name="confirmed-user" value="[% current_user %]" />
                 <input type="hidden" name="confirmed-user-fn" value="[% current_user_fn %]" />
                 <input type="hidden" name="confirmed-user-ln" value="[% current_user_ln %]" />
-                <p>[% 'Email:' | gettext %] <input type="text" size="36" value="[% current_user_email %]" readonly="true" /></p>
+                <p style="display:table-row;">
+					<label style="display:table-cell;" for="email">[% 'Email:' | gettext %]&nbsp;</label> 
+					<input type="text" id="email" name="email" size="36" value="[% current_user_email %]" readonly="true" />
+				</p>
                 <input type="hidden" name="confirmed-email" value="[% current_user_email %]" />
                 [% FOREACH roomnumber IN selected_room_no %]
-                <p>[% 'Room:' | gettext %] <input type="text" size="36" value="[% roomnumber.roomnumber %]" readonly="true" /></p>
-                <input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
-                [% END %]
-                <p style="float:right;">[% 'Time:' | gettext %] <input type="text" size="36" value="[% displayed_time %]" readonly="true" /></p>
+					<p style="display:table-row;">
+						<label style="display:table-cell;" for="room">[% 'Room:' | gettext %]&nbsp;</label> 
+						<input style="display:table-cell;" type="text" id="room" name="room" size="36" value="[% roomnumber.roomnumber %]" readonly="true" />
+					</p>
+					<input type="hidden" name="confirmed-roomnumber" value="[% roomnumber.roomnumber %]" />
+				[% END %]
+                <p style="display:table-row;">
+					<label style="display:table-cell;" for="time">[% 'Time:' | gettext %]&nbsp;</label> 
+					<input style="display:table-cell;" type="text" id="time" name="time" size="36" value="[% displayed_time %]" readonly="true" />
+				</p>
                 <input type="hidden" name="confirmed-displayed-start" value="[% displayed_start %]" />
                 <input type="hidden" name="confirmed-displayed-end" value="[% displayed_end %]" />
                 <input type="hidden" name="confirmed-room-id" value="[% selected_room_id %]" />
@@ -398,7 +410,11 @@
                 <input type="hidden" name="op" value="reservation-confirmed" />
                 [% IF Koha.Preference('KohaAdminEmailAddress') %]
                 <!-- Checked by default -->
-                <p><input type="checkbox" name="send-confirmation-copy" value="1" checked="true" />Send me a copy of my confirmation</p>
+                <!-- Checked by default -->
+                    <p>
+						<input type="checkbox" id="send-confirmation-copy" name="send-confirmation-copy" value="1" checked> 
+						<label for="send-confirmation-copy">[% 'Send a copy as confirmation' | gettext %]</label>
+					</p>
                 [% END # IF Koha.Preference('KohaAdminEmailAddress') %]
                 <p><input type="submit" name="confirmationSubmit" value="[% 'Confirm' | gettext %]" /><input type="submit" name="confirmationSubmit" value="[% 'Start over' | gettext %]" /></p>
             </fieldset>
