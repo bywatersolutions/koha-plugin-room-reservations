@@ -213,8 +213,6 @@
                 var endToMilliseconds = Date.parse(endTimestamp);
 
                 var timeDifferenceInMilliseconds = endToMilliseconds - startToMilliseconds;
-                
-                alert(timeDifferenceInMilliseconds + ", " + maxTimeToMilliSeconds);
 
                 if (timeDifferenceInMilliseconds > maxTimeToMilliSeconds && maxTimeToMilliSeconds > 0) {
 
