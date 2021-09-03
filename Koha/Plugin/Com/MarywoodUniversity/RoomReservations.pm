@@ -936,11 +936,12 @@ sub configure {
         my $submitted = $cgi->param('max-submitted') || q{};
 
         if ( $submitted eq '1' ) {
-
+			
+			my $max_time_days = $cgi->param('max-time-days-field');
             my $max_time_hours = $cgi->param('max-time-hours-field');
             my $max_time_minutes = $cgi->param('max-time-minutes-field');
 
-            my $max_time = ($max_time_hours * 60) + $max_time_minutes;
+            my $max_time = ($max_time_days * 60 * 24) + ($max_time_hours * 60) + $max_time_minutes;
 
             $self->store_data({ max_time => $max_time });
         }

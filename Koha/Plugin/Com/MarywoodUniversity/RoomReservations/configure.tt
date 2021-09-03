@@ -99,7 +99,7 @@
                             <option value="action-select-add-equipment">[% 'Add room equipment' | gettext %]</option>
                             <option value="action-select-edit-equipment">[% 'Edit room equipment' | gettext %]</option>                
                             <option value="action-select-delete-equipment">[% 'Delete room equipment' | gettext %]</option>                            
-                            <option value="action-max-future-date">[% 'OPAC max future date' | gettext %]</option>
+                            <!-- <option value="action-max-future-date">[% 'OPAC max future date' | gettext %]</option> -->
                             <option value="action-max-time">[% 'OPAC max time' | gettext %]</option>
                             <option value="action-restrict-daily-reservations-per-patron">[% 'Restrict daily reservations per patron' | gettext %]</option>
                             <option value="action-restrict-categories">[% 'Restrict patron categories' | gettext %]</option>
@@ -347,16 +347,26 @@
                         <td>[% 'n/a minutes' | gettext %]</td>
                     </tr>
                     [% ELSE %]
+                    [% SET max_days = max_time div (24*60) %]
+                    [% SET max_rest = max_time - (max_days*24*60) %]
+                    [% SET max_hours = max_rest div 60 %]
+                    [% SET max_minutes = max_rest mod 60 %]
+                    
+                    
                     <tr>
                         <td style="text-align: right;">[% 'Current max time:' | gettext %]</td>
-                        <td>[% max_time %] [% 'minutes' | gettext %]</td>
+                        <td>[% IF max_days > 0 %][% max_days %] [% 'days' | gettext %][% END %] 
+                            [% IF max_hours > 0 %][% max_hours %] [% 'hours' | gettext %][% END %]
+                            [% IF max_minutes > 0 %][% max_minutes %] [% 'minutes' | gettext %][% END %]</td>
                     </tr>
                     [% END # max_time == '' %]
-                    <!-- <tr>
-                        <td style="text-align: right;">Set max time: </td>
-                        <td><input type="text" name="max-time-field" id="max-time-field" size="4" maxlength="4" /></td>
-                    </tr> -->
                     <tr>
+                        <td style="text-align: right;">[% 'Set max time:' | gettext %] </td>
+                        <td>[% 'Days' | gettext %]: <input type="number" name="max-time-days-field" id="max-time-days-field" min="0" max="365" step="1" />
+                        [% 'Hours' | gettext %]: <input type="number" name="max-time-hours-field" id="max-time-hours-field" min="0" max="24" step="1" />
+                        [% 'Minutes' | gettext %]: <input type="number" name="max-time-minutes-field" id="max-time-minutes-field" min="0" max="60" step="15" /></td>
+                    </tr> 
+                    <!--<tr>
                         <td style="text-align: right;">[% 'Set max time:' | gettext %] </td>
                         <td>
                             <select name="max-time-hours-field" id="max-time-hours-field">
@@ -391,7 +401,7 @@
                                 <option value="30">30</option>
                             </select> [% 'minutes' | gettext %]
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
                 <tfoot>
                     <tr class="table-row-centered">
