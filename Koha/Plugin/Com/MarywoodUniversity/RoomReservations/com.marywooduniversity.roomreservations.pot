@@ -390,56 +390,60 @@ msgstr ""
 msgid "Confirmation"
 msgstr ""
 
-#: bookas.tt:382 configure.tt:222 configure.tt:1042 configure.tt:1145
+#: bookas.tt:383 configure.tt:222 configure.tt:1042 configure.tt:1145
 #: opac/calendar-sendconfirmation.tt:24 opac/calendar.tt:486
 msgid "Name:"
 msgstr ""
 
-#: bookas.tt:386 opac/calendar.tt:495
+#: bookas.tt:390 opac/calendar.tt:495
 msgid "Email:"
 msgstr ""
 
-#: bookas.tt:389 opac/calendar-sendconfirmation.tt:26 opac/calendar.tt:501
+#: bookas.tt:396 opac/calendar-sendconfirmation.tt:26 opac/calendar.tt:501
 msgid "Room:"
 msgstr ""
 
-#: bookas.tt:392 opac/calendar.tt:507
+#: bookas.tt:402 opac/calendar.tt:507
 msgid "Time:"
 msgstr ""
 
-#: bookas.tt:403 opac/calendar.tt:476 opac/calendar.tt:524
+#: bookas.tt:416
+msgid "Send a copy as confirmation"
+msgstr ""
+
+#: bookas.tt:419 opac/calendar.tt:476 opac/calendar.tt:524
 msgid "Confirm"
 msgstr ""
 
-#: bookas.tt:403 opac/calendar.tt:525
+#: bookas.tt:419 opac/calendar.tt:525
 msgid "Start over"
 msgstr ""
 
-#: bookas.tt:413 opac/calendar.tt:536
+#: bookas.tt:429 opac/calendar.tt:536
 msgid "Sorry!"
 msgstr ""
 
-#: bookas.tt:415 opac/calendar.tt:538
+#: bookas.tt:431 opac/calendar.tt:538
 msgid "It appears there was a problem completing your reservation"
 msgstr ""
 
-#: bookas.tt:417 opac/calendar.tt:540
+#: bookas.tt:433 opac/calendar.tt:540
 msgid "This is most likely due to someone else placing a reservation for a conflicting time slot."
 msgstr ""
 
-#: bookas.tt:424 opac/calendar.tt:545
+#: bookas.tt:440 opac/calendar.tt:545
 msgid "Click here to search again"
 msgstr ""
 
-#: bookas.tt:427 opac/calendar.tt:548
+#: bookas.tt:443 opac/calendar.tt:548
 msgid "Congratulations! Your reservation is confirmed!"
 msgstr ""
 
-#: bookas.tt:430 opac/calendar.tt:551
+#: bookas.tt:446 opac/calendar.tt:551
 msgid "An email confirmation has been sent to"
 msgstr ""
 
-#: bookas.tt:436
+#: bookas.tt:452
 msgid "Back to patron record"
 msgstr ""
 
