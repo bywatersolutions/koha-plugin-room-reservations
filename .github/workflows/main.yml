@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        koha-version: [master, stable, oldstable]
+        koha-version: [master, stable]
 
     steps:
 
