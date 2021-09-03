@@ -203,6 +203,7 @@ sub uninstall() {
 
     my @uninstaller_statements = (
         qq{DROP TABLE IF EXISTS $bookings_table;},
+        qq{DROP TABLE IF EXISTS $openinghours_table;},
         qq{DROP TABLE IF EXISTS $roomequipment_table;},
         qq{DROP TABLE IF EXISTS $equipment_table;},
         qq{DROP TABLE IF EXISTS $rooms_table;},
