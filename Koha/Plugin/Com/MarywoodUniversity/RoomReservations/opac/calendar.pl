@@ -422,6 +422,8 @@ elsif( $op eq 'reservation-confirmed' ) {
             from => $displayed_start,
             to   => $displayed_end,
             confirmed_timestamp => $timestamp,
+            language => C4::Languages::getlanguage($cgi) || 'en',
+			mbf_path => abs_path( '../translations' )
         );
 
         # Getting template result
