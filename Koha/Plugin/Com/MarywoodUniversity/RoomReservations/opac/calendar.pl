@@ -89,6 +89,9 @@ if ( !defined($op) ) {
 	if ( defined($selected_mon_cnt) ) {
 		$yr  = $yr + floor(($mon + $selected_mon_cnt - 1) / 12);
 		$mon = ($mon + $selected_mon_cnt) % 12;
+		if ($mon == 0) {
+			$mon = 12;
+		}
 	}
 
     my @month = calendar($mon, $yr);
