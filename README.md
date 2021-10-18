@@ -1,5 +1,9 @@
 WARNING: Prior to version 1.1.15 there is no safeguard in place to prevent data from being deleted during an upgrade. Be sure to backup/save data prior to upgrading. Beginning with version 1.1.15 as a new install, existing table data (reservations, rooms, room equipment, etc.) will persist after upgrades. Even so, always remember to perform a database backup prior to upgrading any component!
 
+# Install dependencies
+
+* Install Template::Plugin::Gettext: `sudo cpanm Template::Plugin::Gettext`
+
 # Apache Configuration
 
 * These instructions assume the plugin is being installed in [kohadevbox](https://github.com/digibib/kohadevbox). If installing for production change the file paths accordingly.
@@ -37,3 +41,17 @@ To add a link to this plugin for acess from the OPAC add the following lines to 
 
     /* Add Booking link for redirection plugin script */
     $("#moresearches li:contains('Advanced search')").after("<li><a href='/booking' target='_blank'>Booking</a></li>");
+
+# Translations
+
+This plugin supports translations!
+
+Basic translation Workflow:
+1) Run: `xgettext-tt2 --output=com.marywooduniversity.roomreservations.pot  --add-comments=TRANSLATORS: --from-code=utf-8 --force-po *`
+from Koha/Plugin/Com/MarywoodUniversity/RoomReservations to update com.marywooduniversity.roomreservations.pot
+2) To generate a .po file for your language, run: `msginit --input=com.marywooduniversity.roomreservations.pot --locale=fr` replacing `fr` with the language code of your choice.
+3) Edit the .po file, add you translated string
+4) Compile the .po file to a .mo file using the command: `msgfmt --check --statistics --verbose -o fr.mo fr.po`
+5) Move the .mo file to `Koha/Plugin/Com/MarywoodUniversity/RoomReservations/translations/fr/LC_MESSAGES/com.marywooduniversity.roomreservations.mo`
+6) Send us the .po and .mo files! If you know how, you can submit a pull request on GitHub!
+

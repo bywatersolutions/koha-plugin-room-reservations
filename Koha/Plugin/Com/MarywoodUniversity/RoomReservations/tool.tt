@@ -34,13 +34,12 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">[% 'Home' | gettext%]</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' %] &rsaquo; [% 'Tool' %]</div>
-
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">[% 'Home' | gettext%]</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">[% 'Plugins' | gettext %]</a> &rsaquo; [% 'Room Reservations' | gettext %] &rsaquo; [% 'Tool' | gettext %]</div>
 <div id="doc3">
 
 	<!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
     <h3>[% 'Koha: Room Reservations Plugin: Tool' | gettext %]</h3>
-
+    
     [% IF op == '' %]
     <script type="text/javascript">
         function validateAction() {
@@ -63,6 +62,7 @@
         			[% 'Select an action:' | gettext %]
         			<select name="tool_actions_selection">
         				<option value=""></option>
+        				<option value="action-manage-openings">[% 'Manage opening hours' | gettext %]</option>
                         <option value="action-manage-blackouts">[% 'Manage blackouts' | gettext %]</option>
         				<option value="action-manage-reservations">[% 'Manage reservations' | gettext %]</option>
         			</select><br />
@@ -93,6 +93,173 @@
         </div>
     </form>
     [% END # op == 'action-selected' %]
+    
+    [% IF op == 'manage-openings' %]
+
+	
+    <script type="text/javascript">
+        function validateOpeningAction() {
+
+        }
+    </script>
+    
+    <script type="text/javascript">
+        function validateOpeningHours() {
+            var start = document.forms["OpeningHoursForm"]["opening-from"].value;
+            var end   = document.forms["OpeningHoursForm"]["opening-to"].value;
+
+            
+            var weekdays = document.querySelectorAll('input[name="weekdays"]:checked');
+            if (weekdays.length == 0) {
+				alert("[% 'Please select at least one weekday.' | gettext %]");
+				return false;
+			};
+            
+			if (end <= start || start == 0 || end == 0) {
+				alert("[% 'Please select valid start and end time.' | gettext %]");
+				return false;
+			}
+        }
+    </script>
+
+    
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
+    <div>
+    <form name="manageOpeningHoursForm" method="post" action="#" onsubmit="return validateOpeningAction()">
+    	<input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+	    <input type="hidden" name="op" value="manage-openings" />
+        <br />
+        [% IF deleted == 0 %]
+        <div class="dialog alert audio-alert-warning">
+            <p class="problem">[% 'There was a problem deleting the selected opening hours. Please try again' | gettext %]</p>
+        </div>
+        [% ELSIF deleted == 1 %]
+        <div class="dialog alert audio-alert-warning">
+            <p class="problem">[% 'Selected opening hours deleted successfully' | gettext %]</p>
+        </div>
+        <br />
+        [% END # IF deleted %]
+        
+        <fieldset class="fieldset-auto-width">
+            <legend>[% 'Delete opening hours' | gettext %]</legend>
+
+			<table>
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>[% 'Day' | gettext %]</th>
+						<th>[% 'Start' | gettext %]</th>
+						<th>[% 'End' | gettext %]</th>
+					</tr>
+				</thead>
+				<tbody>
+					[% IF opening_hours %]
+						[% FOREACH opening_hour IN opening_hours %]
+						<tr style="text-align: center;">
+							<td style="margin: 0;"><input type="radio" name="manage-openings-id" value="[% opening_hour.openid %]"></td>
+							<td>[% opening_hour.day | gettext %]</td>
+							<td>[% opening_hour.start %]</td>
+							<td>[% opening_hour.end %]</td>
+						</tr>
+						[% END %]
+						<tr>
+							<td colspan="4">
+								<select name="manage-openings-action">
+									<option value="">[% 'Actions' | gettext %]</option>
+									<option value="delete">[% 'Delete' | gettext %]</option>
+								</select>
+								&nbsp;<input type="submit" name="submit-opening-hours-del" value="[% 'Submit' | gettext %]" />
+							</td>
+						</tr>
+					[% ELSE %]
+						<tr>
+							<td colspan="4">
+								[% 'No opening hours configured.' | gettext %]
+							</td>
+						</tr>
+					[% END %]
+				</tbody>
+			</table>
+		</fieldset>
+    </form>
+    </div>
+    <div>
+    <form action="#" name="OpeningHoursForm" method="post" onsubmit="return validateOpeningHours();">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+        <input type="hidden" name="op" value="manage-openings" />
+        <fieldset class="fieldset-auto-width">
+            <legend>[% 'Add opening hours' | gettext %]</legend>
+            <table>
+				<tr>
+                    <td>
+                        <b>[% 'Select opening days' | gettext %]</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+							<input type="checkbox" name="weekdays" id="mon" value="1"/>
+							<label for="mon">[% 'Monday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="tue" value="2" />
+							<label for="tue">[% 'Tuesday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="wed" value="3" />
+							<label for="wed">[% 'Wednesday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="thu" value="4" />
+							<label for="thu">[% 'Thursday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="fri" value="5" />
+							<label for="fri">[% 'Friday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="sat" value="6" />
+							<label for="sat">[% 'Saturday' | gettext %]</label>
+						</div>
+						<div>
+							<input type="checkbox" name="weekdays" id="sun" value="7" />
+							<label for="sun">[% 'Sunday' | gettext %]</label>
+						</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>[% 'Select opening hours' | gettext %]</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+						<div>
+							<label for="from">[% 'From' | gettext %]</label>
+							<input type="time" name="opening-from" id="from" />
+							<label for="to">[% 'To' | gettext %]</label>
+							<input type="time" name="opening-to" id="to" />
+						</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" name="submit-opening-hours" value="[% 'Add' | gettext %]" />
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+    </div>
+    
+    [% END # op == 'manage-openings' %]
 
     [% IF op == 'manage-reservations' %]
     <script type="text/javascript">
@@ -120,6 +287,12 @@
         }
     </script>
     <!-- TODO: add JS validation to check only one action item is selected - if (count > 1) -->
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
     <form name="manageBookingsForm" method="post" action="#" onsubmit="return validateBookingAction()">
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
@@ -137,7 +310,10 @@
         [% END # IF deleted %]
         [% IF bookings %]
         <h4>[% 'Manage reservations' | gettext %]</h4>
-
+        <br />
+        <a href="[% OPACBaseURL %]/booking" target="_blank">[% 'Go to OPAC-Calendar view' | gettext %]</a>
+        <br />
+        <br />
         <table>
             <thead>
                 <tr>
@@ -153,7 +329,7 @@
             	<tr style="text-align: center;">
             		<td style="margin: 0;"><input type="radio" name="manage-bookings-id" value="[% booking.bookingid %]"></td>
             		<td>[% booking.roomnumber %]</td>
-            		<td>[% booking.firstname %] [% booking.surname %]</td>
+            		<td><a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% booking.borrowernumber %]">[% booking.firstname %] [% booking.surname %]</a></td>
             		<td>[% booking.start %]</td>
             		<td>[% booking.end %]</td>
             	</tr>
@@ -209,6 +385,12 @@
             }
         }
     </script>
+    <form method="post" action="#">
+        <input type="hidden" name="class" value="[% CLASS %]" />
+        <input type="hidden" name="method" value="[% METHOD %]" />
+
+        <button>[% 'Select another action' | gettext %]</button>
+    </form>
     <form name="manageBlackoutsForm" action="#" method="post" onsubmit="return validateManageBlackouts()">
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
@@ -238,10 +420,10 @@
                 <tr>
                     <td colspan="5">
                         <select name="manage-blackouts-action">
-                            <option value="">Actions</option>
-                            <option value="delete">Delete</option>
+                            <option value="">[% 'Actions' | gettext %]</option>
+                            <option value="delete">[% 'Delete' | gettext %]</option>
                         </select>
-                        &nbsp;<input type="submit" name="manage-blackouts-submit" value="Submit" />
+                        &nbsp;<input type="submit" name="manage-blackouts-submit" value="[% 'Submit' | gettext %]" />
                     </td>
                 </tr>
             </tbody>
@@ -330,43 +512,11 @@
             });
         });
 
-        function validateDate(dateStr) {
-           const regExp = /^(\d\d?)\/(\d\d?)\/(\d{4})$/;
-           let matches = dateStr.match(regExp);
-           let isValid = matches;
-           let maxDate = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-           if (matches) {
-             const month = parseInt(matches[1]);
-             const date = parseInt(matches[2]);
-             const year = parseInt(matches[3]);
-
-             isValid = month <= 12 && month > 0;
-             isValid &= date <= maxDate[month] && date > 0;
-
-             const leapYear = (year % 400 == 0)
-                || (year % 4 == 0 && year % 100 != 0);
-             isValid &= month != 2 || leapYear || date <= 28;
-           }
-
-           return isValid
-        }
-
         function validateFullBlackout() {
             var startDate = document.forms["fullBlackoutForm"]["blackout-start-date"].value;
             var endDate   = document.forms["fullBlackoutForm"]["blackout-end-date"].value;
             var rooms     = document.getElementsByName("current-room-blackout");
             var roomChecked = false;
-
-            if (!validateDate(startDate)) {
-                alert("[% 'Start date is required.' | gettext %]");
-                return false;
-            }
-
-            if (!validateDate(endDate)) {
-                alert("[% 'End date is required.' | gettext %]");
-                return false;
-            }
 
             for (var i = 0; i < rooms.length; i++) {
                 if (rooms[i].checked) {
@@ -391,14 +541,13 @@
             <table>
                 <tr>
                     <td>
-                        <input class="datefield" name="blackout-start-date" id="blackout-start-date" size="10" placeholder="[% 'Start' | gettext %]" required="required" />
-                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                        <input type="date" name="blackout-start-date" id="blackout-start-date" required pattern="\d{4}-\d{2}-\d{2}" />
+                        <!--<span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>-->
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input class="datefield" name="blackout-end-date" id="blackout-end-date" size="10" placeholder="[% 'End' | gettext %]" required="required" />
-                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                        <input type="date" name="blackout-end-date" id="blackout-end-date" required pattern="\d{4}-\d{2}-\d{2}" />
                     </td>
                 </tr>
                 <tr>
@@ -451,18 +600,6 @@
             var rooms = document.getElementsByName("current-room-blackout");
             var roomChecked = false;
 
-            if (!validateDate(blackoutDate)) {
-                alert("Date is required.");
-                return false;
-            }
-
-            // convert date format from mm/dd/yyyy to yyyy-mm-dd
-            blackoutDate = blackoutDate.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
-
-            // timestamp of MySQL type DATETIME
-            var startTimestamp = blackoutDate + " " + blackoutStartTime;
-            var endTimestamp   = blackoutDate + " " + blackoutEndTime;
-
             // determines if invalid start/end values were entered
             if (startTimestamp >= endTimestamp) {
                 alert("[% 'Please select a valid start and end time!' | gettext %]");
@@ -492,8 +629,7 @@
             <table>
                 <tr>
                     <td>
-                        <input class ="datefield" name="blackout-date" id="blackout-date" size="10" placeholder="Date" />
-                        <span class="date-format to">[% INCLUDE 'date-format.inc' %]</span>
+                        <input type ="date" name="blackout-date" id="blackout-date" required pattern="\d{4}-\d{2}-\d{2}"/>
                     </td>
                 </tr>
                 <tr>
@@ -607,7 +743,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>All day<input type="checkbox" disabled="true"/></td>
+                    <td>[% 'All day' | gettext %]<input type="checkbox" disabled="true"/></td>
                 </tr>
                 [% IF current_rooms %]
                 <tr>
@@ -630,13 +766,13 @@
                 [% IF current_rooms %]
                 <tr>
                     <td>
-                        <input type="submit" name="submit-partial-blackout" value="Add" />
+                        <input type="submit" name="submit-partial-blackout" value="[% 'Add' | gettext %]" />
                     </td>
                 </tr>
                 [% ELSE %]
                 <tr>
                     <td>
-                        <input type="submit" name="submit-partial-blackout" value="Add" disabled="true" />
+                        <input type="submit" name="submit-partial-blackout" value="[% 'Add' | gettext %]" disabled="true" />
                     </td>
                 </tr>
                 [% END # IF current_rooms %]
@@ -647,55 +783,5 @@
     [% END # op == 'manage-blackouts' %]
 
 [% INCLUDE calendar.inc %]
-<!-- Full blackout -->
-<script type="text/javascript">
-// <![CDATA[
 
-    $(document).ready(function() {
-        $(".datefield").prop("readOnly", true);
-    });
-
-    // http://jqueryui.com/demos/datepicker/#date-range
-    var requestdates = $( "#blackout-start-date, #blackout-end-date" ).datepicker({
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onSelect: function( selectedDate ) {
-            var option = this.id == "blackout-start-date" ? "minDate" : "maxDate",
-                instance = $( this ).data( "datepicker" );
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
-            requestdates.not( this ).datepicker("option", option, date);
-        }
-    });
-// ]]>
-</script>
-
-<!-- Partial blackout -->
-<script type="text/javascript">
-// <![CDATA[
-
-    $(document).ready(function() {
-        $(".datefield").prop("readOnly", true);
-    });
-
-    // http://jqueryui.com/demos/datepicker/#date-range
-    var requestdates = $( "#blackout-date" ).datepicker({
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onSelect: function( selectedDate ) {
-            var option = this.id == "blackout-date" ? "minDate" : "maxDate",
-                instance = $( this ).data( "datepicker" );
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
-            requestdates.not( this ).datepicker("option", option, date);
-        }
-    });
-// ]]>
-</script>
 [% INCLUDE 'intranet-bottom.inc' %]
