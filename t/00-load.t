@@ -39,6 +39,7 @@ find(
         wanted   => sub {
             my $m = $_;
             return unless $m =~ s/[.]pm$//;
+            return unless $m =~ s/Simple.pm$//;
             $m =~ s{^.*/Koha/}{Koha/};
             $m =~ s{/}{::}g;
             use_ok($m) || BAIL_OUT("***** PROBLEMS LOADING FILE '$m'");
