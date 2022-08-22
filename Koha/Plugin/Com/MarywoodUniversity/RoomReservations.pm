@@ -15,7 +15,7 @@ use POSIX 'strftime';
 use C4::Auth;
 use C4::Context;
 use C4::Output;
-use Koha::DateUtils qw(dt_from_string);
+use Koha::DateUtils qw(dt_from_string output_pref);
 use Koha::Email;
 use Koha::Patrons;
 use Encode;

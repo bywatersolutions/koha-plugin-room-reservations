@@ -29,7 +29,7 @@ use MIME::Base64;
 use Koha::Patrons;
 use Koha::Patron::Category;
 use Koha::Patron::Categories;
-use Koha::DateUtils qw( dt_from_string );
+use Koha::DateUtils qw( dt_from_string output_pref );
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 use POSIX 'strftime';
