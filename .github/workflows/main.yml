@@ -44,6 +44,8 @@ jobs:
 
     - uses: actions/checkout@v1
 
+    - uses: gautamkrishnar/keepalive-workflow@v1 # Keeps GitHub from pausing cron'ed actions
+
     - name: Get Koha Version Branch Name
       id: koha-version
       uses: "bywatersolutions/github-action-koha-get-version-by-label@master"
@@ -171,6 +173,7 @@ jobs:
         release-version: ${{ steps.myvars.outputs.tag_version }}
         release-name: ${{ steps.myvars.outputs.github_repo }}
         minimum-version: ${{ steps.koha-version-oldstable.outputs.version-major-minor }}
+        plugin-module: "Koha/Plugin/Com/MarywoodUniversity/RoomReservations.pm"
 
     - name: See if kpz was created
       run: |
