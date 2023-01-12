@@ -944,37 +944,10 @@
 
 
     if (max_days === "") {
-        // http://jqueryui.com/demos/datepicker/#date-range
-        var requestdates = $( "#availability-search-start-date, #availability-search-end-date" ).datepicker({
-            minDate: 0,
-            changeMonth: true,
-            numberOfMonths: 1,
-            onSelect: function( selectedDate ) {
-                var option = this.id == "availability-search-start-date" ? "minDate" : "maxDate",
-                    instance = $( this ).data( "datepicker" );
-                    date = $.datepicker.parseDate(
-                        instance.settings.dateFormat ||
-                        $.datepicker._defaults.dateFormat,
-                        selectedDate, instance.settings );
-                requestdates.not( this ).datepicker("option", option, date);
-            }
-        });
+        var requestdates = $( "#availability-search-start-date, #availability-search-end-date" ).flatpickr({});
     } else {
-        // http://jqueryui.com/demos/datepicker/#date-range
-        var requestdates = $( "#availability-search-start-date, #availability-search-end-date" ).datepicker({
-            minDate: 0,
+        var requestdates = $( "#availability-search-start-date, #availability-search-end-date" ).flatpickr({
             maxDate: "+" + max_days + "D",
-            changeMonth: true,
-            numberOfMonths: 1,
-            onSelect: function( selectedDate ) {
-                var option = this.id == "availability-search-start-date" ? "minDate" : "maxDate",
-                    instance = $( this ).data( "datepicker" );
-                    date = $.datepicker.parseDate(
-                        instance.settings.dateFormat ||
-                        $.datepicker._defaults.dateFormat,
-                        selectedDate, instance.settings );
-                requestdates.not( this ).datepicker("option", option, date);
-            }
         });
     }
 // ]]>

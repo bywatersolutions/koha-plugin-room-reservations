@@ -655,21 +655,7 @@
         $(".datefield").prop("readOnly", true);
     });
 
-    // http://jqueryui.com/demos/datepicker/#date-range
-    var requestdates = $( "#blackout-start-date, #blackout-end-date" ).datepicker({
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onSelect: function( selectedDate ) {
-            var option = this.id == "blackout-start-date" ? "minDate" : "maxDate",
-                instance = $( this ).data( "datepicker" );
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
-            requestdates.not( this ).datepicker("option", option, date);
-        }
-    });
+    var requestdates = $( "#blackout-start-date, #blackout-end-date" ).flatpickr({});
 // ]]>
 </script>
 
@@ -681,21 +667,7 @@
         $(".datefield").prop("readOnly", true);
     });
 
-    // http://jqueryui.com/demos/datepicker/#date-range
-    var requestdates = $( "#blackout-date" ).datepicker({
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onSelect: function( selectedDate ) {
-            var option = this.id == "blackout-date" ? "minDate" : "maxDate",
-                instance = $( this ).data( "datepicker" );
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
-            requestdates.not( this ).datepicker("option", option, date);
-        }
-    });
+    var requestdates = $( "#blackout-date" ).flatpickr({});
 // ]]>
 </script>
 [% INCLUDE 'intranet-bottom.inc' %]
