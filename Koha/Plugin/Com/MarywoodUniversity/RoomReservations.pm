@@ -554,7 +554,7 @@ sub tool {
         my $end_time      = $cgi->param('blackout-end-time');
         my @rooms         = $cgi->multi_param('current-room-blackout');
 
-        $blackout_date = sprintf '%3$04d-%02d-%02d', split m:/:, $blackout_date;
+        $blackout_date =  $blackout_date;
 
         my $start = $blackout_date . " $start_time";
         my $end   = $blackout_date . " $end_time";
