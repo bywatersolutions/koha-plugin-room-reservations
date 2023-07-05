@@ -507,10 +507,8 @@ sub tool {
         my $blackout_end_date   = $cgi->param('blackout-end-date');
         my @rooms               = $cgi->multi_param('current-room-blackout');
 
-        my $start_date = sprintf '%3$04d-%02d-%02d', split m:/:,
-          $blackout_start_date;
-        my $end_date = sprintf '%3$04d-%02d-%02d', split m:/:,
-          $blackout_end_date;
+        my $start_date = $blackout_start_date;
+        my $end_date = $blackout_end_date;
 
         $start_date = $start_date . ' 00:00:00';
         $end_date   = $end_date . ' 23:59:59';

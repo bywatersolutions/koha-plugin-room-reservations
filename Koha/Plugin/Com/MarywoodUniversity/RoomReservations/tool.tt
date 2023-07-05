@@ -330,27 +330,6 @@
             });
         });
 
-        function validateDate(dateStr) {
-           const regExp = /^(\d\d?)\/(\d\d?)\/(\d{4})$/;
-           let matches = dateStr.match(regExp);
-           let isValid = matches;
-           let maxDate = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-           if (matches) {
-             const month = parseInt(matches[1]);
-             const date = parseInt(matches[2]);
-             const year = parseInt(matches[3]);
-
-             isValid = month <= 12 && month > 0;
-             isValid &= date <= maxDate[month] && date > 0;
-
-             const leapYear = (year % 400 == 0)
-                || (year % 4 == 0 && year % 100 != 0);
-             isValid &= month != 2 || leapYear || date <= 28;
-           }
-
-           return isValid
-        }
 
         function validateFullBlackout() {
             var startDate = document.forms["fullBlackoutForm"]["blackout-start-date"].value;
@@ -358,15 +337,6 @@
             var rooms     = document.getElementsByName("current-room-blackout");
             var roomChecked = false;
 
-            if (!validateDate(startDate)) {
-                alert("[% 'Start date is required.' | gettext %]");
-                return false;
-            }
-
-            if (!validateDate(endDate)) {
-                alert("[% 'End date is required.' | gettext %]");
-                return false;
-            }
 
             for (var i = 0; i < rooms.length; i++) {
                 if (rooms[i].checked) {
@@ -450,11 +420,6 @@
             var blackoutEndTime = document.forms["partialBlackoutForm"]["blackout-end-time"].value;
             var rooms = document.getElementsByName("current-room-blackout");
             var roomChecked = false;
-
-            if (!validateDate(blackoutDate)) {
-                alert("Date is required.");
-                return false;
-            }
 
             // convert date format from mm/dd/yyyy to yyyy-mm-dd
             blackoutDate = blackoutDate.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
