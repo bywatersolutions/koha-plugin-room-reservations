@@ -86,7 +86,9 @@ sub new {
 sub upgrade {
     my ( $self, $args ) = @_;
 
-    my $database_version = $self->retrieve_data('__INSTALLED_VERSION__') || 0;
+    my $database_version = $self->retrieve_data('__INSTALLED_VERSION__');
+
+    return 1 unless defined $database_version;
 
     if ( _version_compare( $database_version, '3.2.3' ) == 1 ) {
         my $old_rooms_table         = 'booking_rooms';
@@ -113,6 +115,8 @@ sub upgrade {
             }
         );
     }
+
+    return 1;
 }
 
 ## NOTE: install() uses an array of double-q commands and
