@@ -39,19 +39,6 @@ our $equipment_index     = $prefix . 'bookingequipment_idx';
 our $roomequipment_table = $prefix . 'booking_room_equipment';
 our $roomequipment_index = $prefix . 'bookingroomequipment_idx';
 
-# set locale settings for gettext
-my $self = new('Koha::Plugin::Com::MarywoodUniversity::RoomReservations');
-my $cgi  = $self->{'cgi'};
-
-my $locale = C4::Languages::getlanguage($cgi);
-$locale = substr( $locale, 0, 2 );
-$ENV{'LANGUAGE'} = $locale;
-setlocale Locale::Messages::LC_ALL(), '';
-textdomain "com.marywooduniversity.roomreservations";
-
-my $locale_path = abs_path( $self->mbf_path('translations') );
-bindtextdomain "com.marywooduniversity.roomreservations" => $locale_path;
-
 our $metadata = {
     name        => getTranslation('Room Reservations Plugin'),
     author      => 'Lee Jamison',
@@ -79,6 +66,18 @@ sub new {
     ## This runs some additional magic and checking
     ## and returns our actual $self
     my $self = $class->SUPER::new($args);
+
+    # set locale settings for gettext
+    my $cgi = $self->{'cgi'};
+
+    my $locale = C4::Languages::getlanguage($cgi);
+    $locale = substr( $locale, 0, 2 );
+    $ENV{'LANGUAGE'} = $locale;
+    setlocale Locale::Messages::LC_ALL(), '';
+    textdomain "com.marywooduniversity.roomreservations";
+
+    my $locale_path = abs_path( $self->mbf_path('translations') );
+    bindtextdomain "com.marywooduniversity.roomreservations" => $locale_path;
 
     return $self;
 }
