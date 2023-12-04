@@ -28,16 +28,16 @@ use POSIX qw(setlocale);
 
 our $VERSION = "{VERSION}";
 
+my $prefix = 'bws_rr_';
 ## Table names and associated MySQL indexes
-#
-our $rooms_table         = 'booking_rooms';
-our $rooms_index         = 'bookingrooms_idx';
-our $bookings_table      = 'bookings';
-our $bookings_index      = 'bookingbookings_idx';
-our $equipment_table     = 'booking_equipment';
-our $equipment_index     = 'bookingequipment_idx';
-our $roomequipment_table = 'booking_room_equipment';
-our $roomequipment_index = 'bookingroomequipment_idx';
+our $rooms_table         = $prefix . 'booking_rooms';
+our $rooms_index         = $prefix . 'bookingrooms_idx';
+our $bookings_table      = $prefix . 'bookings';
+our $bookings_index      = $prefix . 'bookingbookings_idx';
+our $equipment_table     = $prefix . 'booking_equipment';
+our $equipment_index     = $prefix . 'bookingequipment_idx';
+our $roomequipment_table = $prefix . 'booking_room_equipment';
+our $roomequipment_index = $prefix . 'bookingroomequipment_idx';
 
 # set locale settings for gettext
 my $self = new('Koha::Plugin::Com::MarywoodUniversity::RoomReservations');
@@ -81,6 +81,38 @@ sub new {
     my $self = $class->SUPER::new($args);
 
     return $self;
+}
+
+sub upgrade {
+    my ( $self, $args ) = @_;
+
+    my $database_version = $self->retrieve_data('__INSTALLED_VERSION__') || 0;
+
+    if ( _version_compare( $database_version, '3.2.3' ) == 1 ) {
+        my $old_rooms_table         = 'booking_rooms';
+        my $old_rooms_index         = 'bookingrooms_idx';
+        my $old_bookings_table      = 'bookings';
+        my $old_bookings_index      = 'bookingbookings_idx';
+        my $old_equipment_table     = 'booking_equipment';
+        my $old_equipment_index     = 'bookingequipment_idx';
+        my $old_roomequipment_table = 'booking_room_equipment';
+        my $old_roomequipment_index = 'bookingroomequipment_idx';
+
+        my $dbh = C4::Context->dbh;
+        $dbh->do(
+            qq{
+                RENAME TABLE
+                $old_rooms_table TO $rooms_table,
+                $old_rooms_index TO $rooms_index,
+                $old_bookings_table TO $bookings_table,
+                $old_bookings_index TO $bookings_index,
+                $old_equipment_table TO $equipment_table,
+                $old_equipment_index TO $equipment_index,
+                $old_roomequipment_table TO $roomequipment_table,
+                $old_roomequipment_index TO $roomequipment_index;
+            }
+        );
+    }
 }
 
 ## NOTE: install() uses an array of double-q commands and
