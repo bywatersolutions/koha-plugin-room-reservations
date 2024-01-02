@@ -104,15 +104,15 @@ sub upgrade {
             qq{
                 RENAME TABLE
                 $old_rooms_table TO $rooms_table,
-                $old_rooms_index TO $rooms_index,
                 $old_bookings_table TO $bookings_table,
-                $old_bookings_index TO $bookings_index,
                 $old_equipment_table TO $equipment_table,
-                $old_equipment_index TO $equipment_index,
                 $old_roomequipment_table TO $roomequipment_table,
-                $old_roomequipment_index TO $roomequipment_index;
             }
         );
+        $dbh->do("ALTER TABLE $rooms_table RENAME INDEX $old_rooms_index TO $rooms_index");
+        $dbh->do("ALTER TABLE $bookings_table RENAME INDEX $old_bookings_index TO $bookings_index");
+        $dbh->do("ALTER TABLE $equipment_table RENAME INDEX $old_equipment_index TO $equipment_index");
+        $dbh->do("ALTER TABLE $roomequipment_table RENAME INDEX $old_roomequipment_index TO $roomequipment_index");
     }
 
     return 1;
