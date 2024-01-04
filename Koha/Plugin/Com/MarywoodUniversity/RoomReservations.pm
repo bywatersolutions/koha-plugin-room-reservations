@@ -1260,7 +1260,7 @@ sub deleteBookingById {
     my $sth = '';
 
     my $query = "
-        DELETE FROM bookings WHERE bookingid = $bookingId;
+        DELETE FROM $bookings_table WHERE bookingid = $bookingId;
     ";
 
     $sth = $dbh->prepare($query);
