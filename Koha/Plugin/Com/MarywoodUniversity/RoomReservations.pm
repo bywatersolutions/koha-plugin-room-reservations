@@ -11,6 +11,7 @@ use MIME::Base64;
 use MIME::QuotedPrint;
 use Mail::Sendmail;
 use POSIX 'strftime';
+use Try::Tiny;
 
 use C4::Auth;
 use C4::Context;
@@ -89,31 +90,35 @@ sub upgrade {
 
     return 1 unless defined $database_version;
 
-    if ( _version_compare( $database_version, '3.2.3' ) == 1 ) {
-        my $old_rooms_table         = 'booking_rooms';
-        my $old_rooms_index         = 'bookingrooms_idx';
-        my $old_bookings_table      = 'bookings';
-        my $old_bookings_index      = 'bookingbookings_idx';
-        my $old_equipment_table     = 'booking_equipment';
-        my $old_equipment_index     = 'bookingequipment_idx';
-        my $old_roomequipment_table = 'booking_room_equipment';
-        my $old_roomequipment_index = 'bookingroomequipment_idx';
+    try {
+        if ( _version_compare( $database_version, '3.2.3' ) == 1 ) {
+            my $old_rooms_table         = 'booking_rooms';
+            my $old_rooms_index         = 'bookingrooms_idx';
+            my $old_bookings_table      = 'bookings';
+            my $old_bookings_index      = 'bookingbookings_idx';
+            my $old_equipment_table     = 'booking_equipment';
+            my $old_equipment_index     = 'bookingequipment_idx';
+            my $old_roomequipment_table = 'booking_room_equipment';
+            my $old_roomequipment_index = 'bookingroomequipment_idx';
 
-        my $dbh = C4::Context->dbh;
-        $dbh->do(
-            qq{
-                RENAME TABLE
-                $old_rooms_table TO $rooms_table,
-                $old_bookings_table TO $bookings_table,
-                $old_equipment_table TO $equipment_table,
-                $old_roomequipment_table TO $roomequipment_table,
-            }
-        );
-        $dbh->do("ALTER TABLE $rooms_table RENAME INDEX $old_rooms_index TO $rooms_index");
-        $dbh->do("ALTER TABLE $bookings_table RENAME INDEX $old_bookings_index TO $bookings_index");
-        $dbh->do("ALTER TABLE $equipment_table RENAME INDEX $old_equipment_index TO $equipment_index");
-        $dbh->do("ALTER TABLE $roomequipment_table RENAME INDEX $old_roomequipment_index TO $roomequipment_index");
-    }
+            my $dbh = C4::Context->dbh;
+            $dbh->do(
+                qq{
+                    RENAME TABLE
+                    $old_rooms_table TO $rooms_table,
+                    $old_bookings_table TO $bookings_table,
+                    $old_equipment_table TO $equipment_table,
+                    $old_roomequipment_table TO $roomequipment_table,
+                }
+            );
+            $dbh->do("ALTER TABLE $rooms_table RENAME INDEX $old_rooms_index TO $rooms_index");
+            $dbh->do("ALTER TABLE $bookings_table RENAME INDEX $old_bookings_index TO $bookings_index");
+            $dbh->do("ALTER TABLE $equipment_table RENAME INDEX $old_equipment_index TO $equipment_index");
+            $dbh->do("ALTER TABLE $roomequipment_table RENAME INDEX $old_roomequipment_index TO $roomequipment_index");
+        }
+    } catch {
+        warn "ERROR DURING UPGRADE: $_";
+    };
 
     return 1;
 }
@@ -129,111 +134,114 @@ sub upgrade {
 sub install() {
     my ( $self, $args ) = @_;
 
-    my $original_version = $self->retrieve_data('plugin_version')
-      ;    # is this a new install or an upgrade?
+    try {
+        my $original_version = $self->retrieve_data('plugin_version')
+          ;    # is this a new install or an upgrade?
 
-    my @installer_statements = (
-qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
-        qq{CREATE TABLE $rooms_table (
-              `roomid` INT NOT NULL AUTO_INCREMENT,
-              `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
-              `maxcapacity` INT NOT NULL, -- maximum number of people allowed in the room
-            PRIMARY KEY (roomid)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-        qq{CREATE INDEX $rooms_index ON $rooms_table(roomid);},
-        qq{CREATE TABLE $bookings_table (
-              `bookingid` INT NOT NULL AUTO_INCREMENT,
-              `borrowernumber` INT NOT NULL, -- foreign key; borrowers table
-              `roomid` INT NOT NULL, -- foreign key; $rooms_table table
-              `start` DATETIME NOT NULL, -- start date/time of booking
-              `end` DATETIME NOT NULL, -- end date/time of booking
-              `blackedout` TINYINT(1) NOT NULL DEFAULT 0,
-              PRIMARY KEY (bookingid),
-              CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
-              CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
-        qq{CREATE TABLE $equipment_table (
-              `equipmentid` INT NOT NULL AUTO_INCREMENT,
-              `equipmentname` VARCHAR(20) NOT NULL,
-              PRIMARY KEY (equipmentid)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-        qq{CREATE INDEX $equipment_index ON $equipment_table(equipmentid);},
-        qq{CREATE TABLE $roomequipment_table (
-              `roomid` INT NOT NULL,
-              `equipmentid` INT NOT NULL,
-              PRIMARY KEY (roomid, equipmentid),
-              CONSTRAINT roomequipment_iafk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
-              CONSTRAINT roomequipment_ibfk FOREIGN KEY (equipmentid) REFERENCES $equipment_table(equipmentid)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
-qq{CREATE INDEX $roomequipment_index ON $roomequipment_table(roomid, equipmentid);},
-        qq{INSERT INTO $equipment_table (equipmentname) VALUES ('none');},
-    );
+        my @installer_statements = (
+    qq{DROP TABLE IF EXISTS $bookings_table, $roomequipment_table, $equipment_table, $rooms_table},
+            qq{CREATE TABLE $rooms_table (
+                  `roomid` INT NOT NULL AUTO_INCREMENT,
+                  `roomnumber` VARCHAR(20) NOT NULL, -- alphanumeric room identifier
+                  `maxcapacity` INT NOT NULL, -- maximum number of people allowed in the room
+                PRIMARY KEY (roomid)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+            qq{CREATE INDEX $rooms_index ON $rooms_table(roomid);},
+            qq{CREATE TABLE $bookings_table (
+                  `bookingid` INT NOT NULL AUTO_INCREMENT,
+                  `borrowernumber` INT NOT NULL, -- foreign key; borrowers table
+                  `roomid` INT NOT NULL, -- foreign key; $rooms_table table
+                  `start` DATETIME NOT NULL, -- start date/time of booking
+                  `end` DATETIME NOT NULL, -- end date/time of booking
+                  `blackedout` TINYINT(1) NOT NULL DEFAULT 0,
+                  PRIMARY KEY (bookingid),
+                  CONSTRAINT calendar_icfk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
+                  CONSTRAINT calendar_ibfk FOREIGN KEY (borrowernumber) REFERENCES borrowers(borrowernumber)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+    qq{CREATE INDEX $bookings_index ON $bookings_table(borrowernumber, roomid);},
+            qq{CREATE TABLE $equipment_table (
+                  `equipmentid` INT NOT NULL AUTO_INCREMENT,
+                  `equipmentname` VARCHAR(20) NOT NULL,
+                  PRIMARY KEY (equipmentid)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+            qq{CREATE INDEX $equipment_index ON $equipment_table(equipmentid);},
+            qq{CREATE TABLE $roomequipment_table (
+                  `roomid` INT NOT NULL,
+                  `equipmentid` INT NOT NULL,
+                  PRIMARY KEY (roomid, equipmentid),
+                  CONSTRAINT roomequipment_iafk FOREIGN KEY (roomid) REFERENCES $rooms_table(roomid),
+                  CONSTRAINT roomequipment_ibfk FOREIGN KEY (equipmentid) REFERENCES $equipment_table(equipmentid)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;},
+    qq{CREATE INDEX $roomequipment_index ON $roomequipment_table(roomid, equipmentid);},
+            qq{INSERT INTO $equipment_table (equipmentname) VALUES ('none');},
+        );
 
-    if ( !defined($original_version) ) {    # clean install
+        if ( !defined($original_version) ) {    # clean install
 
-        # Add required IntranetUserJS entry to place
-        # reservations for a patron from circulation.pl
-        my $IntranetUserJS = C4::Context->preference('IntranetUserJS');
+            # Add required IntranetUserJS entry to place
+            # reservations for a patron from circulation.pl
+            my $IntranetUserJS = C4::Context->preference('IntranetUserJS');
 
-        $IntranetUserJS =~
-s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
+            $IntranetUserJS =~
+    s/\/\* JS for Koha RoomReservation Plugin.*End of JS for Koha RoomReservation Plugin \*\///gs;
 
-        $IntranetUserJS .= q[/* JS for Koha RoomReservation Plugin
-This JS was added automatically by installing the RoomReservation plugin
-Please do not modify */
+            $IntranetUserJS .= q[/* JS for Koha RoomReservation Plugin
+    This JS was added automatically by installing the RoomReservation plugin
+    Please do not modify */
 
-$(document).ready(function() {
-var buttonText = "];
-        $IntranetUserJS .= getTranslation('Reserve room as patron') . q[";
-var data = $("div.patroninfo h5").html();
+    $(document).ready(function() {
+    var buttonText = "];
+            $IntranetUserJS .= getTranslation('Reserve room as patron') . q[";
+    var data = $("div.patroninfo h5").html();
 
-    if (typeof borrowernumber !== 'undefined') {
-        if (data) {
-            var regExp = /\(([^)]+)\)/;
-            var matches = regExp.exec(data);
-            var cardnumber = matches[1];
+        if (typeof borrowernumber !== 'undefined') {
+            if (data) {
+                var regExp = /\(([^)]+)\)/;
+                var matches = regExp.exec(data);
+                var cardnumber = matches[1];
 
-            $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;' + buttonText + '</a>').insertAfter($('#addnewmessageLabel'));
+                $('<a id="bookAsButton" target="_blank" class="btn btn-default btn-sm" href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::MarywoodUniversity::RoomReservations&method=bookas&borrowernumber=' + borrowernumber + '"><i class="fa fa-search"></i>&nbsp;' + buttonText + '</a>').insertAfter($('#addnewmessageLabel'));
+            }
         }
-    }
-});
-
-    /* End of JS for Koha RoomReservation Plugin */];
-
-        C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
-
-        for (@installer_statements) {
-            my $sth = C4::Context->dbh->prepare($_);
-            $sth->execute or die C4::Context->dbh->errstr;
-        }
-    }
-    else {    # upgrade
-        if ( $original_version eq '1.1.15' ) {
-
-            # do nothing..no database changes
-        }
-    }
-
-    C4::Context->dbh->do(q{
-        INSERT IGNORE INTO letter ( module, code, branchcode, name, is_html, title, message_transport_type, lang, content ) VALUES (
-            'members', 'ROOM_RESERVATION', "", "Room Reservation", 1, "Study Room Reservation Confirmation", "email", "default", "
-<p>Your study room request has been completed!</p>
-<p>For proof of reservation, print or save this email containing the reservation details!</p>
-
-<hr/>
-Name: [% user %]<br/>
-Room: [% room %]<br/>
-From: [% from %]<br/>
-To: [% to %]<br/>
-Reservation confirmed: [% confirmed_timestamp %]
-<hr/>"
-);
     });
 
-    $self->store_data( { plugin_version => $VERSION } )
-      ;       # used when upgrading to newer version
+        /* End of JS for Koha RoomReservation Plugin */];
 
+            C4::Context->set_preference( 'IntranetUserJS', $IntranetUserJS );
+
+            for (@installer_statements) {
+                my $sth = C4::Context->dbh->prepare($_);
+                $sth->execute or die C4::Context->dbh->errstr;
+            }
+        }
+        else {    # upgrade
+            if ( $original_version eq '1.1.15' ) {
+
+                # do nothing..no database changes
+            }
+        }
+
+        C4::Context->dbh->do(q{
+            INSERT IGNORE INTO letter ( module, code, branchcode, name, is_html, title, message_transport_type, lang, content ) VALUES (
+                'members', 'ROOM_RESERVATION', "", "Room Reservation", 1, "Study Room Reservation Confirmation", "email", "default", "
+    <p>Your study room request has been completed!</p>
+    <p>For proof of reservation, print or save this email containing the reservation details!</p>
+
+    <hr/>
+    Name: [% user %]<br/>
+    Room: [% room %]<br/>
+    From: [% from %]<br/>
+    To: [% to %]<br/>
+    Reservation confirmed: [% confirmed_timestamp %]
+    <hr/>"
+    );
+        });
+
+        $self->store_data( { plugin_version => $VERSION } )
+          ;       # used when upgrading to newer version
+    } catch {
+        warn "ERROR DURING INSTALLATION: $_";
+    };
     return 1;
 }
 
