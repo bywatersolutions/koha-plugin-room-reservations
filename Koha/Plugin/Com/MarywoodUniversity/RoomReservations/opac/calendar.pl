@@ -49,10 +49,12 @@ my $pluginDir = dirname(abs_path($0));
 my $template_name = $pluginDir . '/calendar.tt';
 my $template2_name = $pluginDir . '/calendar-sendconfirmation.tt';
 
-my $rooms_table = 'booking_rooms';
-my $bookings_table = 'bookings';
-my $equipment_table = 'booking_equipment';
-my $roomequipment_table = 'booking_room_equipment';
+my $prefix = 'bws_rr_';
+
+my $rooms_table         = $prefix . 'booking_rooms';
+my $bookings_table      = $prefix . 'bookings';
+my $equipment_table     = $prefix . 'booking_equipment';
+my $roomequipment_table = $prefix . 'booking_room_equipment';
 
 my $valid; # used to check if booking still valid prior to insertion of new booking
 
