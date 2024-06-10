@@ -391,7 +391,7 @@ sub getUserDailyResLimit {
     $date = "$date%";
 
     my $dbh = C4::Context->dbh;
-    my $sql = "SELECT COUNT(*) AS daily_total FROM bookings WHERE borrowernumber = ? AND start LIKE ?";
+    my $sql = "SELECT COUNT(*) AS daily_total FROM $bookings_table WHERE borrowernumber = ? AND start LIKE ?";
     my $sth = $dbh->prepare($sql);
     $sth->execute( $bn, $date );
     my $row = $sth->fetchrow_hashref();
