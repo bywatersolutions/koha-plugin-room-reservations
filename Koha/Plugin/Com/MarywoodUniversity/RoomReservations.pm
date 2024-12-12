@@ -475,7 +475,7 @@ sub tool {
     my $submit_partial_blackout =
       $cgi->param('submit-partial-blackout') || q{};  # add partial-day blackout
 
-    if (   $op eq 'action-selected'
+    if (   $op eq 'cud-action-selected'
         && $tool_action eq 'action-manage-reservations' )
     {
 
@@ -486,7 +486,7 @@ sub tool {
             bookings => $bookings,
         );
     }
-    elsif ($op eq 'action-selected'
+    elsif ($op eq 'cud-action-selected'
         && $tool_action eq 'action-manage-blackouts' )
     {
 
@@ -657,7 +657,7 @@ sub configure {
 
         );
     }
-    elsif ( $op eq 'action-selected' ) {
+    elsif ( $op eq 'cud-action-selected' ) {
 
         my $selected = $cgi->param('config_actions_selection');
 
@@ -665,7 +665,7 @@ sub configure {
 
         if ( $selected eq 'action-select-display' ) {
 
-            $action = 'display-rooms';
+            $action = 'cud-display-rooms';
 
             $template->param(
                 action => $action,
@@ -674,7 +674,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-select-add' ) {
 
-            $action = 'add-rooms';
+            $action = 'cud-add-rooms';
 
             $template->param(
                 action => $action,
@@ -683,7 +683,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-select-edit' ) {
 
-            $action = 'edit-rooms';
+            $action = 'cud-edit-rooms';
 
             $template->param(
                 action => $action,
@@ -692,7 +692,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-select-delete' ) {
 
-            $action = 'delete-rooms';
+            $action = 'cud-delete-rooms';
 
             $template->param(
                 action => $action,
@@ -701,7 +701,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-select-add-equipment' ) {
 
-            $action = 'add-equipment';
+            $action = 'cud-add-equipment';
 
             $template->param(
                 action => $action,
@@ -710,7 +710,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-select-delete-equipment' ) {
 
-            $action = 'delete-equipment';
+            $action = 'cud-delete-equipment';
 
             $template->param(
                 action => $action,
@@ -719,7 +719,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-max-future-date' ) {
 
-            $action = 'max-future-date';
+            $action = 'cud-max-future-date';
 
             $template->param(
                 action => $action,
@@ -728,7 +728,7 @@ sub configure {
         }
         elsif ( $selected eq 'action-max-time' ) {
 
-            $action = 'max-time';
+            $action = 'cud-max-time';
 
             $template->param(
                 action => $action,
@@ -829,7 +829,7 @@ sub configure {
             restrict_message      => $restricted_message,
         );
     }
-    elsif ( $op eq 'max-time' ) {
+    elsif ( $op eq 'cud-max-time' ) {
 
         my $submitted = $cgi->param('max-submitted') || q{};
 
@@ -855,7 +855,7 @@ sub configure {
 
         );
     }
-    elsif ( $op eq 'max-future-date' ) {
+    elsif ( $op eq 'cud-max-future-date' ) {
 
         my $submitted = $cgi->param('max-submitted') || q{};
 
@@ -878,7 +878,7 @@ sub configure {
 
         );
     }
-    elsif ( $op eq 'display-rooms' ) {
+    elsif ( $op eq 'cud-display-rooms' ) {
 
         my $roomnumbers = getAllRoomNumbers();
 
@@ -887,7 +887,7 @@ sub configure {
             roomnumbers => $roomnumbers,
         );
     }
-    elsif ( $op eq 'display-rooms-detail' ) {
+    elsif ( $op eq 'cud-display-rooms-detail' ) {
 
         my $roomIdToDisplay = $cgi->param('selected-displayed-room');
 
@@ -901,7 +901,7 @@ sub configure {
             selected_room_equipment => $roomEquipment,
         );
     }
-    elsif ( $op eq 'add-rooms' ) {
+    elsif ( $op eq 'cud-add-rooms' ) {
 
         my $addedRoom = $cgi->param('added-room') || q{};
 
@@ -923,7 +923,7 @@ sub configure {
             all_room_numbers    => $roomNumbers,
         );
     }
-    elsif ( $op eq 'edit-rooms' ) {
+    elsif ( $op eq 'cud-edit-rooms' ) {
 
         my $editing              = $cgi->param('editing')                || q{};
         my $roomDetailsUpdated   = $cgi->param('room-details-updated')   || q{};
@@ -958,7 +958,7 @@ sub configure {
             current_rooms => $roomNumbers,
         );
     }
-    elsif ( $op eq 'edit-rooms-selection' ) {
+    elsif ( $op eq 'cud-edit-rooms-selection' ) {
 
         my $choice = $cgi->param('edit-rooms-choice') || q{};
 
@@ -1007,7 +1007,7 @@ sub configure {
             all_available_equipment => $allAvailableEquipment,
         );
     }
-    elsif ( $op eq 'delete-rooms' ) {
+    elsif ( $op eq 'cud-delete-rooms' ) {
 
         my $delete = $cgi->param('delete') || q{};
 
@@ -1035,7 +1035,7 @@ sub configure {
             rooms_available_to_delete => 1,
         );
     }
-    elsif ( $op eq 'add-equipment' ) {
+    elsif ( $op eq 'cud-add-equipment' ) {
 
         my $insert = $cgi->param('insert') || q{};
 
@@ -1058,7 +1058,7 @@ sub configure {
             available_equipment => $availableEquipment,
         );
     }
-    elsif ( $op eq 'delete-equipment' ) {
+    elsif ( $op eq 'cud-delete-equipment' ) {
 
         my $delete = $cgi->param('delete') || q{};
 

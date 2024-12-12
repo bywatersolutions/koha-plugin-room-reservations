@@ -56,7 +56,7 @@
         [% INCLUDE 'csrf-token.inc' %]
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="action-selected" />
+        <input type="hidden" name="op" value="cud-action-selected" />
 
         <fieldset class="fieldset-auto-width">
         	<legend>[% 'Actions' | gettext %]</legend>
@@ -73,7 +73,7 @@
     </form>
     [% END # op == '' %]
 
-    [% IF op == 'action-selected' %]
+    [% IF op == 'cud-action-selected' %]
     <script type="text/javascript">
         // binds onload to anonymous function
         // this causes the fieldless form below
@@ -94,7 +94,7 @@
             <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
         </div>
     </form>
-    [% END # op == 'action-selected' %]
+    [% END # op == 'cud-action-selected' %]
 
     [% IF op == 'manage-reservations' %]
     <script type="text/javascript">

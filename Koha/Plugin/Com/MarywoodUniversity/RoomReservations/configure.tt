@@ -85,7 +85,7 @@
         [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="action-selected" />
+        <input type="hidden" name="op" value="cud-action-selected" />
 
         <fieldset class="fieldset-auto-width">
             <legend>[% 'Actions' | gettext %]</legend>
@@ -110,7 +110,7 @@
     </form>
     [% END # op == '' %]
 
-    [% IF op == 'action-selected' %]
+    [% IF op == 'cud-action-selected' %]
     <script type="text/javascript">
         // binds onload to anonymous function
         // this causes the fieldless form below
@@ -131,9 +131,9 @@
             <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
         </div>
     </form>
-    [% END # op == 'action-selected' %]
+    [% END # op == 'cud-action-selected' %]
 
-    [% IF op == 'display-rooms' %]
+    [% IF op == 'cud-display-rooms' %]
     <script type="text/javascript">
             function validateDisplayRooms() {
                 // populate an equipment array to iterate for validation
@@ -166,7 +166,7 @@
         [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="display-rooms-detail" />
+        <input type="hidden" name="op" value="cud-display-rooms-detail" />
         <table>
         <thead>
             <tr>
@@ -198,9 +198,9 @@
         </tfoot>
         </table>
     </form>
-    [% END # op == 'display-rooms' %]
+    [% END # op == 'cud-display-rooms' %]
 
-    [% IF op == 'display-rooms-detail' %]
+    [% IF op == 'cud-display-rooms-detail' %]
     <form method="post" action="#">
         [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
@@ -214,7 +214,7 @@
         [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="display-rooms" />
+        <input type="hidden" name="op" value="cud-display-rooms" />
 
         <button>[% 'Select another room to display' | gettext %]</button>
     </form>
@@ -245,9 +245,9 @@
             [% END # FOREACH room IN selected_room_details %]
         </tbody>
     </table>
-    [% END # op == 'display-rooms-detail' %]
+    [% END # op == 'cud-display-rooms-detail' %]
 
-    [% IF op == 'max-future-date' %]
+    [% IF op == 'cud-max-future-date' %]
         <form method="post" action="#">
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
@@ -278,7 +278,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="max-future-date" />
+            <input type="hidden" name="op" value="cud-max-future-date" />
             <input type="hidden" name="max-submitted" value="1" />
             <table>
                 <thead class="table-header-bold table-row-centered">
@@ -310,7 +310,7 @@
                 </tfoot>
             </table>
         </form>
-    [% END # op == 'max-future-date' %]
+    [% END # op == 'cud-max-future-date' %]
 
     [% IF op == 'max-time' %]
         <form method="post" action="#">
@@ -577,7 +577,7 @@
         </form>
     [% END # op == 'restrict-categories' %]
 
-    [% IF op == 'add-rooms' %]
+    [% IF op == 'cud-add-rooms' %]
         <script type="text/javascript">
             function validateAddRooms() {
                 var roomname = document.forms["addRoomForm"]["add-room-roomnumber"].value;
@@ -639,7 +639,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="add-rooms" />
+            <input type="hidden" name="op" value="cud-add-rooms" />
             <input type="hidden" name="added-room" value="1" />
             <table>
                 <thead class="table-header-bold table-row-centered">
@@ -682,9 +682,9 @@
                 </tfoot>
             </table>
         </form>
-    [% END # op == 'add-rooms' %]
+    [% END # op == 'cud-add-rooms' %]
 
-    [% IF op == 'edit-rooms' %]
+    [% IF op == 'cud-edit-rooms' %]
         <script type="text/javascript">
             function validateEditRooms() {
                 var editChoice = document.forms["editRoomsForm"]["edit-rooms-choice"].value;
@@ -709,7 +709,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="edit-rooms-selection" />
+            <input type="hidden" name="op" value="cud-edit-rooms-selection" />
             <input type="hidden" name="editing" value="1" />
             <table>
                 <thead>
@@ -741,9 +741,9 @@
                 </tfoot>
             </table>
         </form>
-    [% END # op == 'edit-rooms' %]
+    [% END # op == 'cud-edit-rooms' %]
 
-    [% IF op == 'edit-rooms-selection' %]
+    [% IF op == 'cud-edit-rooms-selection' %]
     <script type="text/javascript">
         // binds onload to anonymous function
         // this causes the fieldless form below
@@ -765,7 +765,7 @@
             <input type="submit" name="actionSelectedBtn" id="actionSelectedBtn" />
         </div>
     </form>
-    [% END # IF op == 'edit-rooms-selection' %]
+    [% END # IF op == 'cud-edit-rooms-selection' %]
 
     [% IF op == 'edit-rooms-room' %]
         <script type="text/javascript">
@@ -797,7 +797,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="edit-rooms" />
+            <input type="hidden" name="op" value="cud-edit-rooms" />
 
             <button>[% 'Select another room to edit' | gettext %]</button>
         </form>
@@ -807,7 +807,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="edit-rooms" />
+            <input type="hidden" name="op" value="cud-edit-rooms" />
             <input type="hidden" name="room-details-updated" value="1" />
             <table>
                 <thead>
@@ -833,7 +833,7 @@
                 </tfoot>
             </table>
         </form>
-    [% END # IF op == 'edit-rooms-room' %]
+    [% END # IF op == 'cud-edit-rooms-room' %]
 
     [% IF op == 'edit-rooms-equipment' %]
         <script type="text/javascript">
@@ -866,7 +866,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="edit-rooms" />
+            <input type="hidden" name="op" value="cud-edit-rooms" />
 
             <button>[% 'Select another room to edit' | gettext %]</button>
         </form>
@@ -876,7 +876,7 @@
             [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
-            <input type="hidden" name="op" value="edit-rooms" />
+            <input type="hidden" name="op" value="cud-edit-rooms" />
             <input type="hidden" name="room-equipment-updated" value="1" />
             <table>
                 <thead>
@@ -912,9 +912,9 @@
                 </tfoot>
             </table>
         </form>
-    [% END # IF op == 'edit-rooms-equipment' %]
+    [% END # IF op == 'cud-edit-rooms-equipment' %]
 
-    [% IF op == 'delete-rooms' %]
+    [% IF op == 'cud-delete-rooms' %]
     <script type="text/javascript">
             function deleteRoomConfirmation() {
                 var rooms = document.getElementsByName("delete-room-radio-button");
@@ -957,7 +957,7 @@
         [% IF rooms_available_to_delete == 1 %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="delete-rooms" />
+        <input type="hidden" name="op" value="cud-delete-rooms" />
         <input type="hidden" name="delete" value="1" />
         <table>
             <thead>
@@ -986,9 +986,9 @@
     <h2>[% 'No rooms available to delete!' | gettext %]</h2>
     [% END %]
     </form>
-    [% END # op == 'delete-rooms' %]
+    [% END # op == 'cud-delete-rooms' %]
 
-    [% IF op == 'add-equipment' %]
+    [% IF op == 'cud-add-equipment' %]
     <script type="text/javascript">
             function validateAddEquipment() {
                 var equipmentname = document.forms["addEquipment"]["add-equipment-text-field"].value;
@@ -1033,7 +1033,7 @@
         [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="add-equipment" />
+        <input type="hidden" name="op" value="cud-add-equipment" />
         <input type="hidden" name="insert" value="1" />
         <table>
             <thead class="table-header-bold table-row-centered">
@@ -1051,9 +1051,9 @@
             </tbody>
         </table>
     </form>
-    [% END # op == 'add-equipment' %]
+    [% END # op == 'cud-add-equipment' %]
 
-    [% IF op == 'delete-equipment' %]
+    [% IF op == 'cud-delete-equipment' %]
     <script type="text/javascript">
             function deleteEquipmentConfirmation() {
                 var equipment = document.getElementsByName("delete-equipment-radio-button");
@@ -1095,7 +1095,7 @@
         [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
-        <input type="hidden" name="op" value="delete-equipment" />
+        <input type="hidden" name="op" value="cud-delete-equipment" />
         <input type="hidden" name="delete" value="1" />
         <table>
             <thead>
