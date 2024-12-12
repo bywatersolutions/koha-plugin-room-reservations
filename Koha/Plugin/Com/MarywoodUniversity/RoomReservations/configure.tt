@@ -82,6 +82,7 @@
 
     [% IF op == '' %]
     <form name="config_actions" method="post" action="#" onsubmit="return validateConfigActions()">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="action-selected" />
@@ -120,6 +121,7 @@
         };
     </script>
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="[% action %]" />
@@ -152,6 +154,7 @@
             }
     </script>
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -160,6 +163,7 @@
     <br />
     <br />
     <form name="displayRooms" method="post" action="#" onsubmit="return validateDisplayRooms()">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="display-rooms-detail" />
@@ -198,6 +202,7 @@
 
     [% IF op == 'display-rooms-detail' %]
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -206,6 +211,7 @@
     <br />
     <br />
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="display-rooms" />
@@ -243,6 +249,7 @@
 
     [% IF op == 'max-future-date' %]
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -268,6 +275,7 @@
             }
         </script>
         <form name="maxFutureDateForm" method="post" action="#" onsubmit="return validateMaxFutureDate();">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="max-future-date" />
@@ -306,6 +314,7 @@
 
     [% IF op == 'max-time' %]
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -326,6 +335,7 @@
             }
         </script>
         <form name="maxTimeForm" method="post" action="#" onsubmit="return validateMaxTime();">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="max-time" />
@@ -400,6 +410,7 @@
 
     [% IF op == 'restrict-daily-reservations-per-patron' %]
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -420,6 +431,7 @@
             }
         </script>
         <form name="restrictDailyReservationsForm" method="post" action="#" onsubmit="return validateLimitRestriction();">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="restrict-daily-reservations-per-patron" />
@@ -483,6 +495,7 @@
 
     [% IF op == 'restrict-categories' %]
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -503,6 +516,7 @@
             }
         </script>
         <form name="restrictCategoriesForm" method="post" action="#" onsubmit="return validateRestrictCategories();">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="restrict-categories" />
@@ -596,6 +610,7 @@
             }
         </script>
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -621,6 +636,7 @@
 
         <!-- TODO: Display table of rooms already added -->
         <form name="addRoomForm" method="post" action="#" onsubmit="return validateAddRooms()">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="add-rooms" />
@@ -681,6 +697,7 @@
             }
         </script>
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -689,6 +706,7 @@
         <br />
         <br />
         <form name="editRoomsForm" method="post" action="#" onsubmit="return validateEditRooms()">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms-selection" />
@@ -736,6 +754,7 @@
         };
     </script>
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="[% edit_action %]" />
@@ -766,6 +785,7 @@
             }
         </script>
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -774,6 +794,7 @@
         <br />
         <br />
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms" />
@@ -783,6 +804,7 @@
         <br />
         <br />
         <form name="editRoomDetails" method="post" action="#" onsubmit="return validateEditRoomsRoom()">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms" />
@@ -832,6 +854,7 @@
             }
         </script>
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -840,6 +863,7 @@
         <br />
         <br />
         <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms" />
@@ -849,6 +873,7 @@
         <br />
         <br />
         <form name="editRoomEquipment" method="post" action="#" onsubmit="return validateEditRoomsEquipment()">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
             <input type="hidden" name="op" value="edit-rooms" />
@@ -919,6 +944,7 @@
     <br />
     <br />
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -927,6 +953,7 @@
     <br />
     <br />
     <form method="post" action="#" onsubmit="return deleteRoomConfirmation()">
+        [% INCLUDE 'csrf-token.inc' %]
         [% IF rooms_available_to_delete == 1 %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
@@ -973,6 +1000,7 @@
             }
         </script>
     <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -1002,6 +1030,7 @@
     <br />
 
     <form name="addEquipment" method="post" action="#" onsubmit="return validateAddEquipment()">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="add-equipment" />
@@ -1054,6 +1083,7 @@
     <br />
     <br />
     <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
             <input type="hidden" name="class" value="[% CLASS %]" />
             <input type="hidden" name="method" value="[% METHOD %]" />
 
@@ -1062,6 +1092,7 @@
         <br />
         <br />
     <form method="post" action="#" onsubmit="return deleteEquipmentConfirmation()">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="delete-equipment" />

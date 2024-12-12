@@ -473,6 +473,7 @@
                          <tr>
                            <td style="text-align:left" colspan="10">
                              <form method="post" name="book-room" action="#">
+                               [% INCLUDE 'csrf-token.inc' %]
                                <input type="hidden" name="op" value="availability-search" />
                                <input type="submit" name="book-room-btn" value="[% 'Book a Room' | gettext %]" />
                              </form>
@@ -588,6 +589,7 @@
                 <div class="span12">
 
                 <form name="availabilitySearchForm" method="post" action="#" onsubmit="return (validateAvailabilitySearch() && checkExistingBookings())">
+                    [% INCLUDE 'csrf-token.inc' %]
                     <input type="hidden" name="max_days" id="max_days" value="[% max_days %]" />
                     <input type="hidden" name="max_time" id="max_time" value="[% max_time %]" />
                     <table align="center">
@@ -796,6 +798,7 @@
         <div class="row-fluid">
             <div class="span12">
                 <form method="post" action="#" onsubmit="return validateAvailabilitySearchResults()">
+                    [% INCLUDE 'csrf-token.inc' %]
                     <input type="hidden" name="start-date" value="[% start_date %]" />
                 [% IF are_rooms_available == 1 %]
                     <table border="2">
@@ -834,6 +837,7 @@
                 [% ELSE %]
                 <h2 class="no-rooms-match">[% 'No rooms match your criteria!' | gettext %]</h2>
                 <form method="post" action="#">
+                    [% INCLUDE 'csrf-token.inc' %]
                     <input type="hidden" name="op" value="availability-search" />
 
                     <button>[% 'Click here to try another search' | gettext %]</button>
@@ -867,6 +871,7 @@
             <div class="span12">
 
             <form name="confirmationForm" id="confirmationForm" method="post" action="#" onsubmit="return validateConfirmationForm();">
+                [% INCLUDE 'csrf-token.inc' %]
                 <fieldset style="float:left;">
                     <legend>[% 'Confirmation' | gettext %]</legend>
                     <p>[% 'Name:' | gettext %] <input type="text" size="36" value="[% current_user %]" readonly="true" /></p>
@@ -910,6 +915,7 @@
             </h2>
 
             <form method="post" action="#">
+            [% INCLUDE 'csrf-token.inc' %]
 
                 <button>[% 'Click here to search again' | gettext %]</button>
             </form>
@@ -920,6 +926,7 @@
             <h3>[% 'An email confirmation has been sent to' | gettext %] [% patron_email %]!</h3>
             [% END %]
             <form method="post" action="#">
+                [% INCLUDE 'csrf-token.inc' %]
 
                 <button>[% 'Back to calendar' | gettext %]</button>
             </form>

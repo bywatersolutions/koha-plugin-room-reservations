@@ -53,6 +53,7 @@
         }
     </script>
     <form name="tool_actions" method="post" action="#" onsubmit="return validateAction()">
+        [% INCLUDE 'csrf-token.inc' %]
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="action-selected" />
@@ -83,6 +84,7 @@
         };
     </script>
     <form method="post" action="#">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="[% action %]" />
@@ -121,6 +123,7 @@
     </script>
     <!-- TODO: add JS validation to check only one action item is selected - if (count > 1) -->
     <form name="manageBookingsForm" method="post" action="#" onsubmit="return validateBookingAction()">
+        [% INCLUDE 'csrf-token.inc' %]
     	<input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
 	    <input type="hidden" name="op" value="manage-reservations" />
@@ -210,6 +213,7 @@
         }
     </script>
     <form name="manageBlackoutsForm" action="#" method="post" onsubmit="return validateManageBlackouts()">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="manage-blackouts" />
@@ -353,6 +357,7 @@
     </script>
     <div id="full-blackout">
     <form action="#" name="fullBlackoutForm" method="post" onsubmit="return validateFullBlackout();">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="manage-blackouts" />
@@ -449,6 +454,7 @@
     </script>
     <div id="partial-blackout">
     <form action="#" name="partialBlackoutForm" method="post" onsubmit="return validatePartialBlackout();">
+        [% INCLUDE 'csrf-token.inc' %]
         <input type="hidden" name="class" value="[% CLASS %]" />
         <input type="hidden" name="method" value="[% METHOD %]" />
         <input type="hidden" name="op" value="manage-blackouts" />
