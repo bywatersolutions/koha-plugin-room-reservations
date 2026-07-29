@@ -1775,11 +1775,12 @@ sub getAvailableRooms {
     ## database statement handler
     my $sth = '';
 
+    my $capacity_clause = ( defined $capacity && $capacity ne '' ) ? "maxcapacity = $capacity AND " : '';
+
     my $query = "
         SELECT *
         FROM $rooms_table
-        WHERE maxcapacity = $capacity
-        AND roomid NOT IN
+        WHERE $capacity_clause roomid NOT IN
             (SELECT roomid
             FROM $bookings_table
             WHERE
